@@ -6,6 +6,7 @@
 
 
 
+
 #ユーザー設定のアドオンリストに表示される色々
 bl_info = {'name':'Silent Key Del',
             'author':'bookyakuno',
