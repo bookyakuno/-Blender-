@@ -1,3 +1,27 @@
+
+
+Compact Properties
+
+
+
+![画像の説明](pic.twitter.com/2P7AOnR1hb)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # minimum_space_info.py
 
 
