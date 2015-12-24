@@ -76,6 +76,14 @@ class INFO_HT_header(Header):
                 row.prop(bone, "name", text="")
 
 
+        row.prop(context.scene,"rno_str_new_name",text="")
+        layout.operator("object.rno_setname",text="",icon='GREASEPENCIL')
+
+
+
+
+
+
 #        layout.separator()
 
         layout.template_running_jobs()
