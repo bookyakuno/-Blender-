@@ -59,7 +59,7 @@ Blenderのバージョンアップ時にはリセットされます。
 
 
 
-# Layer Management_x in properties shelf
+# Layer_Management_x_in_properties_shelf
 
 
  Layer Managementをツールシェルフ(左に出るやつ)からプロパティシェルフ(右に出るやつ)にでるように変更しただけのアドオン。
