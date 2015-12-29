@@ -22,7 +22,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-    "name": "My_etc plus PLAY & HIDE",
+    "name": "My_etc",
     "author": "bookyakuno",
     "version": (1),
     "location": "View3D > properties Shelf > My etc",
