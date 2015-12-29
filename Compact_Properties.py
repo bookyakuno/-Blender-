@@ -1,8 +1,8 @@
 bl_info = {
-"name": "Compact Properties _x3",
+"name": "Compact_Properties _x3",
 "author": "bookyakuno",
 "version": (1.0),
-"blender": (2, 76, b),
+"blender": (2, 76),
 "location": "Please add a shortcut object.compact_prop",
 "description": "Simple Panel",
 "warning": "",
@@ -40,6 +40,16 @@ class DialogOperator(bpy.types.Operator):
         obj = context.object
         obj_type = obj.type
 
+
+
+
+
+
+
+
+
+
+
 ### アイテム
         ob = context.active_object
         row = layout.row()
@@ -53,6 +63,28 @@ class DialogOperator(bpy.types.Operator):
                 row.label(text="", icon='BONE_DATA')
                 row.prop(bone, "name", text="")
 
+
+
+
+### Amaranth Toolset のフレームオンシェード(displayWireframe)
+
+
+        row = col.row(align=True)
+        row.operator("object.amth_wire_toggle" ,
+                                 icon="MOD_WIREFRAME", text="Display").clear = False
+        row.operator("object.amth_wire_toggle" ,
+                                 icon="X", text="Clear").clear = True
+        row = col.row(align=True)
+        row.operator("mesh.presel", text="PreSel" ,icon="LOOPSEL")
+        row.operator("presel.stop", text="PreSel" ,icon="X")
+			
+
+
+
+
+
+
+
 ### その他いろいろ
         col = layout.column(align=True)
 
@@ -60,11 +92,10 @@ class DialogOperator(bpy.types.Operator):
         layout.separator()
         row = layout.row()
         row.prop(view, "show_world", text="World.")
-        row.prop(view, "lock_camera", text="Lok.Cam")
+#        row.prop(view, "lock_camera", text="Lok.Cam")
 
-        row = layout.row()
-        col.prop(view, "show_only_render")        
 
+#        col.prop(view, "show_only_render")        
         row = layout.row()
         row.prop(obj, "show_x_ray", text="X-Ray.")
         row.prop(obj, "show_wire", text="Wire")
@@ -83,6 +114,29 @@ class DialogOperator(bpy.types.Operator):
             col.template_icon_view(view, "matcap_icon")
         col.prop(view, "show_backface_culling")
         
+        
+        
+
+        if rd.has_multiple_engines:
+            layout.prop(rd, "engine", text="")
+
+
+
+
+
+#PreSel
+
+
+
+
+
+
+
+
+        
+### AO
+        
+        
         col = layout.column(align=True)
         fx_settings = view.fx_settings
 
@@ -100,31 +154,108 @@ class DialogOperator(bpy.types.Operator):
                 subcol.prop(ssao_settings, "samples")
                 subcol.prop(ssao_settings, "color")
 
-### 実験いろいろ
+        
 
 
-### Amaranth Toolset のフレームオンシェード(displayWireframe)
-        scene = context.scene
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        """
+        
+        
+        
+### 自動キーフレーム挿入        
 
-        self.layout.separator()
-        col = self.layout.column(align=True)
-        row = col.row(align=True)
-        row.operator(AMTH_OBJECT_OT_wire_toggle.bl_idname,
-                                 icon="MOD_WIREFRAME", text="Display").clear = False
-        row.operator(AMTH_OBJECT_OT_wire_toggle.bl_idname,
-                                 icon="X", text="Clear").clear = True
-        if rd.has_multiple_engines:
-            layout.prop(rd, "engine", text="")
+        row = layout.row(align=True)
+        row.prop(toolsettings, "use_keyframe_insert_auto", text="", toggle=True)
+        if toolsettings.use_keyframe_insert_auto:
+            row.prop(toolsettings, "use_keyframe_insert_keyingset", text="", toggle=True)
+
+            if screen.is_animation_playing and not userprefs.edit.use_keyframe_insert_available:
+                subsub = row.row(align=True)
+                subsub.prop(toolsettings, "use_record_with_nla", toggle=True)
+
+        
+        
+"""
+                
+
+        
+
+
+
+
+
+
+
+
+
+        return {'FINISHED'}
+
+"""
+
+
+
+
+class play_hide(bpy.types.Operator):
+    bl_idname = "object.play_hide"
+    bl_label = "PLAY & HIDE"
+
+
+
+    def execute(self, context):
+
+        
+
+        if (bpy.context.screen.is_animation_playing == False):
+            	bpy.context.space_data.show_only_render = True
+            	bpy.ops.screen.animation_play(reverse=False, sync=False)
+        
+        else:
+            	bpy.context.space_data.show_only_render = False
+            	bpy.ops.screen.animation_play(reverse=False, sync=False)
+
+        
+
+        return {'FINISHED'}
+
+
+"""
+   
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
 
 
 def register():
     bpy.utils.register_class(DialogOperator)
-
+#    bpy.utils.register_class(play_hide)
 def unregister():
     bpy.utils.unregister_class(DialogOperator)
-
+#    bpy.utils.unregister_class(play_hide)
 if __name__ == "__main__":
     register()
-
 
