@@ -27,7 +27,7 @@
 
 
 
-# Compact Properties
+# Compact_Properties.py
 
 プロパティシェルフにあるよく使う項目だけをダイアログで表示するアドオン。
 
