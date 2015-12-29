@@ -17,7 +17,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 # <pep8 compliant>
-#
+##
 bl_info = {
     "name": "Layer Management_x in properties shelf",
     "author": "Alfonso Annarumma, Bastien Montagne",
