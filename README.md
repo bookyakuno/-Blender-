@@ -1,6 +1,16 @@
 
 
+# UbuntuAmbiance_bookyakunoEdit.xml
+Ubuntu Ambiance テーマを元に、気になった所を自分なりに改良したもの。
 
+     主張しすぎている赤紫を変更
+     メッシュは水色で、若干Maya準拠に
+     陰影処理のオンオフ表示をわかりやすく
+     グラフエディタのハンドルを大きく
+     薄いグラデーションで背景が平坦な印象にならないように
+
+Extensions:2.6/Py/Scripts/Interface/Themes/ - BlenderWiki
+http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Interface/Themes/
 
 
 # PLAY_HIDE.py
