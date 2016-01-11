@@ -45,6 +45,9 @@ class key_copy_x(bpy.types.Operator):
     def execute(self, context):
         
 
+        if (context.active_object):
+            self.report(type={"INFO"}, message="key_copy_x")			# Message
+
         
         bpy.ops.object.view_menu(variable="DOPESHEET_EDITOR")	#ドープシートへ移動
         bpy.ops.action.select_leftright(mode='RIGHT', extend=False)	 # 右側を選択 
@@ -66,6 +69,8 @@ class key_paste_x(bpy.types.Operator):
 
     def execute(self, context):
 
+        if (context.active_object):
+            self.report(type={"INFO"}, message="key_paste_x")			# Message
         
         
         bpy.ops.object.view_menu(variable="DOPESHEET_EDITOR")
