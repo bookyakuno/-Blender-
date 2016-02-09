@@ -1,5 +1,4 @@
 
-
 # UbuntuAmbiance_bookyakunoEdit.xml
 Ubuntu Ambiance テーマを元に、気になった所を自分なりに改良したもの。
 
