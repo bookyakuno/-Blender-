@@ -31,19 +31,47 @@ class INFO_HT_header(Header):
         scene = context.scene
         rd = scene.render
 
+
+        layout.prop(scene, "frame_current", text="")
+
+
+
+
+        scene = context.scene
+        toolsettings = context.tool_settings
+        screen = context.screen
+        userprefs = context.user_preferences
+
+
+        row = layout.row(align=True)
+        row.prop(toolsettings, "use_keyframe_insert_auto", text="", toggle=True)
+        if toolsettings.use_keyframe_insert_auto:
+            row.prop(toolsettings, "use_keyframe_insert_keyingset", text="", toggle=True)
+
+            if screen.is_animation_playing and not userprefs.edit.use_keyframe_insert_available:
+                subsub = row.row(align=True)
+                subsub.prop(toolsettings, "use_record_with_nla", toggle=True)
+
+
+
+
+
+
+
         row = layout.row(align=True)
         row.template_header()
+
+
+#スプラッシュ
+        row.operator("wm.splash", text="", icon='BLENDER', emboss=False)
 
         INFO_MT_editor_menus.draw_collapsible(context, layout)
 
         if window.screen.show_fullscreen:
             layout.operator("screen.back_to_previous", icon='SCREEN_BACK', text="Back to Previous")
 
-            layout.separator()
-        else:
-            row.operator("wm.splash", text="", icon='BLENDER', emboss=False)
-            
-            
+#            layout.separator()
+#        else:
 
 #            layout.template_ID(context.window, "screen", new="screen.new", unlink="screen.delete")
 #            layout.template_ID(context.screen, "scene", new="scene.new", unlink="scene.delete")
@@ -61,7 +89,7 @@ class INFO_HT_header(Header):
         view = context.space_data
         scene = context.scene
         obj = context.object
-        obj_type = obj.type
+#        obj_type = obj.type
 
         ob = context.active_object
         row = layout.row()
@@ -75,7 +103,7 @@ class INFO_HT_header(Header):
                 row.label(text="", icon='BONE_DATA')
                 row.prop(bone, "name", text="")
 
-
+# 連番リネーム
         row.prop(context.scene,"rno_str_new_name",text="")
         layout.operator("object.rno_setname",text="",icon='GREASEPENCIL')
 
@@ -123,11 +151,11 @@ class INFO_MT_editor_menus(Menu):
 
         if rd.use_game_engine:
             layout.menu("INFO_MT_game")
-        else:
-            layout.menu("INFO_MT_render")
+#        else:
+#            layout.menu("INFO_MT_render")
 
-        layout.menu("INFO_MT_window")
-        layout.menu("INFO_MT_help")
+#        layout.menu("INFO_MT_window")
+#        layout.menu("INFO_MT_help")
 
 
 class INFO_MT_file(Menu):
