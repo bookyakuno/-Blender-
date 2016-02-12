@@ -1,4 +1,47 @@
 
+
+# Asset_Flinger_thumbnail_x.py
+
+Asset Flingerアドオンで使えるサムネイルを作成するアドオン。
+
+これとgawky_OBJ_export_xアドオンを利用すれば、サムネイル付きobjをすぐさま作成できる。
+
+
+荒削りだが、今後修正かもわからないので公開しておく。
+
+matapの設定やアウトラインの有無など、
+
+本来ならばインターフェイスを用意すべきなところですが、
+
+手動でソースコード335行付近をいじって下さい。
+
+一応コメントでの説明付きです。
+
+だれか続き作ってもええんやで？
+
+
+
+■ 使い方
+
+1. このアドオンをDLしてインストール
+2. 下記のリンクからAsset FlingerアドオンをDLしてインストール
+3. BlenderAid/Asset-Flinger: Asset Flinger - Simple Mesh Importer for Blender
+
+	https://github.com/BlenderAid/Asset-Flinger
+
+5. Asset Flinger アドオンの設定画面で、好きな場所のファイルパスを設定
+6. このアドオンの設定画面で、Asset Flingerアドオンにて設定したファイルパスと同じファイルパスを設定
+7. Blendファイルは保存しておくこと 
+8. 画像/UVエディターを分割表示しておく
+9. D + shift + ctrl + cmd もしくは『 object.all_cmp 』を好きなキーに設定して実行
+10. 画像/UVエディターにレンダリング結果が表示される
+11. これを確認しながら何度か試して、良いアングルを見つけてください。
+
+
+
+
+
+
 # UbuntuAmbiance_bookyakunoEdit.xml
 Ubuntu Ambiance テーマを元に、気になった所を自分なりに改良したもの。
 
