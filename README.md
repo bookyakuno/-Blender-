@@ -18,7 +18,7 @@ Asset Flingerアドオンで使えるサムネ付きobjをすぐさま作成で�
 
 1. この2つのアドオンをDLしてインストール
 2. 下記のリンクからAsset FlingerアドオンをDLしてインストール
-3. BlenderAid/Asset-Flinger: Asset Flinger - Simple Mesh Importer for Blender
+3. BlenderAid/Asset-Flinger: Asset Flinger - Simple Mesh Importer for Blender  
 	https://github.com/BlenderAid/Asset-Flinger
 
 5. Asset Flinger アドオンの設定画面で、好きな場所のファイルパスを設定
@@ -26,10 +26,10 @@ Asset Flingerアドオンで使えるサムネ付きobjをすぐさま作成で�
 7. 画像/UVエディターを分割表示しておく
 8. View3D > Tool Shelf > Create > Asset Flinger OBJ ここにUIが追加されるので、それぞれ実行。
 9. Asset Flinger Thumbnail を実行すると画像/UVエディターにレンダリング結果が表示されるので、これを確認しながら何度か試して、良いアングルを見つけてください。
-
-
-
-     ■ 課題
+  
+  
+  ***
+     ■ 課題  
      Blendファイルを保存していないとエラーが出る
      
      2つのアドオンを1つにしたい
@@ -40,11 +40,11 @@ Asset Flingerアドオンで使えるサムネ付きobjをすぐさま作成で�
      
      シェーディングの設定を実行前に戻せていない
      
+***
 
-
-
-
-
+  
+  
+  
 
 # UbuntuAmbiance_bookyakunoEdit.xml
 Ubuntu Ambiance テーマを元に、気になった所を自分なりに改良したもの。
@@ -55,7 +55,7 @@ Ubuntu Ambiance テーマを元に、気になった所を自分なりに改良�
      グラフエディタのハンドルを大きく
      薄いグラデーションで背景が平坦な印象にならないように
 
-Extensions:2.6/Py/Scripts/Interface/Themes/ - BlenderWiki
+Extensions:2.6/Py/Scripts/Interface/Themes/ - BlenderWiki  
 http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Interface/Themes/
 
 
