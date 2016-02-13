@@ -130,7 +130,7 @@ class assetflinger_objPanel(bpy.types.Panel):
         wm = context.window_manager
         row = layout.row()
         layout.operator("ops.assetflinger_obj", text="OBJ export", icon="PLAY").operation = "cmd"
-        layout.operator("object.all_cmp", text="Thumbnail export", icon="PLAY").operation = "cmd"
+        layout.operator("object.asset_flinger_thumbnail", text="Thumbnail export", icon="PLAY")
 
 
 
