@@ -1,42 +1,39 @@
 
-
-# Asset_Flinger_thumbnail_x.py
-
-Asset Flingerアドオンで使えるサムネイルを作成するアドオン。
-
-これと鋭意製作中のgawky_OBJ_export_xアドオンを利用すれば、サムネイル付きobjをすぐさま作成できる。
+# Asset_Flinger_OBJ.py
+オブジェクト名付きobjファイルを、指定したフォルダにすぐさま作成するアドオン。
 
 
-荒削りだが、今後修正かもわからないので公開しておく。
+# Asset_Flinger_Thumbnail.py
+小さいサムネイルを、指定したフォルダにすぐさま作成するアドオン。
 
-matapの設定やアウトラインの有無など、
-
-本来ならばインターフェイスを用意すべきなところですが、
-
-手動でソースコード335行付近をいじって下さい。
-
-一応コメントでの説明付きです。
-
-だれか続き作ってもええんやで？
+これとAsset_Flinger_OBJ アドオンを利用すれば、
+Asset Flingerアドオンで使えるサムネ付きobjをすぐさま作成できる。
 
 
 
 ■ 使い方
 
-1. このアドオンをDLしてインストール
+※-- サムネイル作成はBlendファイルは保存しておくこと --※
+
+
+1. この2つのアドオンをDLしてインストール
 2. 下記のリンクからAsset FlingerアドオンをDLしてインストール
 3. BlenderAid/Asset-Flinger: Asset Flinger - Simple Mesh Importer for Blender
-
 	https://github.com/BlenderAid/Asset-Flinger
 
 5. Asset Flinger アドオンの設定画面で、好きな場所のファイルパスを設定
-6. このアドオンの設定画面で、Asset Flingerアドオンにて設定したファイルパスと同じファイルパスを設定
-7. Blendファイルは保存しておくこと 
-8. 画像/UVエディターを分割表示しておく
-9. D + shift + ctrl + cmd もしくは『 object.all_cmp 』を好きなキーに設定して実行
-10. 画像/UVエディターにレンダリング結果が表示される
-11. これを確認しながら何度か試して、良いアングルを見つけてください。
+6. 2つのアドオンの設定画面で、Asset Flingerアドオンにて設定したファイルパスと同じファイルパスを設定
+7. 画像/UVエディターを分割表示しておく
+8. View3D > Tool Shelf > Create > Asset Flinger OBJ ここにUIが追加されるので、それぞれ実行。
+9. Asset Flinger Thumbnail を実行すると画像/UVエディターにレンダリング結果が表示されるので、これを確認しながら何度か試して、良いアングルを見つけてください。
 
+
+
+     ■ 課題
+     Blendファイルを保存していないとエラーが出る
+     2つのアドオンを1つにしたい
+     複数オブジェクトを保存できない
+     matap・アウトライン・背景色などの設定インターフェイスが未完備
 
 
 
