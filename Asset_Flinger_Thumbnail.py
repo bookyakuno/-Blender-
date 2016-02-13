@@ -1,13 +1,17 @@
 bl_info = {
-    "name": "Asset Flinger thumbnail_x",
+    "name": "Asset Flinger Thumbnail",
     "author": "bookyakuno",
-    "version": (1, 0),
+    "version": (1, 1),
     "blender": (2, 76, 0),
-    "location": "D + shift + ctrl + cmd or 『 object.all_cmp 』",
+    "location": "『 object.asset_flinger_thumbnail 』",
     "description": "create thumbnail for Asset Flinger addon ",
     "warning": "",
-    "category": "Render"}
+    "category": "Mesh"}
     
+# 参考
+# Auto Save Render
+# game engine - How to take pictures from the GE? - Blender Stack Exchange
+#http://blender.stackexchange.com/questions/27253/how-to-take-pictures-from-the-ge
     
 
     
@@ -32,7 +36,7 @@ class ExampleAddonPreferences(AddonPreferences):
     bl_idname = __name__
 
     filepath_x = StringProperty(
-            name="File Path",
+            name="Your Library",
             subtype='FILE_PATH',
             )
 
@@ -81,303 +85,11 @@ def unregister():
 
 
 # ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-
-
-
-# ===============================================================
 
 # ===============================================================
 
 
     
-
-class InstantMesher(bpy.types.Operator):
-    bl_idname = "ops.instantmesher"
-    bl_label = "instant meshes export"
-    bl_options = {'REGISTER', 'UNDO'}
-    bl_region_type = "WINDOW"
-
-    operation = bpy.props.StringProperty()
-
-    # custom variables
-    # Defined in the Blender addon preferences
-    instantmeshesPath = "" # Path to the "instant Meshes"-executable
-    sketchretopPath = "" # Path to the "Sketch-Retopo"-executable
-    targetDir = "" # If nothing is specified, the 'home' directory is used
-
-    @classmethod
-    def poll(cls, context):
-        return True
-
-    def execute(self, context):
-        if len(bpy.context.selected_objects) < 1:
-            return {'CANCELLED'}
-
-
-        self.setUpPaths(context)
-
-        active_object = bpy.context.active_object
-        name = active_object.name
-        objname = name + ".obj" # The temp object is called the same as the active object you have selected in Blender.
-        bpy.ops.view3d.snap_cursor_to_selected() # Set 3D Cursor to the origin of the selected object
-
-        try:
-            bpy.ops.export_scene.obj(filepath=objname, use_selection=True, use_materials=False) # Exports the *.obj to your home directory (on Linux, at least) or the directory you specified above under the 'targetDir' variable
-        except Exception as e:
-            printErrorMessage("Could not create OBJ", e)
-            return {'CANCELLED'}
-
-        if self.operation == "cmd":
-            self.cmd(objname, context)
-
-        elif self.operation == "regular":
-            self.regular(objname, context)
-
-        elif self.operation == "sketch":
-            self.sketch(objname, context)
-
-        try:
-            bpy.ops.object.origin_set(type='ORIGIN_CURSOR') # Set object origin to 3D Cursor
-        except:
-            bpy.ops.object.ogtc()
-
-
-        self.operation = "regular"
-
-        return {'FINISHED'}
-
-
-
-    def setUpPaths(self, context):
-        user_preferences = context.user_preferences
-        addon_prefs = user_preferences.addons[__name__].preferences
-
-        self.instantmeshesPath = str(addon_prefs.instant_path) # Set path for instant meshes
-        self.sketchretopPath = str(addon_prefs.sketch_path) # Set path for Sketch-Retopo
-        self.targetDir = str(addon_prefs.temp_folder) # Set path for temp dir to store objs in
-
-        info = ("Path: %s" % (addon_prefs.instant_path))
-
-        if self.instantmeshesPath == "":
-            print("Path to 'instant Meshes' not specified. Terminating...")
-            return {'CANCELLED'}
-
-        if self.targetDir != "" and os.path.isdir(self.targetDir):
-            os.chdir(self.targetDir)
-        else:
-            os.chdir(os.path.expanduser("~"))
-            
-
-
-    def cmd(self, objname, context):
-        wm = context.window_manager
-        creationTime = os.path.getmtime(objname) # Get creation time of obj for later comparison
-
-        smoothingIts = str(wm.instantMesherSmoothingInt)
-        allQuads = bool(wm.instantMesherQuadsBool)
-        vertsAmount = wm.instantMesherVertexCountInt
-
-        print("VERTSAMOUNT", str(vertsAmount))
-
-        # try:
-        if allQuads:
-            vertsAmount = str(int(vertsAmount/4))
-            subprocess.call([self.instantmeshesPath,  "-o", objname, "-S", str(smoothingIts), "-v", vertsAmount, objname]) # Calls Instant Meshes and appends the temporary *.obj to it
-        else:
-            subprocess.call([self.instantmeshesPath,  "-o", objname, "-S", str(smoothingIts), "-v", str(vertsAmount), "-D", objname]) # Calls Instant Meshes and appends the temporary *.obj to it
-
-        # except Exception as e:
-        #     printErrorMessage("Could not execute Instant Meshes", e)
-
-        if(os.path.getmtime(objname) != creationTime):
-            try:
-                bpy.ops.import_scene.obj(filepath=objname) # Imports remeshed obj into Blender
-            except Exception as e:
-                printErrorMessage("Could not import OBJ", e)
-                return {'CANCELLED'}
-        else:
-            print("Object has not changed. Skipping import...")
-            pass
-
-        try:
-            os.remove(objname) # Removes temporary obj
-        except Exception as e:
-            printErrorMessage("Could not remove OBJ", e)
-
-
-
-
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-#===============================================================
-
-
-
-
-
-
-
-
-
-
-
-class InstantMesherPanel(bpy.types.Panel):
-    """ """
-    bl_label = "OBJ EXPORT"
-    bl_idname = "OBJECT_PT_instantmesher"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'TOOLS'
-#    bl_category = "Retopology"
-    bl_context = "objectmode"
-
-
-
-    def draw(self, context):
-        user_preferences = context.user_preferences
-        addon_prefs = user_preferences.addons[__name__].preferences
-
-        instantmeshesPath = str(addon_prefs.instant_path)
-        sketchPath = str(addon_prefs.sketch_path)
-        layout = self.layout
-        obj = context.object
-        wm = context.window_manager
-        row = layout.row()
-        layout.operator("ops.instantmesher", text="OBJ export", icon="PLAY").operation = "cmd"
-
-
-
-bl_idname = 'VIEW3D_PT_name'
-bl_space_type = 'VIEW_3D'
-bl_label = 'Name'
-bl_region_type = 'TOOLS'
-bl_options = {'HIDE_HEADER'}
-bl_category = 'Name'
-
-def register():
-
-    bpy.utils.register_class(InstantMesher)
-    bpy.utils.register_class(InstantMesherPanel)
-
-
-
-
-
-
-def unregister():
-    bpy.utils.unregister_class(InstantMesher)
-    bpy.utils.unregister_class(InstantMesherPanel)
-
-
-
-
-if __name__ == "__main__":
-    register()
-    
-    
-    
-    
-    
-    
-
-# ===============================================================
-
-# ===============================================================
-
-
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-# ===============================================================
-
-
-
-# ===============================================================
-
-# ===============================================================
-
-
-    
-    
-# 
-# 
-# class InstantMesherPreferences(AddonPreferences):
-#     bl_idname = __name__
-# 
-#     instant_path = StringProperty(
-#             name="Instant Meshes-executable path",
-#             subtype='FILE_PATH',
-#             )
-# 
-#     temp_folder = StringProperty(
-#             name="folder to store temp objs",
-#             subtype='DIR_PATH',
-#             )
-# 
-#     sketch_path = StringProperty(
-#             name="Sketch-Retopo-executable path",
-#             subtype='FILE_PATH',
-#             )
-# 
-    
-
-
-
-
-
-
-
-# Auto Save Render
-# game engine - How to take pictures from the GE? - Blender Stack Exchange
-#http://blender.stackexchange.com/questions/27253/how-to-take-pictures-from-the-ge
 
 def main(context):
     for ob in context.scene.objects:
@@ -582,10 +294,10 @@ class save_thumbnail(bpy.types.Operator):
 
 
 
-class all_cmp(bpy.types.Operator):
+class asset_flinger_thumbnail(bpy.types.Operator):
     """Tooltip"""
-    bl_idname = "object.all_cmp"
-    bl_label = "all_cmp"
+    bl_idname = "object.asset_flinger_thumbnail"
+    bl_label = "asset_flinger_thumbnail"
 
     @classmethod
     def poll(cls, context):
@@ -647,7 +359,7 @@ def register():
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 
-    kmi = km.keymap_items.new(all_cmp.bl_idname, 'D', 'PRESS', shift=True, ctrl=True, oskey=True)
+    kmi = km.keymap_items.new(asset_flinger_thumbnail.bl_idname, 'D', 'PRESS', shift=True, ctrl=True, oskey=True)
     addon_keymaps.append((km, kmi))
 
 def unregister():
@@ -665,6 +377,7 @@ def unregister():
 
 
 
+
 # 
 # 
 # 
@@ -672,13 +385,13 @@ def unregister():
 # 
 # def register():
 #     bpy.utils.register_class(save_thumbnail)
-#     bpy.utils.register_class(all_cmp)
+#     bpy.utils.register_class(asset_flinger_thumbnail)
 #     bpy.utils.register_class(InstantMesherPreferences)
 # 
 # 
 # def unregister():
 #     bpy.utils.unregister_class(save_thumbnail)
-#     bpy.utils.unregister_class(all_cmp)
+#     bpy.utils.unregister_class(asset_flinger_thumbnail)
 #     bpy.utils.unregister_class(InstantMesherPreferences)
 # 
 # 
