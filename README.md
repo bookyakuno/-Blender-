@@ -1,9 +1,22 @@
+# Curve & Array Set
 
-# Asset_Flinger_OBJ.py
+一発でカーブと配列複製モディファイアを設定するモディファイア。    
+
+
+     1.カーブ 2.オブジェクト の順に選択して、  
+     
+     ツールシェルフの作成タブの  
+     
+     " Curve & Array Set "を実行してください。  
+     
+     カーブの名前は、『 "cv_" + オブジェクト名 』に自動でリネームされます。  
+  
+  
+# Asset Flinger OBJ
 オブジェクト名付きobjファイルを、指定したフォルダにすぐさま作成するアドオン。
 
 
-# Asset_Flinger_Thumbnail.py
+# Asset Flinger Thumbnail
 小さいサムネイルを、指定したフォルダにすぐさま作成するアドオン。
 
 これとAsset_Flinger_OBJ アドオンを利用すれば、
@@ -59,7 +72,7 @@ Extensions:2.6/Py/Scripts/Interface/Themes/ - BlenderWiki
 http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Interface/Themes/
 
 
-# PLAY_HIDE.py
+# PLAY & HIDE
 
 再生と同時にリグとか無駄なものを非表示にする(レンダリングする物のみ)アドオン。
 
