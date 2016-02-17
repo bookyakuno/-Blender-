@@ -1,3 +1,21 @@
+# Resolution X-Y Change
+
+レンダリングの解像度、 X と Y の値を入れ替えるアドオン。
+
+
+
+     Properties > 
+     
+     Render > 
+     
+     Dimensions > 
+     
+     X-Y
+
+
+
+
+
 # Curve & Array Set
 
 一発でカーブモディファイアと配列複製モディファイアを設定するアドオン。    
