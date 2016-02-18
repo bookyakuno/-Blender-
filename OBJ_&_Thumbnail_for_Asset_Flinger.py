@@ -4,7 +4,7 @@ bl_info = {
     'name': 'OBJ & Thumbnail for Asset Flinger',
     'description': '"create OBJ & Thumbnail for Asset Flinger addon"',
     'author': 'bookyakuno',
-    'version': (1,0),
+    'version': (1,1),
     'blender': (2, 76, 0),
     'warning': "",
     'location': 'View3D > Tool Shelf > Create > Asset Flinger OBJ & Thumbnail',
