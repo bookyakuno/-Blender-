@@ -41,7 +41,7 @@ def register():
     if kc:
         km = kc.keymaps.new(name='3D View', space_type='VIEW_3D')
         kmi = km.keymap_items.new('wm.call_menu', 'F', 'PRESS', ctrl = True, shift = True)
-        kmi.properties.name = "view3d.mymenu"
+        kmi.properties.name = "object.material_list_menu_x"
 
 def unregister():
     bpy.utils.unregister_module(__name__)
