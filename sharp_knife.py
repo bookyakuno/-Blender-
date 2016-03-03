@@ -22,7 +22,7 @@
 bl_info = {
         "name": "SHARP Knife (Snap Utilities Line bk.Edit)",
     "author": "Germano Cavalcante, Arrange by bookyakuno",
-    "version": (5, 7 + 0,1),
+    "version": (5, 7 + 0,1,1),
     "blender": (2, 77),
     "location": "mesh.snap_utilities_line",
     "description": "Vertex or Center only Powerful snap Knife tool.",
@@ -484,7 +484,7 @@ class CharMap:
     ascii = {
         ".", ",", "-", "+", "1", "2", "3",
         "4", "5", "6", "7", "8", "9", "0",
-        "c", "m", "d", "k", "h", "a",
+         "m", "d", "k", "h", "a", ## CをY軸固定にするため、"c"を削除
         " ", "/", "*", "'", "\""
         #"="
         }
