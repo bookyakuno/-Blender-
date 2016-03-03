@@ -8,6 +8,8 @@
 これはSnap Utilities Lineアドオンを元に、  
 ナイフツールとして使いやすいよう編集したものです。  
 あえてポリゴン作成できないようにしています。  
+Home · Mano-Wii/Addon-Snap-Utilities-Line Wiki
+https://github.com/Mano-Wii/Addon-Snap-Utilities-Line/wiki
 
 ▼ 変更点  
 『##』 で始まるコメントアウトに変更点を書いたので検索してください。
