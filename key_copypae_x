@@ -1,6 +1,6 @@
 # 3D Navigation_x TOOLBAR v1.2 - 3Dview Addon - Blender 2.5x
 #
-# THIS SCRIPT IS LICENSED UNDER GPL, 
+# THIS SCRIPT IS LICENSED UNDER GPL,
 # please read the license block.
 #
 # ##### BEGIN GPL LICENSE BLOCK #####
@@ -24,9 +24,9 @@
 bl_info = {
     "name": "key_copypae_x",
     "author": "bookyakuno",
-    "version": (1),
-    "location": "Timeline shift + ctrl/cmd + C/V",
-    "description": "current key frame COPY&PASTE",
+    "version": (1,2),
+    "location": "Timeline shift + ctrl/cmd + X/C/V",
+    "description": "current key frame CUT, COPY, PASTE in Timeline",
     "warning": "",
     "category": "timeline"}
 
@@ -34,8 +34,31 @@ bl_info = {
 import bpy
 
 
-       
-        
+
+
+class key_cut_x(bpy.types.Operator):
+    bl_idname = "object.key_cut_x"
+    bl_label = "key_cut_x"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        # Message
+        if (context.active_object):
+            self.report(type={"INFO"}, message="key_cut_x")
+
+
+        bpy.ops.object.view_menu(variable="DOPESHEET_EDITOR")	    # ドープシートへ移動
+        # 選択を確実に解除
+        bpy.ops.action.select_leftright(mode='RIGHT', extend=False)	 # 右側を選択
+        bpy.ops.action.select_all_toggle(invert=False)				# 選択解除
+
+        bpy.ops.action.select_column(mode='CFRA')				    # 現在のフレームのキーをすべて選択
+        bpy.ops.action.copy()									    # キーフレームをコピー
+        bpy.ops.action.delete()                                     # キーフレームをカット
+        bpy.ops.object.view_menu(variable="TIMELINE")				# タイムラインへ戻る
+
+        return {'FINISHED'}
+
 
 class key_copy_x(bpy.types.Operator):
     bl_idname = "object.key_copy_x"
@@ -43,25 +66,26 @@ class key_copy_x(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        
-
+        # Message
         if (context.active_object):
-            self.report(type={"INFO"}, message="key_copy_x")			# Message
+            self.report(type={"INFO"}, message="key_copy_x")
 
-        
+
         bpy.ops.object.view_menu(variable="DOPESHEET_EDITOR")	#ドープシートへ移動
-        bpy.ops.action.select_leftright(mode='RIGHT', extend=False)	 # 右側を選択 
+        # 選択を確実に解除
+        bpy.ops.action.select_leftright(mode='RIGHT', extend=False)	 # 右側を選択
         bpy.ops.action.select_all_toggle(invert=False)				# 選択解除
-														# 上2つで選択を確実に解除
+
         bpy.ops.action.select_column(mode='CFRA')				# 現在のフレームのキーをすべて選択
         bpy.ops.action.copy()									# キーフレームをコピー
         bpy.ops.object.view_menu(variable="TIMELINE")				# タイムラインへ戻る
 
-
         return {'FINISHED'}
-        
-        
-        
+
+
+
+
+
 class key_paste_x(bpy.types.Operator):
     bl_idname = "object.key_paste_x"
     bl_label = "key_paste_x"
@@ -71,19 +95,39 @@ class key_paste_x(bpy.types.Operator):
 
         if (context.active_object):
             self.report(type={"INFO"}, message="key_paste_x")			# Message
-        
-        
+
+
         bpy.ops.object.view_menu(variable="DOPESHEET_EDITOR")
         bpy.ops.action.paste()
         bpy.ops.object.view_menu(variable="TIMELINE")
 
-       
+
         return {'FINISHED'}
-        
-        
-                
-        
-        
+
+
+
+class key_move_current_x(bpy.types.Operator):
+    bl_idname = "object.key_move_current_x"
+    bl_label = "key_move_current_x"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+
+        # if (context.active_object):
+        self.report(type={"INFO"}, message="key_move_current_x")			# Message
+
+        bpy.ops.action.copy()
+        bpy.ops.action.delete()
+        bpy.ops.action.paste()
+
+
+        return {'FINISHED'}
+
+
+
+
+
+
 
         # store keymaps here to access after registration
 addon_keymaps = []
@@ -94,16 +138,27 @@ def register():
 #addon_keymaps = [] #put on out of register()
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.new(name = 'Timeline', space_type = 'TIMELINE')
-
+    # key_cut_x
+    kmi = km.keymap_items.new(key_cut_x.bl_idname, 'X', 'PRESS', shift=True, ctrl=True)
+    addon_keymaps.append((km, kmi))
+    kmi = km.keymap_items.new(key_cut_x.bl_idname, 'X', 'PRESS', shift=True, oskey=True)
+    addon_keymaps.append((km, kmi))
+    # key_copy_x
     kmi = km.keymap_items.new(key_copy_x.bl_idname, 'C', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
     kmi = km.keymap_items.new(key_copy_x.bl_idname, 'C', 'PRESS', shift=True, oskey=True)
     addon_keymaps.append((km, kmi))
-
+    # key_paste_x
     kmi = km.keymap_items.new(key_paste_x.bl_idname, 'V', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
     kmi = km.keymap_items.new(key_paste_x.bl_idname, 'V', 'PRESS', shift=True, oskey=True)
     addon_keymaps.append((km, kmi))
+    # key_move_current_x
+    kmi = km.keymap_items.new(key_move_current_x.bl_idname, 'X', 'PRESS',  oskey=True)
+    addon_keymaps.append((km, kmi))
+
+
+
 
 def unregister():
     bpy.utils.unregister_module(__name__)
@@ -111,27 +166,27 @@ def unregister():
     for km, kmi in addon_keymaps:
         km.keymap_items.remove(kmi)
     addon_keymaps.clear()
-        
-        
-        
-        
-        
-        
-        
-        
-#         
-#         
-# 
+
+
+
+
+
+
+
+
+#
+#
+#
 # # register the class
 # def register():
 #     bpy.utils.register_module(__name__)
-#  
-#     pass 
-# 
+#
+#     pass
+#
 # def unregister():
 #     bpy.utils.unregister_module(__name__)
-#  
-#     pass 
-# 
-# if __name__ == "__main__": 
+#
+#     pass
+#
+# if __name__ == "__main__":
 #     register()
