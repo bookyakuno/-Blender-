@@ -24,9 +24,9 @@
 bl_info = {
     "name": "key_copypae_x",
     "author": "bookyakuno",
-    "version": (1,2),
-    "location": "Timeline shift + ctrl/cmd + X/C/V",
-    "description": "current key frame CUT, COPY, PASTE in Timeline",
+    "version": (1,3),
+    "location": "shift + ctrl/cmd + X/C/V ,key_del = BACK_SPACE(Other Anime Editor Window)",
+    "description": "current key frame CUT, COPY, PASTE, DELETE in Timeline",
     "warning": "",
     "category": "timeline"}
 
@@ -129,6 +129,44 @@ class key_move_current_x(bpy.types.Operator):
 
 
 
+
+
+
+class key_del_x(bpy.types.Operator):
+	bl_idname = "object.key_del_x"
+	bl_label = "key_del_x"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		if (context.active_object):
+		    self.report(type={"INFO"}, message="key_del_x")			# Message
+		bpy.ops.anim.keyframe_delete_v3d() #これが実際に削除するやつ。普通にAlt + Iから実行する方は、『警告 + この文』を実行しているので、この文だけを実行させる
+		return {'FINISHED'}
+
+
+class key_del_graph_x(bpy.types.Operator):
+	bl_idname = "graph.key_del_graph_x"
+	bl_label = "silent_graph_Key_Del"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		if (context.active_object):
+		    self.report(type={"INFO"}, message="key_del_graph_x")			# Message
+		bpy.ops.graph.delete()
+		 #これが実際に削除するやつ。普通にAlt + Iから実行する方は、『警告 + この文』を実行しているので、この文だけを実行させる
+		return {'FINISHED'}
+
+
+
+
+
+
+
+
+
+
+
+
         # store keymaps here to access after registration
 addon_keymaps = []
 
@@ -138,25 +176,45 @@ def register():
 #addon_keymaps = [] #put on out of register()
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.new(name = 'Timeline', space_type = 'TIMELINE')
+
     # key_cut_x
     kmi = km.keymap_items.new(key_cut_x.bl_idname, 'X', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
     kmi = km.keymap_items.new(key_cut_x.bl_idname, 'X', 'PRESS', shift=True, oskey=True)
     addon_keymaps.append((km, kmi))
+
     # key_copy_x
     kmi = km.keymap_items.new(key_copy_x.bl_idname, 'C', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
     kmi = km.keymap_items.new(key_copy_x.bl_idname, 'C', 'PRESS', shift=True, oskey=True)
     addon_keymaps.append((km, kmi))
+
     # key_paste_x
     kmi = km.keymap_items.new(key_paste_x.bl_idname, 'V', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
     kmi = km.keymap_items.new(key_paste_x.bl_idname, 'V', 'PRESS', shift=True, oskey=True)
     addon_keymaps.append((km, kmi))
+
     # key_move_current_x
     kmi = km.keymap_items.new(key_move_current_x.bl_idname, 'X', 'PRESS',  oskey=True)
     addon_keymaps.append((km, kmi))
 
+    # key_del_x
+    kmi = km.keymap_items.new(key_del_x.bl_idname, 'BACK_SPACE', 'PRESS')
+    addon_keymaps.append((km, kmi))
+
+    km = wm.keyconfigs.addon.keymaps.new(name = 'Graph Editor Generic', space_type = 'GRAPH_EDITOR')
+    kmi = km.keymap_items.new(key_del_graph_x.bl_idname, 'BACK_SPACE', 'PRESS')
+    addon_keymaps.append((km, kmi))
+    # km = wm.keyconfigs.addon.keymaps.new(name = 'Dopesheet', space_type = 'DOPESHEET_EDITOR')
+    # kmi = km.keymap_items.new(key_del_x.bl_idname, 'BACK_SPACE', 'PRESS')
+    # addon_keymaps.append((km, kmi))
+    km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
+    kmi = km.keymap_items.new(key_del_x.bl_idname, 'BACK_SPACE', 'PRESS',  alt=True)
+    addon_keymaps.append((km, kmi))
+    km = wm.keyconfigs.addon.keymaps.new(name='Pose Mode', space_type='EMPTY')
+    kmi = km.keymap_items.new(key_del_x.bl_idname, 'BACK_SPACE', 'PRESS',  alt=True)
+    addon_keymaps.append((km, kmi))
 
 
 
