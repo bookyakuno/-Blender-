@@ -209,7 +209,6 @@ http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Interface/Themes/
 
 AO・Matcap・ワイヤーフレーム表示に設定・選択オブジェクトをレントゲンに設定・ワールドの背景など。
 
-アドオンをオンにし、以下を3D View内に手動でショートカット登録してください
 
      object.compact_prop
 	
