@@ -207,13 +207,14 @@ http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Interface/Themes/
 
 プロパティシェルフを極力使いたくない自分用に作ったアドオンです。
 
-リネーム・ワールドの背景・選択オブジェクトをレントゲンに設定など。
+AO・Matcap・ワイヤーフレーム表示に設定・選択オブジェクトをレントゲンに設定・ワールドの背景など。
 
 アドオンをオンにし、以下を3D View内に手動でショートカット登録してください
 
      object.compact_prop
-
-
+	
+	Cmd + Ctrl + 3  
+	Shift + Ctrl + 3
 
 
 
