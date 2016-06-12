@@ -1,12 +1,11 @@
 # rigify_select_pie_menu.py
 
 rigifyのリグを選択するパイメニューです。 
-パイメニューならではの速攻選択で  
-下記のリンクの RigifyPicker アドオンと併用して下さい。  
+主要な部位の高速選択ができます。
+下記リンクの RigifyPicker アドオンと併用して下さい。  
 
-ダウンロード| サルバArtero  
+Downloads | Salva Artero
 http://salvadorartero.com/downloads/
-
 
 
 # sharp_knife.py
