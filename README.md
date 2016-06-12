@@ -1,3 +1,12 @@
+# rigify_select_pie_menu.py
+
+rigifyのリグを選択するパイメニューです。 
+パイメニューならではの速攻選択で  
+下記のリンクの RigifyPicker アドオンと併用して下さい。  
+
+ダウンロード| サルバArtero  
+http://salvadorartero.com/downloads/
+
 
 
 # sharp_knife.py
