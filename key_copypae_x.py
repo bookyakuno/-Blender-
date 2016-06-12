@@ -24,8 +24,8 @@
 bl_info = {
     "name": "key_copypae_x",
     "author": "bookyakuno",
-    "version": (1,3),
-    "location": "shift + ctrl/cmd + X/C/V ,key_del = BACK_SPACE(Other Anime Editor Window)",
+    "version": (1,4),
+    "location": "timeline shift + ctrl/cmd + X/C/V, key_del = BACK_SPACE(Other Anime Editor Window), , Property Shelf > Display > PLAY & HIDE",
     "description": "current key frame CUT, COPY, PASTE, DELETE in Timeline",
     "warning": "",
     "category": "timeline"}
@@ -35,6 +35,94 @@ import bpy
 
 
 
+class WazouPieMenuPrefs_x(bpy.types.AddonPreferences):
+    bl_idname = __name__
+    bpy.types.Scene.Enable_Tab_01 = bpy.props.BoolProperty(default=False)
+
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(context.scene, "Enable_Tab_01", text="Info", icon="QUESTION")
+        if context.scene.Enable_Tab_01:
+
+            row = layout.row()
+            layout.label(text="timeline")
+            layout.label(text="Cut     > shift + ctrl/cmd + X")
+            layout.label(text="Copy    > shift + ctrl/cmd + C")
+            layout.label(text="Paste   > shift + ctrl/cmd + V")
+            layout.label(text="key_del > BACK_SPACE")
+            layout.label(text="")
+            layout.label(text="PLAY & HIDE")
+            layout.label(text="(Animation play & Rendering Only)")
+            layout.label(text="3D View > ")
+            layout.label(text="Property Shelf > ")
+            layout.label(text="Display > ")
+            layout.label(text="PLAY & HIDE")
+
+
+
+class play_hide(bpy.types.Operator):
+    bl_idname = "object.play_hide"
+    bl_label = "PLAY & HIDE"
+
+
+
+    def execute(self, context):
+
+
+
+        if (bpy.context.screen.is_animation_playing == False):
+            	bpy.context.space_data.show_only_render = True
+            	bpy.ops.screen.animation_play(reverse=False, sync=False)
+
+        else:
+            	bpy.context.space_data.show_only_render = False
+            	bpy.ops.screen.animation_play(reverse=False, sync=False)
+
+
+
+        return {'FINISHED'}
+
+
+
+
+
+
+
+# ヘッダーに項目追加
+def play_hide_menu(self, context):
+
+	layout = self.layout
+
+	col = layout.column()
+
+	if (bpy.context.screen.is_animation_playing == False):
+            col.operator("object.play_hide", icon="PLAY")
+
+	else:
+            col.operator("object.play_hide", icon="PAUSE")
+
+
+
+
+
+
+
+
+
+
+class curve_add_point(bpy.types.Operator):
+    bl_idname = "object.curve_add_point"
+    bl_label = "curve_add_point"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+
+
+        bpy.ops.curve.select_next()
+        bpy.ops.curve.subdivide()
+
+        return {'FINISHED'}
 
 class key_cut_x(bpy.types.Operator):
     bl_idname = "object.key_cut_x"
@@ -160,6 +248,18 @@ class key_del_graph_x(bpy.types.Operator):
 
 
 
+class only_select(bpy.types.Operator):
+	bl_idname = "object.only_select"
+	bl_label = "only_select"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.view3d.local_view_ex()
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.mesh.hide(unselected=True)
+
+		return {'FINISHED'}
 
 
 
@@ -172,6 +272,10 @@ addon_keymaps = []
 
 def register():
     bpy.utils.register_module(__name__)
+    # ヘッダーメニューに項目追加
+    bpy.types.VIEW3D_PT_view3d_display.prepend(play_hide_menu)
+
+
     # handle the keymap
 #addon_keymaps = [] #put on out of register()
     wm = bpy.context.window_manager
@@ -225,6 +329,8 @@ def unregister():
         km.keymap_items.remove(kmi)
     addon_keymaps.clear()
 
+    # ヘッダーメニューの項目解除
+    bpy.types.VIEW3D_PT_view3d_display.remove(play_hide_menu)
 
 
 
