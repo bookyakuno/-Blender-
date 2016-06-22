@@ -25,29 +25,29 @@ bl_info = {'name':'45 rotate gesture',
             'author':'bookyakuno',
             'version':(0,1),
             'category':'3D View',
-            'location':'View3D > Ctrl + Shift + D',
+            'location':'View3D > cmd + D , Ctrl + Shift + D',
             'description':'45 rotate Gesture'}
-    
- 
+
+
 
 class rotate_gesture(bpy.types.Operator):
     bl_idname = "object.rotate_gesture"
     bl_label = "45 rotate gesture"
-    bl_options = {'REGISTER', 'UNDO'} 
-    
+    bl_options = {'REGISTER', 'UNDO'}
 
-    
-    first_mouse_x = IntProperty()
-    first_mouse_y = IntProperty()
-    first_mouse_z = IntProperty()
-    first_valuex = FloatProperty()
-    first_valuey = FloatProperty()
-    first_valuez = FloatProperty()
-    axis = StringProperty()
-    value_fix_x = 0
-    value_fix_y = 0
-    value_fix_z = 0
-    nd = 0
+
+
+#     first_mouse_x = IntProperty()
+#     first_mouse_y = IntProperty()
+#     first_mouse_z = IntProperty()
+#     first_valuex = FloatProperty()
+#     first_valuey = FloatProperty()
+#     first_valuez = FloatProperty()
+#     axis = StringProperty()
+#     value_fix_x = 0
+#     value_fix_y = 0
+#     value_fix_z = 0
+#     nd = 0
     def vdist(self):
       area=bpy.context.window.screen.areas[0]
       for x in bpy.context.window.screen.areas:
@@ -62,82 +62,82 @@ class rotate_gesture(bpy.types.Operator):
         context.area.header_text_set('Mouse wheel Up/Down or + - key = 45, Shift +wheel = -45, ZXCY = & AXIS,  Shift + ZXCY = -45 & AXIS')
 
 
-################################################################ 
+################################################################
 
-################################################################ 
+################################################################
 # # # # # # # #
-        
-        if event.type == 'Q' and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=0.785398) #編集
+
+        if event.type == 'D' and event.value=='PRESS':
+            bpy.ops.transform.rotate(value=0.785398, constraint_orientation='GLOBAL') #編集
 
 
         elif event.type == 'WHEELUPMOUSE' and event.shift  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(True, False, False)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(True, False, False), constraint_orientation='GLOBAL') #編集
         elif event.type == 'WHEELDOWNMOUSE' and event.shift  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(True, False, False)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(True, False, False), constraint_orientation='GLOBAL') #編集
 
         elif event.type == 'WHEELUPMOUSE' and event.alt  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
         elif event.type == 'WHEELDOWNMOUSE' and event.alt  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
 
         elif event.type == 'WHEELUPMOUSE' and event.alt  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
         elif event.type == 'WHEELDOWNMOUSE' and event.alt  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
 
 
         elif event.type == 'WHEELUPMOUSE' and event.oskey  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, False, True)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, False, True), constraint_orientation='GLOBAL') #編集
         elif event.type == 'WHEELDOWNMOUSE' and event.oskey  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, False, True)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, False, True), constraint_orientation='GLOBAL') #編集
 
 
 
 
         elif event.type == 'WHEELUPMOUSE':
 
-            bpy.ops.transform.rotate(value=0.785398) #編集
+            bpy.ops.transform.rotate(value=0.785398, constraint_orientation='GLOBAL') #編集
         elif event.type == 'WHEELDOWNMOUSE':
 
-            bpy.ops.transform.rotate(value=-0.785398) #編集
+            bpy.ops.transform.rotate(value=-0.785398, constraint_orientation='GLOBAL') #編集
 
 
         elif event.type == 'NUMPAD_PLUS' and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398) #編集
+            bpy.ops.transform.rotate(value=-0.785398, constraint_orientation='GLOBAL') #編集
 
         elif event.type == 'NUMPAD_MINUS' and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398) #編集
+            bpy.ops.transform.rotate(value=-0.785398, constraint_orientation='GLOBAL') #編集
 
 
 
         elif event.type == 'X' and event.shift  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(True, False, False)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(True, False, False), constraint_orientation='GLOBAL') #編集
         elif event.type == 'X'  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(True, False, False)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(True, False, False), constraint_orientation='GLOBAL') #編集
 
         elif event.type == 'Y' and event.shift  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
         elif event.type == 'Y'  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
 
         elif event.type == 'C' and event.shift  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
         elif event.type == 'C'  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, True, False), constraint_orientation='GLOBAL') #編集
 
         elif event.type == 'Z' and event.shift  and event.value=='PRESS':
-            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, False, True)) #編集
+            bpy.ops.transform.rotate(value=-0.785398,constraint_axis=(False, False, True), constraint_orientation='GLOBAL') #編集
         elif event.type == 'Z'  and event.value=='PRESS':
 
-            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, False, True)) #編集
+            bpy.ops.transform.rotate(value=0.785398,constraint_axis=(False, False, True), constraint_orientation='GLOBAL') #編集
 
 
 
@@ -160,9 +160,9 @@ class rotate_gesture(bpy.types.Operator):
 
 
 # # # # # # # #
-################################################################ 
+################################################################
 
-################################################################ 
+################################################################
 
 
         return {'RUNNING_MODAL'}
@@ -183,9 +183,9 @@ class rotate_gesture(bpy.types.Operator):
 
 
 
-            
+
             args = (self, context)
-            
+
             self.id=int(cArrID)
             context.window_manager.modal_handler_add(self)
             return {'RUNNING_MODAL'}
@@ -198,7 +198,7 @@ class rotate_gesture(bpy.types.Operator):
 
 
 
-    
+
 addon_keymaps = []
 
 def register():
@@ -208,6 +208,9 @@ def register():
     wm = bpy.context.window_manager
     km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
 
+    # kmi = km.keymap_items.new(rotate_gesture.bl_idname, 'D', 'PRESS', shift=True, ctrl=True)
+    kmi = km.keymap_items.new(rotate_gesture.bl_idname, 'D', 'PRESS', oskey=True)
+    addon_keymaps.append((km, kmi))
     kmi = km.keymap_items.new(rotate_gesture.bl_idname, 'D', 'PRESS', shift=True, ctrl=True)
     addon_keymaps.append((km, kmi))
 
@@ -216,4 +219,4 @@ def unregister():
     # handle the keymap
     for km, kmi in addon_keymaps:
         km.keymap_items.remove(kmi)
-    addon_keymaps.clear()   
+    addon_keymaps.clear()
