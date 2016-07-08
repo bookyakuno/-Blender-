@@ -1,8 +1,3 @@
-# 3D Navigation_x TOOLBAR v1.2 - 3Dview Addon - Blender 2.5x
-#
-# THIS SCRIPT IS LICENSED UNDER GPL,
-# please read the license block.
-#
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  This program is free software; you can redistribute it and/or
