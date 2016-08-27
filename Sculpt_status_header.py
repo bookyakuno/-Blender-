@@ -16,20 +16,13 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-
-
-
-
-
 import bpy
-
-
 
 # アドオン情報
 bl_info = {
 	"name" : "Sculpt status header",
 	"author" : "bookyakuno",
-	"version" : (0, 1),
+	"version" : (0, 2),
 	"blender" : (2, 77),
 	"location" : "Sculpt Mode > 3DView > header > Left",
 	"description" : "Sculpt smart status",
@@ -40,40 +33,129 @@ bl_info = {
 }
 
 
+def prop_unified_size_x(self, context):
+	ups = context.tool_settings.unified_paint_settings
+	ptr = ups if ups.use_unified_size else brush
+	parent.prop(ptr, prop_name, icon=icon, text=text, slider=slider)
+
+
 
 # ヘッダーに項目追加
 def sculpt_header(self, context):
 
 	layout = self.layout
-	
-	if context.sculpt_object:
-	
-		sculpt = context.tool_settings.sculpt
-		
+
+
+	if context.image_paint_object:
+
 		col = layout.column(align=True)
 		row = col.row(align=True)
 		# シンメトリー
+
+		toolsettings = context.tool_settings
+		ipaint = toolsettings.image_paint
+		row.prop(ipaint, "use_symmetry_x", text="X", toggle=True)
+		row.prop(ipaint, "use_symmetry_y", text="Y", toggle=True)
+		row.prop(ipaint, "use_symmetry_z", text="Z", toggle=True)
+
+
+
+		settings = self.paint_settings(context)
+		brush = settings.brush
+
+		col = layout.column()
+
+		col.label(text="Stroke Method:")
+
+		col.prop(brush, "stroke_method", text="")
+
+
+
+
+
+
+
+
+	obj = context.active_object
+	mode_string = context.mode
+	edit_object = context.edit_object
+	gp_edit = context.gpencil_data and context.gpencil_data.use_stroke_edit_mode
+	mode = obj.mode
+	if (mode == 'EDIT' and obj.type == 'MESH' or mode == 'EDIT' and 'ARMATURE'):
+
+		arm = context.active_object.data
+		self.layout.prop(arm, "use_mirror_x",text="",icon="MOD_MIRROR")
+
+
+#	obj = context.active_object
+#	if obj:
+#			obj_type = obj.type
+
+#			if obj_type in {'ARMATURE'}:
+
+#				arm = context.active_object.data
+#				self.layout.prop(arm, "use_mirror_x",text="",icon="MOD_MIRROR")
+
+
+#	if mode_string == 'EDIT_ARMATURE':
+#    
+#		arm = context.active_object.data
+#		self.layout.prop(arm, "use_mirror_x")
+
+#	if ob.type == 'ARMATURE' and ob.mode in {'EDIT', 'POSE'}:
+
+#		arm = context.active_object.data
+#		self.layout.prop(arm, "use_mirror_x")
+
+
+	if context.sculpt_object:
+
+		col = layout.column(align=True)
+		row = col.row(align=True)
+		# シンメトリー
+		sculpt = context.tool_settings.sculpt
 		row.prop(sculpt, "use_symmetry_x", text="X", toggle=True)
 		row.prop(sculpt, "use_symmetry_y", text="Y", toggle=True)
 		row.prop(sculpt, "use_symmetry_z", text="Z", toggle=True)
-	
+
+
 
 
 # 		toolsettings = context.tool_settings
 # 		settings = self.paint_settings(context)
 # 		brush = settings.brush
-# 
-# 
+#
+#
 # 		col.template_ID_preview(settings, "brush", new="brush.add", rows=3, cols=8)
-	
-	
-	
+
+
+
 		# Dynatopo
 		row.separator()
 		if context.sculpt_object.use_dynamic_topology_sculpting:
 			row.operator("sculpt.dynamic_topology_toggle", icon='CANCEL', text="")
 		else:
 			row.operator("sculpt.dynamic_topology_toggle", icon='MOD_REMESH', text="")
+
+
+
+################################################################
+
+#		row.prop(brush, "stroke_method", text="")
+
+		row.prop(sculpt, "detail_size", text="")
+
+
+def texture_import(self, context):
+
+	layout = self.layout
+
+
+	layout.separator()
+	layout.operator('texture.load_brushes')
+	layout.operator('texture.load_single_brush')
+
+
 
 
 
@@ -85,6 +167,7 @@ def register():
 # 	bpy.utils.register_module(__name__)
 	# ヘッダーメニューに項目追加
 	bpy.types.VIEW3D_HT_header.prepend(sculpt_header)
+	bpy.types.VIEW3D_PT_tools_brush_texture.append(texture_import)
 
 # アドオンを無効にしたときの処理
 def unregister():
@@ -92,6 +175,7 @@ def unregister():
 # 	bpy.utils.unregister_module(__name__)
 	# ヘッダーメニューの項目解除
 	bpy.types.VIEW3D_HT_header.remove(sculpt_header)
+	bpy.types.VIEW3D_PT_tools_brush_texture.remove(texture_import)
 
 
 
