@@ -1,3 +1,9 @@
+# save_all_renderlayers_and_passes_bk_edit.py
+
+レンダーレイヤーと各種パスを、名前を付け、フォルダにわけて保存してくれるアドオン"Create save_all_renderlayers_and_passes"を改良して、パスの名前が短くなるようにしました。  
+135行付近です。  
+エラーが出ても気にしないで構いません。  
+
 # rigify_select_pie_menu.py
 
 rigifyのリグを選択するパイメニューです。 
