@@ -19,7 +19,7 @@
 bl_info = {
     "name": "easy render settings check",
     "author": "bookyakuno",
-    "version": (1,1),
+    "version": (1,2),
     "blender": (2, 78, 0),
     'location': 'Properties > Render > Dimensions',
     "description": "& X-Y Resolution Change, Render CycleSlot",
@@ -54,7 +54,7 @@ class render_cycleslots(bpy.types.Operator):
 
         slots = bpy.data.images['Render Result'].render_slots
         slots.active_index=(slots.active_index+1)%8
-        bpy.ops.render.render()
+        bpy.ops.render.render('INVOKE_DEFAULT')
 
         return {'FINISHED'}
 
