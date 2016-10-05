@@ -24,7 +24,7 @@ bl_info = {
 	"author" : "bookyakuno",
 	"version" : (0, 2),
 	"blender" : (2, 78),
-	"location" : "Sculpt Mode > 3DView > header > Left, separate_mask > shfit + alt + D",
+	"location" : "Sculpt Mode > 3DView > header > Left, duplicate/separate mask > shfit + alt + D/F",
 	"description" : "Sculpt smart status",
 	"warning" : "",
 	"wiki_url" : "",
@@ -225,6 +225,29 @@ def texture_import(self, context):
 
 
 
+class duplicate_mask(bpy.types.Operator):
+	bl_idname = "object.duplicate_mask"
+	bl_label = "duplicate_mask"
+
+
+	def execute(self, context):
+		bpy.ops.paint.hide_show(action='HIDE', area='MASKED') # マスク部分を非表示
+		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモードに戻す
+		bpy.ops.object.select_all(action='DESELECT') #全選択解除で最後に選択するものを複製したものだけにする
+		bpy.ops.object.editmode_toggle() # 編集モード
+		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
+		bpy.ops.mesh.reveal() # 隠しているものを表示
+		bpy.ops.mesh.duplicate_move() # 選択部分を複製
+		bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする(F2)
+		bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
+		bpy.ops.mesh.separate(type='SELECTED') # 選択部分を分離
+		bpy.ops.object.editmode_toggle() # オブジェクトモード
+		bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY') #重心に原点を配置して、回転しやすいように
+
+		return {'FINISHED'}
+
+
+
 class separate_mask(bpy.types.Operator):
 	bl_idname = "object.separate_mask"
 	bl_label = "separate_mask"
@@ -237,7 +260,8 @@ class separate_mask(bpy.types.Operator):
 		bpy.ops.object.editmode_toggle() # 編集モード
 		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
 		bpy.ops.mesh.reveal() # 隠しているものを表示
-		bpy.ops.mesh.duplicate_move() # 選択部分を複製
+		# bpy.ops.mesh.duplicate_move() # 選択部分を複製
+		bpy.ops.mesh.split()
 		bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする(F2)
 		bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
 		bpy.ops.mesh.separate(type='SELECTED') # 選択部分を分離
@@ -262,7 +286,9 @@ def register():
 
 	wm = bpy.context.window_manager
 	km = wm.keyconfigs.addon.keymaps.new(name='Sculpt', space_type='EMPTY')
-	kmi = km.keymap_items.new(separate_mask.bl_idname, 'D', 'PRESS',  alt=True, shift=True)
+	kmi = km.keymap_items.new(duplicate_mask.bl_idname, 'D', 'PRESS',  alt=True, shift=True)
+	addon_keymaps.append((km, kmi))
+	kmi = km.keymap_items.new(separate_mask.bl_idname, 'F', 'PRESS',  alt=True, shift=True)
 	addon_keymaps.append((km, kmi))
 
 
