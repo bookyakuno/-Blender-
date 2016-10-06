@@ -23,9 +23,9 @@ from random import random
 bl_info = {
 	"name" : "Sculpt status header",
 	"author" : "bookyakuno",
-	"version" : (0, 3),
+	"version" : (0, 4),
 	"blender" : (2, 78),
-	"location" : "3DView > header, duplicate/separate/mat/mat_select mask > shfit + alt + D/F/R/R+ctrl",
+	"location" : "3DView > header, duplicate/separate/mat/mat_select/cut_mat_group > shfit + alt + D/F/R/R+ctrl/V",
 	"description" : "Sculpt smart status",
 	"warning" : "",
 	"wiki_url" : "",
@@ -336,6 +336,76 @@ class mat_mask(bpy.types.Operator):
 		return {'FINISHED'}
 
 
+class cut_mat_group(bpy.types.Operator):
+	bl_idname = "object.cut_mat_group"
+	bl_label = "cut_mat_group"
+
+
+	def execute(self, context):
+
+		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモードへ
+		active = bpy.context.active_object
+		bpy.ops.object.select_all(action='DESELECT') #全選択解除して複数選択を回避
+		active.select = True
+
+
+		bpy.ops.gpencil.convert(type='CURVE', use_timing_data=True)
+		bpy.ops.gpencil.layer_remove()
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
+		bpy.ops.mesh.knife_project(cut_through=True)
+
+
+		ob = bpy.context.object
+		me = ob.data
+
+		mat_offset = len(me.materials)
+		mat_count = 1
+
+		mats = []
+		for i in range(mat_count):
+			mat = bpy.data.materials.new("Mat_%i" % i)
+			mat.diffuse_color = random(), random(), random()
+			me.materials.append(mat)
+
+		# Can't assign materials in editmode
+		bpy.ops.object.mode_set(mode='OBJECT')
+
+		i = 0
+		for poly in me.polygons:
+			if poly.select:
+				poly.material_index = i % mat_count + mat_offset
+				i += 1
+
+
+
+
+
+		#  アクティブオブジェクトの定義
+		active = bpy.context.active_object
+
+		#  アクティブオブジェクトの名前を定義
+		name = active.name
+
+		#  "cv_" + アクティブオブジェクト名に定義
+		objname = "cv_" + name
+
+
+		#  一度、アクティブの選択を解除し、リネームする
+		active.select = False
+		for obj in bpy.context.selected_objects:
+		    obj.name = objname
+
+		bpy.ops.object.delete(use_global=False)
+
+		#  再度、アクティブを選択
+		active.select = True
+
+
+		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモード
+		return {'FINISHED'}
+
+
 
 addon_keymaps = []
 def register():
@@ -353,6 +423,8 @@ def register():
 	kmi = km.keymap_items.new(duplicate_mask.bl_idname, 'D', 'PRESS',  alt=True, shift=True)
 	addon_keymaps.append((km, kmi))
 	kmi = km.keymap_items.new(separate_mask.bl_idname, 'F', 'PRESS',  alt=True, shift=True)
+	addon_keymaps.append((km, kmi))
+	kmi = km.keymap_items.new(cut_mat_group.bl_idname, 'V', 'PRESS',  alt=True, shift=True)
 	addon_keymaps.append((km, kmi))
 	kmi = km.keymap_items.new(mat_mask.bl_idname, 'R', 'PRESS',  alt=True, shift=True)
 	addon_keymaps.append((km, kmi))
