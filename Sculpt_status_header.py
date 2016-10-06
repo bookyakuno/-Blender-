@@ -17,14 +17,15 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import bpy
+from random import random
 
 # アドオン情報
 bl_info = {
 	"name" : "Sculpt status header",
 	"author" : "bookyakuno",
-	"version" : (0, 2),
+	"version" : (0, 3),
 	"blender" : (2, 78),
-	"location" : "Sculpt Mode > 3DView > header > Left, duplicate/separate mask > shfit + alt + D/F",
+	"location" : "3DView > header, duplicate/separate/mat/mat_select mask > shfit + alt + D/F/R/R+ctrl",
 	"description" : "Sculpt smart status",
 	"warning" : "",
 	"wiki_url" : "",
@@ -271,6 +272,69 @@ class separate_mask(bpy.types.Operator):
 		return {'FINISHED'}
 
 
+class mat_select_mask(bpy.types.Operator):
+	bl_idname = "object.mat_select_mask"
+	bl_label = "mat_select_mask"
+
+
+	def execute(self, context):
+		bpy.ops.paint.hide_show(action='HIDE', area='MASKED') # マスク部分を非表示
+		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモードに戻す
+		bpy.ops.object.editmode_toggle() # 編集モード
+		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
+		bpy.ops.mesh.reveal() # 隠しているものを表示
+		bpy.ops.sculpt.sculptmode_toggle() # スカルプトモード
+		bpy.ops.paint.mask_flood_fill(mode='VALUE', value=0)
+		bpy.ops.object.editmode_toggle() # 編集モード
+		# bpy.ops.mesh.duplicate_move() # 選択部分を複製
+		bpy.ops.mesh.select_similar(type='MATERIAL', threshold=0.01)
+		bpy.ops.mesh.hide(unselected=False)
+		bpy.ops.sculpt.sculptmode_toggle() # スカルプトモード
+		bpy.ops.paint.mask_flood_fill(mode='VALUE', value=1)
+		bpy.ops.paint.hide_show(action='SHOW', area='ALL')
+		bpy.ops.paint.mask_flood_fill(mode='INVERT')
+
+
+		return {'FINISHED'}
+
+
+
+class mat_mask(bpy.types.Operator):
+	bl_idname = "object.mat_mask"
+	bl_label = "mat_mask"
+
+
+	def execute(self, context):
+		bpy.ops.paint.hide_show(action='HIDE', area='MASKED') # マスク部分を非表示
+		bpy.ops.object.editmode_toggle() # 編集モード
+		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
+		bpy.ops.mesh.reveal() # 隠しているものを表示
+
+		ob = bpy.context.object
+		me = ob.data
+
+		mat_offset = len(me.materials)
+		mat_count = 1
+
+		mats = []
+		for i in range(mat_count):
+			mat = bpy.data.materials.new("Mat_%i" % i)
+			mat.diffuse_color = random(), random(), random()
+			me.materials.append(mat)
+
+		# Can't assign materials in editmode
+		bpy.ops.object.mode_set(mode='OBJECT')
+
+		i = 0
+		for poly in me.polygons:
+			if poly.select:
+				poly.material_index = i % mat_count + mat_offset
+				i += 1
+
+
+		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモード
+		return {'FINISHED'}
+
 
 
 addon_keymaps = []
@@ -289,6 +353,10 @@ def register():
 	kmi = km.keymap_items.new(duplicate_mask.bl_idname, 'D', 'PRESS',  alt=True, shift=True)
 	addon_keymaps.append((km, kmi))
 	kmi = km.keymap_items.new(separate_mask.bl_idname, 'F', 'PRESS',  alt=True, shift=True)
+	addon_keymaps.append((km, kmi))
+	kmi = km.keymap_items.new(mat_mask.bl_idname, 'R', 'PRESS',  alt=True, shift=True)
+	addon_keymaps.append((km, kmi))
+	kmi = km.keymap_items.new(mat_select_mask.bl_idname, 'R', 'PRESS',  alt=True, shift=True, ctrl=True)
 	addon_keymaps.append((km, kmi))
 
 
