@@ -18,20 +18,45 @@
 
 import bpy
 from random import random
+import bpy
+from bpy.types import Menu, Panel, UIList
+#from bl_ui.properties_grease_pencil_common import (
+#		GreasePencilDrawingToolsPanel,
+#		GreasePencilStrokeEditPanel,
+#		GreasePencilStrokeSculptPanel,
+#		GreasePencilBrushPanel,
+#		GreasePencilBrushCurvesPanel
+#		)
+#from bl_ui.properties_paint_common import (
+#		UnifiedPaintPanel,
+#		brush_texture_settings,
+#		brush_texpaint_common,
+#		brush_mask_texture_settings,
+#		)
+
+
+
 
 # アドオン情報
 bl_info = {
 	"name" : "Sculpt status header",
 	"author" : "bookyakuno",
-	"version" : (0, 4),
+	"version" : (0, 5),
 	"blender" : (2, 78),
-	"location" : "3DView > header, duplicate/separate/mat/mat_select/cut_mat_group > shfit + alt + D/F/R/R+ctrl/V",
+	"location" : "3DView > TOOL Shelf > Sculpt Tab > Sculpt_menu_x, duplicate/separate/mat/mat_select/cut_mat_group > shfit + alt + D/F/R/R+ctrl/V",
 	"description" : "Sculpt smart status",
 	"warning" : "",
 	"wiki_url" : "",
 	"tracker_url" : "",
 	"category" : "UI"
 }
+
+
+
+#class View3DPaintPanel(UnifiedPaintPanel):
+#	bl_space_type = 'VIEW_3D'
+#	bl_region_type = 'TOOLS'
+
 
 
 def prop_unified_size_x(self, context):
@@ -121,6 +146,13 @@ def sculpt_header(self, context):
 		row.prop(sculpt, "use_symmetry_z", text="Z", toggle=True)
 
 
+#		toolsettings = context.tool_settings
+#		settings = self.paint_settings(context)
+#		brush = settings.brush
+
+
+#		col.template_ID_preview(settings, "brush", new="brush.add", rows=3, cols=8)
+
 
 
 #   	 toolsettings = context.tool_settings
@@ -171,12 +203,16 @@ def sculpt_header(self, context):
 				layout.prop(WM, "smooth_mesh", text="", icon='MOD_SMOOTH')
 				layout.prop(WM, "update_detail_flood_fill", text="", icon='MOD_DECIM')
 
+		userpref = context.user_preferences
+		view = userpref.view
+		row = layout.row()
+		col = row.column()
+		layout.prop(view, "use_auto_perspective", text="", icon="CAMERA_DATA")
 
 #	def prop_unified_strength(parent, context, brush, prop_name, icon='NONE', text="", slider=False):
 #		ups = context.tool_settings.unified_paint_settings
 #		ptr = ups if ups.use_unified_strength else brush
 #		parent.prop(ptr, prop_name, icon=icon, text=text, slider=slider)
-
 
 
 
@@ -239,7 +275,7 @@ class duplicate_mask(bpy.types.Operator):
 		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
 		bpy.ops.mesh.reveal() # 隠しているものを表示
 		bpy.ops.mesh.duplicate_move() # 選択部分を複製
-		bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする(F2)
+		bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする
 		bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
 		bpy.ops.mesh.separate(type='SELECTED') # 選択部分を分離
 		bpy.ops.object.editmode_toggle() # オブジェクトモード
@@ -394,7 +430,7 @@ class cut_mat_group(bpy.types.Operator):
 		#  一度、アクティブの選択を解除し、リネームする
 		active.select = False
 		for obj in bpy.context.selected_objects:
-		    obj.name = objname
+			obj.name = objname
 
 		bpy.ops.object.delete(use_global=False)
 
@@ -404,6 +440,205 @@ class cut_mat_group(bpy.types.Operator):
 
 		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモード
 		return {'FINISHED'}
+
+
+class grease_pencil_cut(bpy.types.Operator):
+	bl_idname = "object.grease_pencil_cut"
+	bl_label = "grease_pencil_cut"
+
+
+	def execute(self, context):
+
+		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモードへ
+		active = bpy.context.active_object
+		bpy.ops.object.select_all(action='DESELECT') #全選択解除して複数選択を回避
+		active.select = True
+
+
+		bpy.ops.gpencil.convert(type='CURVE', use_timing_data=True)
+		bpy.ops.gpencil.layer_remove()
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
+		bpy.ops.mesh.knife_project(cut_through=True)
+		bpy.ops.mesh.delete(type='FACE')
+
+
+
+
+		# Can't assign materials in editmode
+		bpy.ops.object.mode_set(mode='OBJECT')
+
+
+		#  アクティブオブジェクトの定義
+		active = bpy.context.active_object
+
+		#  アクティブオブジェクトの名前を定義
+		name = active.name
+
+		#  "cv_" + アクティブオブジェクト名に定義
+		objname = "cv_" + name
+
+
+		#  一度、アクティブの選択を解除し、リネームする
+		active.select = False
+		for obj in bpy.context.selected_objects:
+			obj.name = objname
+
+		bpy.ops.object.delete(use_global=False)
+
+		#  再度、アクティブを選択
+		active.select = True
+
+
+		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモード
+		return {'FINISHED'}
+
+class grease_pencil_cut_v2(bpy.types.Operator):
+	bl_idname = "object.grease_pencil_cut_v2"
+	bl_label = "grease_pencil_cut_v2"
+
+
+	def execute(self, context):
+
+
+		bpy.ops.gpencil.convert(type='CURVE', use_timing_data=True)
+		bpy.ops.gpencil.layer_remove()
+		bpy.ops.object.convert(target='MESH')
+
+
+		# Can't assign materials in editmode
+		bpy.ops.object.mode_set(mode='OBJECT')
+
+
+		#  アクティブオブジェクトの定義
+		active = bpy.context.active_object
+
+		#  アクティブオブジェクトの名前を定義
+		name = active.name
+
+		#  "gpc_" + アクティブオブジェクト名に定義
+		objname = "gpc_" + name
+
+
+		#  一度、アクティブの選択を解除し、リネームする
+		active.select = False
+		for obj in bpy.context.selected_objects:
+			obj.name = objname
+
+		bpy.context.scene.objects.active = bpy.data.objects["gpc_" + name]
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.mesh.select_all(action='SELECT')
+		bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする
+		bpy.ops.transform.translate(value=(2.38419e-07, 0, -50), constraint_axis=(False, False, True), constraint_orientation='NORMAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=11.9182) # 移動
+		bpy.ops.mesh.extrude_region_move(MESH_OT_extrude_region={"mirror":False}, TRANSFORM_OT_translate={"value":(-9.53674e-07, -0.000114441, 271.401), "constraint_axis":(False, False, True), "constraint_orientation":'NORMAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":11.9182, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "texture_space":False, "remove_on_cancel":False, "release_confirm":False}) # 押し出し
+		bpy.ops.mesh.select_all(action='SELECT')
+		bpy.ops.mesh.normals_make_consistent(inside=False) # ノーマルを直す
+		# bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 三角形化
+
+		bpy.ops.object.editmode_toggle()
+		#
+		# #  再度、アクティブを選択
+		bpy.ops.object.select_all(action='DESELECT') #全選択解除
+
+		active.select = True
+		scene = bpy.context.scene
+		for ob in scene.objects:
+			if ob.name.startswith("gpc_" + name):
+				ob.select = True
+		bpy.context.scene.objects.active = bpy.data.objects[name]
+
+
+		# active.select = True
+		# bpy.ops.object.modifier_apply(modifier="BTool_" + "gpc_" + name)
+		bpy.ops.btool.boolean_diff_direct()
+		return {'FINISHED'}
+
+
+
+class convert_multireso(bpy.types.Operator):
+	bl_idname = "object.convert_multireso"
+	bl_label = "convert_multireso"
+
+
+	def execute(self, context):
+
+
+
+
+		#  アクティブオブジェクトの定義
+		active = bpy.context.active_object
+
+		#  アクティブオブジェクトの名前を定義
+		name = active.name
+
+
+
+		bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "gpencil_strokes":False, "texture_space":False, "remove_on_cancel":False, "release_confirm":False})
+		bpy.ops.object.modifier_add(type='DECIMATE')
+		bpy.context.object.modifiers["Decimate"].use_symmetry = True
+		bpy.context.object.modifiers["Decimate"].ratio = 0.05
+		bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Decimate")
+
+
+		bpy.ops.object.modifier_add(type='MULTIRES')
+		bpy.ops.object.multires_subdivide(modifier="Multires")
+		bpy.ops.object.multires_subdivide(modifier="Multires")
+
+
+
+
+
+		bpy.ops.object.modifier_add(type='SHRINKWRAP')
+		bpy.context.object.modifiers["Shrinkwrap"].wrap_method = 'PROJECT'
+		bpy.context.object.modifiers["Shrinkwrap"].use_negative_direction = True
+		bpy.context.object.modifiers["Shrinkwrap"].target = bpy.data.objects[name]
+		bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Shrinkwrap")
+
+		return {'FINISHED'}
+
+
+
+
+
+
+
+
+
+class Sculpt_menu_x(bpy.types.Panel):
+	"""UI panel for the Remesh and Boolean buttons"""
+	bl_label = "Sculpt_menu_x"
+	bl_idname = "Sculpt_menu_x"
+	bl_space_type = 'VIEW_3D'
+	bl_region_type = 'TOOLS'
+	bl_category = "Sculpt"
+
+
+	def draw(self, context):
+		layout = self.layout
+		edit = context.user_preferences.edit
+		wm = context.window_manager
+
+		row = layout.row(align=True)
+		row.operator("object.duplicate_mask", icon="UV_ISLANDSEL")
+		row.operator("object.separate_mask", icon="MOD_UVPROJECT")
+		row = layout.row(align=True)
+		row.operator("object.mat_mask", icon="FACESEL_HLT")
+		row.operator("object.mat_select_mask", icon="RESTRICT_SELECT_OFF")
+		row.operator("object.cut_mat_group", icon="BORDER_LASSO")
+		row = layout.row(align=True)
+		row.operator("object.grease_pencil_cut", icon="IPO_ELASTIC")
+		row.operator("object.grease_pencil_cut_v2", icon="RNDCURVE")
+		row = layout.row(align=True)
+		row.operator("object.convert_multireso", icon="MOD_MULTIRES")
+
+
+
+
+
+
+
+
+
 
 
 
@@ -432,6 +667,15 @@ def register():
 	addon_keymaps.append((km, kmi))
 
 
+	kmi = km.keymap_items.new(grease_pencil_cut.bl_idname, 'R', 'PRESS',ctrl=True)
+	addon_keymaps.append((km, kmi))
+
+	kmi = km.keymap_items.new(grease_pencil_cut_v2.bl_idname, 'R', 'PRESS',shift=True)
+	addon_keymaps.append((km, kmi))
+
+	km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
+	kmi = km.keymap_items.new(grease_pencil_cut_v2.bl_idname, 'R', 'PRESS',shift=True)
+	addon_keymaps.append((km, kmi))
 
 
 
