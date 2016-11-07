@@ -9,7 +9,7 @@
 * 不要なものを非表示にして再生(PLAY & HIDE)  
     * プロパティシェルフ  
 * キーを警告なしに削除  
-* バックスペース  
+    * バックスペース  
   
 # save_all_renderlayers_and_passes_bk_edit.py  
   
@@ -90,51 +90,16 @@ https://github.com/Mano-Wii/Addon-Snap-Utilities-Line/wiki
   
 ショートカットはCtrl + Shift + D  
   
-マウスホイール    
+マウスホイール  
     …… ビュー視点で45/-45度回転  
-Shift / Alt / Cmd + マウスホイール   
+Shift / Alt / Cmd + マウスホイール  
     …… X / Y / Z 軸指定45/-45度回転  
-ZXCY    
+ZXCY  
     …… 軸指定 45度回転  
-Shift + ZXCY    
+Shift + ZXCY  
     …… 軸指定 -45度回転  
   
   
-  
-  
-  
-# Keymap set  
-※ 再起動時に、アドオン設定画面で変更した設定が全て消える問題があるので、  
-  
-現状、変更は実質不可  
-  
-  
-簡単に使いやすいショートカットを設定するアドオン。  
-一般的なショートカットを設定することができます。  
-このアドオンの設定にて、追加するキーマップの編集が可能です。  
-  
-* 矩形選択 …… マウスドラッグ  
-* リンク選択 …… ダブルクリック  
-* 削除・溶解 …… バックスペース  
- メッシュ編集では、選択モードに応じて要素を削除するように  
-* テンキーでのビュー変更 …… 1,2,3キー  
-* カメラビューを4キー  
-* レンダリングを5キー  
-* トランスフォームY軸指定 …… Cキーでも可能に  
-(キーボード左下のZXCで軸指定しやすいように)  
-* ビューの回転と移動  
-好きな様に変更して下さい  
-* 全体を表示* 選択部分を表示  
-MayaのようなA,Fキーなど、好きな様に変更して下さい  
-* 対話モード …… Tab + 修飾キー  
-■ バグ  
-  
-このアドオンのチェックを何度かオン・オフしていると、  
-同じキーマップがいくつも生成されるが、重複するキーマップは、再起動に自動で消去される  
-  
-今の所3Dビューまわりのみだが、今後全エディターに対応する予定  
-  
-Mac基準(Cmdありき)のキー設定なので、Windowsユーザーは適宜キーマップを変更すること  
   
   
 # easy_render_settings_check.py  
@@ -189,38 +154,12 @@ Asset Flingerアドオンで使える、
 10. 保存するとすぐに上書き保存がされるので、オブジェクト名がかぶらないように注意  
   
   
-# UbuntuAmbiance_bookyakunoEdit.xml  
-  
-Ubuntu Ambiance テーマを元に、気になった所を自分なりに改良したもの。  
-  
-     主張しすぎている赤紫を変更  
-     メッシュは水色で、若干Maya準拠に  
-     陰影処理のオンオフ表示をわかりやすく  
-     グラフエディタのハンドルを大きく  
-     薄いグラデーションで背景が平坦な印象にならないように  
-  
-Extensions:2.6/Py/Scripts/Interface/Themes/ - BlenderWiki  
-http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Interface/Themes/  
-  
-  
-# Compact_Properties.py  
-  
-プロパティシェルフにあるよく使う項目だけをダイアログで表示するアドオン。  
-  
-プロパティシェルフを極力使いたくない自分用に作ったアドオンです。  
-  
-AO* Matcap* ワイヤーフレーム表示に設定* 選択オブジェクトをレントゲンに設定* ワールドの背景ど。  
-  
-object.compact_prop  
-Cmd + Ctrl + 3  
-Shift + Ctrl + 3  
-  
   
   
 # info_header_useful.py  
   
 Infoヘッダーを有効活用するアドオン。  
-Mayaのように、ヘッダーで名前が確認できるのは非常に便利  
+ヘッダーで名前が確認できるのは非常に便利  
 最近使ったファイル一覧は、スプラッシュスクリーンよりスマート  
   
 * 現在のフレームの確認、変更ができるように  
@@ -230,6 +169,7 @@ Mayaのように、ヘッダーで名前が確認できるのは非常に便利
 * 選択中のオブジェクト名をリネームできるように  
 * オブジェクトを名前で選択できるように  
   
+<img src="https://github.com/bookyakuno/img/blob/master/info_header_useful.jpg" alt="info_header_useful">  
   
 # Layer_M  
   
@@ -261,10 +201,6 @@ https://github.com/saidenka/Blender-Scramble-Addon )にある『確認せずに�
      object.delete_xxx  
   
   
-       
-  
-  
-  
 # rigify_select_pie_menu.py  
   
 rigifyのリグを選択するパイメニューです。  
@@ -274,6 +210,67 @@ rigifyのリグを選択するパイメニューです。
 Downloads | Salva Artero  
 http://salvadorartero.com/downloads/  
   
+  
+# UbuntuAmbiance_bookyakunoEdit.xml  
+  
+Ubuntu Ambiance テーマを元に、気になった所を自分なりに改良したもの。  
+  
+   主張しすぎている赤紫を変更  
+   メッシュは水色で、若干Maya準拠に  
+   陰影処理のオンオフ表示をわかりやすく  
+   グラフエディタのハンドルを大きく  
+   薄いグラデーションで背景が平坦な印象にならないように  
+  
+Extensions:2.6/Py/Scripts/Interface/Themes/ - BlenderWiki  
+http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/Interface/Themes/  
+  
+  
+# Compact_Properties.py  
+  
+プロパティシェルフにあるよく使う項目だけをダイアログで表示するアドオン。  
+  
+プロパティシェルフを極力使いたくない自分用に作ったアドオンです。  
+  
+AO・Matcap・ワイヤーフレーム表示に設定・選択オブジェクトをレントゲンに設定・ワールドの背景など。  
+  
+object.compact_prop  
+Cmd + Ctrl + 3  
+Shift + Ctrl + 3  
+  
+  
+  
+# Keymap set  
+※ 再起動時に、アドオン設定画面で変更した設定が全て消える問題があるので、  
+  
+現状、変更は実質不可  
+  
+  
+簡単に使いやすいショートカットを設定するアドオン。  
+一般的なショートカットを設定することができます。  
+このアドオンの設定にて、追加するキーマップの編集が可能です。  
+  
+* 矩形選択 …… マウスドラッグ  
+* リンク選択 …… ダブルクリック  
+* 削除・溶解 …… バックスペース  
+メッシュ編集では、選択モードに応じて要素を削除するように  
+* テンキーでのビュー変更 …… 1,2,3キー  
+* カメラビューを4キー  
+* レンダリングを5キー  
+* トランスフォームY軸指定 …… Cキーでも可能に  
+(キーボード左下のZXCで軸指定しやすいように)  
+* ビューの回転と移動  
+好きな様に変更して下さい  
+* 全体を表示* 選択部分を表示  
+MayaのようなA,Fキーなど、好きな様に変更して下さい  
+* 対話モード …… Tab + 修飾キー  
+■ バグ  
+  
+このアドオンのチェックを何度かオン・オフしていると、  
+同じキーマップがいくつも生成されるが、重複するキーマップは、再起動に自動で消去される  
+  
+今の所3Dビューまわりのみだが、今後全エディターに対応する予定  
+  
+Mac基準(Cmdありき)のキー設定なので、Windowsユーザーは適宜キーマップを変更すること  
   
   
 # Blender-Bookyakuno-config  
