@@ -17,13 +17,13 @@
 # ##### END GPL LICENSE BLOCK #####
 
 # <pep8 compliant>
-##
+#
 bl_info = {
     "name": "Layer Management_x in properties shelf",
-    "author": "Alfonso Annarumma, Bastien Montagne",
+    "author": "Alfonso Annarumma, Bastien Montagne,bookyakuno",
     "version": (1, 5, 2),
     "blender": (2, 72, 0),
-    "location": "properties shelf > Layer Management",
+    "location": "properties shelf > Layer M",
     "warning": "",
     "description": "Display and Edit Layer Name",
     "wiki_url": "http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/3D_interaction/layer_manager",
@@ -369,7 +369,7 @@ class SCENE_OT_namedlayer_show_all(bpy.types.Operator):
 class SCENE_PT_namedlayer_layers(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_label = "Layer Management"
+    bl_label = "Layer M"
     bl_options = {'DEFAULT_CLOSED'}
     bl_category = "Layers"
 
@@ -377,6 +377,31 @@ class SCENE_PT_namedlayer_layers(bpy.types.Panel):
     def poll(self, context):
         return ((getattr(context, "mode", 'EDIT_MESH') not in EDIT_MODES) and
                 (context.area.spaces.active.type == 'VIEW_3D'))
+
+    def draw_header(self, context):
+        row = self.layout.row()
+        row.scale_x = 0.7
+        row.scale_y = 0.7
+#        row.template_header_3D()
+#
+        row.prop(context.scene, 'layers', text="")
+
+#        view = context.space_data
+#        # mode_string = context.mode
+#        obj = context.active_object
+#        toolsettings = context.tool_settings
+
+#        row = layout.row(align=True)
+#        row.template_header()
+
+#        VIEW3D_MT_editor_menus.draw_collapsible(context, layout)
+
+#        # Contains buttons like Mode, Pivot, Manipulator, Layer, Mesh Select Mode...
+#        row = layout
+#        layout.template_header_3D()
+
+
+
 
     def draw(self, context):
         scene = context.scene
@@ -387,6 +412,9 @@ class SCENE_PT_namedlayer_layers(bpy.types.Panel):
         use_hide = namedlayers.use_hide_empty_layers
         use_indices = namedlayers.use_layer_indices
         use_classic = namedlayers.use_classic
+
+
+
 
         # Check for lock camera and layer is active
         if view_3d.lock_camera_and_layers:
@@ -399,19 +427,26 @@ class SCENE_PT_namedlayer_layers(bpy.types.Panel):
         layout = self.layout
         row = layout.row()
         col = row.column()
-        col.prop(view_3d, "lock_camera_and_layers", text="")
+
+
+
+        layout = self.layout
+        row = layout.row()
+        row.scale_x = 3
+
         # Check if there is a layer off
         show = (False in {layer for layer in layer_cont.layers})
         icon = 'RESTRICT_VIEW_ON' if show else 'RESTRICT_VIEW_OFF'
-        col.operator("scene.namedlayer_show_all", emboss=False, icon=icon, text="").show = show
+        row.operator("scene.namedlayer_show_all", emboss=False, icon=icon, text="").show = show
 
-        col = row.column()
-        col.prop(namedlayers, "use_classic")
-        col.prop(namedlayers, "use_extra_options", text="Options")
+#        row.prop(namedlayers, "use_classic")
+        row.prop(namedlayers, "use_extra_options", text="", icon="ALIGN")
 
-        col = row.column()
-        col.prop(namedlayers, "use_layer_indices", text="Indices")
-        col.prop(namedlayers, "use_hide_empty_layers", text="Hide Empty")
+        row.prop(namedlayers, "use_layer_indices", text="", icon="IPO_QUINT")
+        row.prop(namedlayers, "use_hide_empty_layers", text="",icon="GHOST_DISABLED")
+        row.prop(view_3d, "lock_camera_and_layers", text="")
+
+
 
         col = layout.column()
         for layer_idx in range(NUM_LAYERS):
@@ -439,6 +474,20 @@ class SCENE_PT_namedlayer_layers(bpy.types.Panel):
             else:
                 row.prop(layer_cont, "layers", index=layer_idx, emboss=True, icon=icon, toggle=True, text="")
 
+
+            if use_extra:
+                use_lock = namedlayer.use_lock
+
+                # Merge layer
+                # check if layer has something
+                has_active = (actob and actob.layers[layer_idx])
+                icon = ('LAYER_ACTIVE' if has_active else 'LAYER_USED') if is_layer_used else 'RADIOBUT_OFF'
+                row.operator("scene.namedlayer_move_to_layer", text="", emboss=True, icon=icon).layer_idx = layer_idx
+
+
+
+
+
             # Name (use special icon for active layer)
             icon = 'FILE_TICK' if (getattr(layer_cont, "active_layer", -1) == layer_idx) else 'NONE'
             row.prop(namedlayer, "name", text="", icon=icon)
@@ -447,36 +496,49 @@ class SCENE_PT_namedlayer_layers(bpy.types.Panel):
                 use_lock = namedlayer.use_lock
 
                 # Select by type operator
-                sub = row.column(align=True)
-                sub.enabled = not use_lock
-                sub.operator("scene.namedlayer_select_objects_by_layer", icon='RESTRICT_SELECT_OFF',
-                             text="", emboss=True).layer_idx = layer_idx
+#                sub = row.column(align=True)
+#                sub.enabled = not use_lock
+#                sub.operator("scene.namedlayer_select_objects_by_layer", icon='RESTRICT_SELECT_OFF',
+#                             text="", emboss=True).layer_idx = layer_idx
 
                 # Lock operator
-                icon = 'LOCKED' if use_lock else 'UNLOCKED'
-                op = row.operator("scene.namedlayer_lock_all", text="", emboss=True, icon=icon)
-                op.layer_idx = layer_idx
-                op.group_idx = -1
-                op.use_lock = use_lock
+#                icon = 'LOCKED' if use_lock else 'UNLOCKED'
+#                op = row.operator("scene.namedlayer_lock_all", text="", emboss=True, icon=icon)
+#                op.layer_idx = layer_idx
+#                op.group_idx = -1
+#                op.use_lock = use_lock
 
                 # Merge layer
                 # check if layer has something
-                has_active = (actob and actob.layers[layer_idx])
-                icon = ('LAYER_ACTIVE' if has_active else 'LAYER_USED') if is_layer_used else 'RADIOBUT_OFF'
-                row.operator("scene.namedlayer_move_to_layer", text="", emboss=True, icon=icon).layer_idx = layer_idx
+#                has_active = (actob and actob.layers[layer_idx])
+#                icon = ('LAYER_ACTIVE' if has_active else 'LAYER_USED') if is_layer_used else 'RADIOBUT_OFF'
+#                row.operator("scene.namedlayer_move_to_layer", text="", emboss=True, icon=icon).layer_idx = layer_idx
 
                 # Wire view
-                use_wire = namedlayer.use_wire
-                icon = 'WIRE' if use_wire else 'POTATO'
-                op = row.operator("scene.namedlayer_toggle_wire", text="", emboss=True, icon=icon)
-                op.layer_idx = layer_idx
-                op.use_wire = not use_wire
+#                use_wire = namedlayer.use_wire
+#                icon = 'WIRE' if use_wire else 'POTATO'
+#                op = row.operator("scene.namedlayer_toggle_wire", text="", emboss=True, icon=icon)
+#                op.layer_idx = layer_idx
+#                op.use_wire = not use_wire
 
-            if not (layer_idx + 1) % 5:
+            if not (layer_idx) %2:
+                col = layout.row()
+
+            if not (layer_idx + 1) %10:
+                layout = self.layout
+                row = layout.row()
+                col = row.column()
                 col.separator()
+
 
         if len(scene.objects) == 0:
             layout.label(text="No objects in scene")
+
+
+
+
+
+
 
 
 class SCENE_UL_namedlayer_groups(UIList):
