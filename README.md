@@ -1,46 +1,3 @@
-# key_copypae_x.py  
-  
-  
-アニメーションを補助する色々  
-* タイムラインでキーのコピー・カット・ペースト  
-    * shift + ctrl/cmd + X/C/V  
-* ドープシートで開始・終了フレームを設定  
-    * alt + S/E  
-* 不要なものを非表示にして再生(PLAY & HIDE)  
-    * プロパティシェルフ  
-* キーを警告なしに削除  
-    * バックスペース  
-  
-# save_all_renderlayers_and_passes_bk_edit.py  
-  
-レンダーレイヤーと各種パスを、名前を付け、フォルダにわけて保存してくれるアドオン"Create save_all_renderlayers_and_passes"を改良して、パスの名前が短くなるようにしました。  
-135行付近です。  
-  
-ambient_occlusio      = ao  
-combined              = cmb  
-diffuse_color         = Dcl  
-diffuse_direct        = Ddt  
-diffuse_indirect      = Dit  
-emit                  = emt  
-environment           = evm  
-glossy_color          = Gcl  
-glossy_direct         = Gdt  
-glossy_indirect       = Git  
-material_index        = IDm  
-object_index          = IDo  
-mist                  = mst  
-normal                = nml  
-transmission_colo     = Tcl  
-transmission_direct   = Tdt  
-transmission_indirect = Tit  
-shadow                = sdw  
-subsurface_color      = Scl  
-subsurface_direct     = Sdt  
-subsurface_indirect   = Sit  
-vector                = vcr  
- (z, UV はそのままでいいので除外)  
-  
-  
 # sharp_knife.py  
 # Snap Utilities Line bk.Edit  
   
@@ -201,9 +158,52 @@ https://github.com/saidenka/Blender-Scramble-Addon )にある『確認せずに�
   
 アドオンをオンにし、以下を手動でショートカット登録してください  
   
-     object.delete_xxx  
+object.delete_xxx  
+  
+
+# key_copypae_x.py  
   
   
+アニメーションを補助する色々  
+* タイムラインでキーのコピー・カット・ペースト  
+    * shift + ctrl/cmd + X/C/V  
+* ドープシートで開始・終了フレームを設定  
+    * alt + S/E  
+* 不要なものを非表示にして再生(PLAY & HIDE)  
+    * プロパティシェルフ  
+* キーを警告なしに削除  
+    * バックスペース  
+  
+# save_all_renderlayers_and_passes_bk_edit.py  
+  
+レンダーレイヤーと各種パスを、名前を付け、フォルダにわけて保存してくれるアドオン"Create save_all_renderlayers_and_passes"を改良して、パスの名前が短くなるようにしました。  
+135行付近です。  
+  
+ambient_occlusio      = ao  
+combined              = cmb  
+diffuse_color         = Dcl  
+diffuse_direct        = Ddt  
+diffuse_indirect      = Dit  
+emit                  = emt  
+environment           = evm  
+glossy_color          = Gcl  
+glossy_direct         = Gdt  
+glossy_indirect       = Git  
+material_index        = IDm  
+object_index          = IDo  
+mist                  = mst  
+normal                = nml  
+transmission_colo     = Tcl  
+transmission_direct   = Tdt  
+transmission_indirect = Tit  
+shadow                = sdw  
+subsurface_color      = Scl  
+subsurface_direct     = Sdt  
+subsurface_indirect   = Sit  
+vector                = vcr  
+ (z, UV はそのままでいいので除外)  
+
+
 # rigify_select_pie_menu.py  
   
 rigifyのリグを選択するパイメニューです。  
