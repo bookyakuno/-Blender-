@@ -98,9 +98,10 @@ ZXCY
     …… 軸指定 45度回転  
 Shift + ZXCY  
     …… 軸指定 -45度回転  
+
+
+<img src="https://github.com/bookyakuno/img/blob/master/45_rotate_gesture.gif" alt="45_rotate_gesture" >  
   
- 
-![45_rotate_gesture](https://github.com/bookyakuno/img/blob/master/45_rotate_gesture.mp4 )  
   
 # easy_render_settings_check.py  
   
