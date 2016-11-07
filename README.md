@@ -1,10 +1,13 @@
+<!--
 <link href="https://github.com/bookyakuno/img/blob/master/Blender_readme.css
 " rel="stylesheet"></link>
 <a class="button" href="#"><span>Hover</span><span>Button</span></a>
 
-<a href="https://github.com/bookyakuno/-Blender-/raw/master/sharp_knife.py" target="_blank">
-    <h1>てすと</h1>
-    </a>
+<p style="color:red;">ここの文字が赤くなる</p>
+<p style="font-size:18px;color:#f00;">フォントサイズが18pxで赤文字で書く</p>
+
+-->
+
 # sharp_knife.py
 # Snap Utilities Line bk.Edit  
 
@@ -16,6 +19,10 @@
 ~~あえてポリゴン作成できないようにしています。~~  
 812行付近の、ポリゴン作成できないようにしたのを削除  
 Y軸固定にYキーも追加して変更を修正  
+
+<a href="https://github.com/bookyakuno/-Blender-/raw/master/sharp_knife.py" target="_blank">
+    【このリンクを右クリック→名前を付けて保存】
+    </a>
   
 
 <img src="https://github.com/bookyakuno/img/blob/master/sharp_knife.gif" alt="sharp_knife" >  
