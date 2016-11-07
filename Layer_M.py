@@ -19,13 +19,13 @@
 # <pep8 compliant>
 #
 bl_info = {
-    "name": "Layer Management_x in properties shelf",
+    "name": "Layer M",
     "author": "Alfonso Annarumma, Bastien Montagne,bookyakuno",
     "version": (1, 5, 2),
     "blender": (2, 72, 0),
     "location": "properties shelf > Layer M",
     "warning": "",
-    "description": "Display and Edit Layer Name",
+    "description": "Layer Management Addon edit by Bookyakuno",
     "wiki_url": "http://wiki.blender.org/index.php/Extensions:2.6/Py/Scripts/3D_interaction/layer_manager",
     "category": "3D View",
 }
