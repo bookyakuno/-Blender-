@@ -53,7 +53,9 @@ vector                = vcr
 812行付近の、ポリゴン作成できないようにしたのを削除  
 Y軸固定にYキーも追加して変更を修正  
   
-  
+
+<img src="https://github.com/bookyakuno/img/blob/master/sharp_knife.gif" alt="sharp_knife" >  
+    
 Home · Mano-Wii/Addon-Snap-Utilities-Line Wiki  
 https://github.com/Mano-Wii/Addon-Snap-Utilities-Line/wiki  
   
