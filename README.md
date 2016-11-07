@@ -21,7 +21,7 @@
 Y軸固定にYキーも追加して変更を修正  
 
 <a href="https://github.com/bookyakuno/-Blender-/raw/master/sharp_knife.py" target="_blank">
-    【このリンクを右クリック→名前を付けて保存】
+    【このリンクを右クリック→名前を付けてリンク先を保存】
     </a>
   
 
