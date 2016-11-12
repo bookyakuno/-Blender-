@@ -18,7 +18,7 @@
 bl_info = {
 	"name": "vert_circle_x",
 	"author": "bookyakuno",
-	"version": (1,1),
+	"version": (1,2),
 	"location": "alt + Y or object.vert_circle_x",
 	"description": "need loop tool addon circle",
 	"warning": "",
@@ -36,6 +36,9 @@ class vert_circle_x(bpy.types.Operator):
 	def execute(self, context):
 
 #		before_Apivot = bpy.context.space_data.pivot_point
+		automerge_setting = bpy.context.scene.tool_settings.use_mesh_automerge
+		bpy.context.scene.tool_settings.use_mesh_automerge = False
+		# bpy.data.scenes['Scene'].tool_settings.use_mesh_automerge = False
 
 		bpy.ops.mesh.select_more()
 		bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value":(0, 0, 0)})
@@ -50,6 +53,7 @@ class vert_circle_x(bpy.types.Operator):
 		bpy.context.user_preferences.edit.use_global_undo = True # 使っているLoop Toolsアドオンのcircleが、グローバルアンドゥをオフにするようになっているので、最後にグローバルアンドゥがオンになるように修正
 
 #		bpy.context.space_data.pivot_point = before_pivot
+		bpy.context.scene.tool_settings.use_mesh_automerge = automerge_setting
 
 
 		return {'FINISHED'}
