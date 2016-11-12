@@ -45,7 +45,7 @@ class vert_circle_x(bpy.types.Operator):
 
 		bpy.ops.transform.resize(value=(0.5, 0.5, 0.5),release_confirm=False)
 
-		# bpy.ops.transform.resize("INVOKE_DEFAULT") # 実行したあとすぐにスケール調整ジェスチャーが始まる。自分としては使わないのでオフ。追加痛い場合は「行頭の「# 」を取る
+		# bpy.ops.transform.resize("INVOKE_DEFAULT") # 実行したあとすぐにスケール調整ジェスチャーが始まる。自分としては使わないのでオフ。使いたい場合は「行頭の「# 」を取る
 
 		bpy.context.user_preferences.edit.use_global_undo = True # 使っているLoop Toolsアドオンのcircleが、グローバルアンドゥをオフにするようになっているので、最後にグローバルアンドゥがオンになるように修正
 
