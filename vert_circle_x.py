@@ -18,7 +18,7 @@
 bl_info = {
 	"name": "vert_circle_x",
 	"author": "bookyakuno",
-	"version": (1,0),
+	"version": (1,1),
 	"location": "alt + Y or object.vert_circle_x",
 	"description": "need loop tool addon circle",
 	"warning": "",
@@ -41,9 +41,13 @@ class vert_circle_x(bpy.types.Operator):
 		bpy.ops.mesh.extrude_region_move(TRANSFORM_OT_translate={"value":(0, 0, 0)})
 		bpy.ops.mesh.looptools_circle(custom_radius=False, fit='best', flatten=True, influence=100, lock_x=False, lock_y=False, lock_z=False, radius=1, regular=True)
 
-		bpy.context.space_data.pivot_point = 'INDIVIDUAL_ORIGINS'
+		bpy.context.space_data.pivot_point = 'INDIVIDUAL_ORIGINS' # あとで複数の作った円を一括してスケール調整できるよう、ピボットを「それぞれの原点」に変更
 
 		bpy.ops.transform.resize(value=(0.5, 0.5, 0.5),release_confirm=False)
+
+		# bpy.ops.transform.resize("INVOKE_DEFAULT") # 実行したあとすぐにスケール調整ジェスチャーが始まる。自分としては使わないのでオフ。追加痛い場合は「行頭の「# 」を取る
+
+		bpy.context.user_preferences.edit.use_global_undo = True # 使っているLoop Toolsアドオンのcircleが、グローバルアンドゥをオフにするようになっているので、最後にグローバルアンドゥがオンになるように修正
 
 #		bpy.context.space_data.pivot_point = before_pivot
 
