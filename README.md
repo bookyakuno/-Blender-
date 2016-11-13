@@ -8,6 +8,22 @@
 
 -->
 
+
+# vert_circle_x.py
+選択している頂点を中心に円形を作るアドオン  
+仕組みは簡単で  
+頂点1つ選択状態から、  
+拡張選択して、  
+押し出して、  
+円形にして、  
+50%縮小しているだけ  
+なので拡張選択で隣接してしまうほど近いとうまく円にできないので注意  
+  
+<a href="https://github.com/bookyakuno/-Blender-/raw/master/vert_circle_x.py" target="_blank">
+    【このリンクを右クリック→名前を付けてリンク先を保存】
+    </a>
+  
+
 # sharp_knife.py
 # Snap Utilities Line bk.Edit  
 
