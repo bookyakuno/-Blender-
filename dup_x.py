@@ -55,6 +55,7 @@ class dup_x_01(bpy.types.Operator):
 		bpy.context.scene.tool_settings.use_snap_align_rotation = True
 		bpy.context.scene.tool_settings.snap_element = 'FACE'
 		bpy.context.scene.tool_settings.snap_target = 'MEDIAN'
+		bpy.context.scene.tool_settings.use_snap_project = True
 
 
 		return {'FINISHED'}
