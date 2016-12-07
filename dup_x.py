@@ -26,7 +26,47 @@ bl_info = {
 	"category": "Object"}
 
 import bpy
+from bpy.props import IntProperty, FloatProperty
 
+
+class dup_x_modal(bpy.types.Operator):
+    bl_idname = "object.dup_x_modal"
+    bl_label = "dup_x_modal"
+
+    first_mouse_y = IntProperty()
+    first_value = FloatProperty()
+
+    def modal(self, context, event):
+        if event.type == 'MOUSEMOVE':
+            delta = self.first_mouse_y - event.mouse_y
+            context.object.scale.x = self.first_value + delta * 0.001
+            context.object.scale.y = self.first_value + delta * 0.001
+            context.object.scale.z = self.first_value + delta * 0.001
+
+        elif event.type == 'LEFTMOUSE':
+            return {'FINISHED'}
+
+        elif event.type in {'RIGHTMOUSE', 'ESC'}:
+            context.object.scale.x = self.first_value
+            context.object.scale.y = self.first_value
+            context.object.scale.z = self.first_value
+
+            return {'CANCELLED'}
+
+        return {'RUNNING_MODAL'}
+
+    def invoke(self, context, event):
+        if context.object:
+            self.first_mouse_y = event.mouse_y
+            self.first_value = context.object.scale.x
+            self.first_value = context.object.scale.y
+            self.first_value = context.object.scale.z
+
+            context.window_manager.modal_handler_add(self)
+            return {'RUNNING_MODAL'}
+        else:
+            self.report({'WARNING'}, "No active object, could not finish")
+            return {'CANCELLED'}
 
 
 class dup_x(bpy.types.Macro):
@@ -55,7 +95,7 @@ class dup_x_01(bpy.types.Operator):
 		bpy.context.scene.tool_settings.use_snap_align_rotation = True
 		bpy.context.scene.tool_settings.snap_element = 'FACE'
 		bpy.context.scene.tool_settings.snap_target = 'MEDIAN'
-		bpy.context.scene.tool_settings.use_snap_project = True
+		bpy.context.scene.tool_settings.use_snap_project = False
 
 
 		return {'FINISHED'}
@@ -136,6 +176,7 @@ class dup_x_reset(bpy.types.Operator):
 
 addon_keymaps = []
 def register():
+	bpy.utils.register_class(dup_x_modal)
 	bpy.utils.register_class(dup_x)
 	bpy.utils.register_class(dup_x_01)
 	bpy.utils.register_class(dup_x_02)
@@ -160,13 +201,15 @@ def register():
 	# dup_x.define('OBJECT_OT_modal_operator')
 	# dup_x.define('OBJECT_OT_dup_x_02')
 	dup_x.define('OBJECT_OT_dup_x_03')
+	dup_x.define('OBJECT_OT_dup_x_modal')
 	dup_x.define('OBJECT_OT_dup_x_05')
 	# dup_x.define('OBJECT_OT_dup_x_06')
-	dup_x.define('OBJECT_OT_dup_x_04')
+	# dup_x.define('OBJECT_OT_dup_x_04')
 	# dup_x.define('OBJECT_OT_dup_x_reset')
 
 
 def unregister():
+	bpy.utils.unregister_class(dup_x_modal)
 	bpy.utils.unregister_class(dup_x)
 	bpy.utils.unregister_class(dup_x_01)
 	bpy.utils.unregister_class(dup_x_02)
