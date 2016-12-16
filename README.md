@@ -9,6 +9,55 @@
 -->
 
 
+
+
+# multi_ob_bake.py
+
+複数のオブジェクトを結合したベイク用オブジェクトと、  
+ベイク用ターゲットオブジェクト、  
+ベイク用のテクスチャを作成し、  
+すぐさまベイクできるように設定するアドオン。  
+背景などの動かないオブジェクトをまるごと同じテクスチャにベイクしたい時に使える。  
+  
+<img src="https://github.com/bookyakuno/img/blob/master/multi_ob_bake.jpg" alt="multi_ob_bake">  
+  
+  
+このアドオンは下記の2つのアドオンを利用します。  
+インストール必須です。  
+  
+AddAsImageTexture  
+https://github.com/chichige-bobo/BlenderPython/blob/master/AddAsImageTexture.py  
+  
+Blender-Scramble-Addon  
+https://github.com/saidenka/Blender-Scramble-Addon  
+  
+  
+  
+  
+下記のような、一連の動作を自動化します。  
+  
+2.選択オブジェクトを複製し、名前を「アクティブオブジェクトの名前+"_target"」に変更  
+3.モディファイア適用 (alt + Cの 「カーブ/メタ/サーフェス/テキストからメッシュ」)  
+4.選択オブジェクトを結合  
+5.さらに1つ複製し、名前を「アクティブオブジェクトの名前+"_bake"」に変更  
+6.Scramble Addon でマテリアル全削除  
+8.「UVの大きさを平均化」・「島をパッキング」でUVを隙間なく敷き詰める  
+7.Scramble Addon でベイク用の新しいテクスチャを作成 1024px  
+1.AddAsImageTexture でベイク用テクスチャを元にマテリアルを作成  
+10.選択 → アクティブ にチェックを入れて、レイの距離を0.01に設定  
+  
+あとは「結合」で全ての要素をベイクし、ベイクしたテクスチャを保存する  
+  
+※ 事前にUV展開済みの複数のオブジェクトを用意して選択しておくこと。  
+※ ターゲットオブジェクトは削除してしまってかまわない。  
+※ マテリアルを設定していないオブジェクトは、結合した時に勝手に他のマテリアルが割り当てられてしまうので注意。  
+  
+
+
+
+
+
+
 # dup_x.py  
 パーツを表面にくっつけまくるアドオン。  
 zbrushのアレをBlenderでもやりたいと思い作ってみた。  
