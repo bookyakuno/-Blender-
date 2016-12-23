@@ -21,18 +21,18 @@ from random import random
 import bpy
 from bpy.types import Menu, Panel, UIList
 #from bl_ui.properties_grease_pencil_common import (
-#		GreasePencilDrawingToolsPanel,
-#		GreasePencilStrokeEditPanel,
-#		GreasePencilStrokeSculptPanel,
-#		GreasePencilBrushPanel,
-#		GreasePencilBrushCurvesPanel
-#		)
+#   	GreasePencilDrawingToolsPanel,
+#   	GreasePencilStrokeEditPanel,
+#   	GreasePencilStrokeSculptPanel,
+#   	GreasePencilBrushPanel,
+#   	GreasePencilBrushCurvesPanel
+#   	)
 #from bl_ui.properties_paint_common import (
-#		UnifiedPaintPanel,
-#		brush_texture_settings,
-#		brush_texpaint_common,
-#		brush_mask_texture_settings,
-#		)
+#   	UnifiedPaintPanel,
+#   	brush_texture_settings,
+#   	brush_texpaint_common,
+#   	brush_mask_texture_settings,
+#   	)
 
 
 
@@ -41,7 +41,7 @@ from bpy.types import Menu, Panel, UIList
 bl_info = {
 	"name" : "Sculpt status header",
 	"author" : "bookyakuno",
-	"version" : (0, 5),
+	"version" : (0, 6),
 	"blender" : (2, 78),
 	"location" : "3DView > TOOL Shelf > Sculpt Tab > Sculpt_menu_x, duplicate/separate/mat/mat_select/cut_mat_group > shfit + alt + D/F/R/R+ctrl/V",
 	"description" : "Sculpt smart status",
@@ -54,8 +54,8 @@ bl_info = {
 
 
 #class View3DPaintPanel(UnifiedPaintPanel):
-#	bl_space_type = 'VIEW_3D'
-#	bl_region_type = 'TOOLS'
+#   bl_space_type = 'VIEW_3D'
+#   bl_region_type = 'TOOLS'
 
 
 
@@ -146,12 +146,12 @@ def sculpt_header(self, context):
 		row.prop(sculpt, "use_symmetry_z", text="Z", toggle=True)
 
 
-#		toolsettings = context.tool_settings
-#		settings = self.paint_settings(context)
-#		brush = settings.brush
+#   	toolsettings = context.tool_settings
+#   	settings = self.paint_settings(context)
+#   	brush = settings.brush
 
 
-#		col.template_ID_preview(settings, "brush", new="brush.add", rows=3, cols=8)
+#   	col.template_ID_preview(settings, "brush", new="brush.add", rows=3, cols=8)
 
 
 
@@ -167,9 +167,9 @@ def sculpt_header(self, context):
 		# Dynatopo
 # row.separator()
 # if context.sculpt_object.use_dynamic_topology_sculpting:
-#	 row.operator("sculpt.dynamic_topology_toggle", icon='CANCEL', text="")
+#    row.operator("sculpt.dynamic_topology_toggle", icon='CANCEL', text="")
 # else:
-#	 row.operator("sculpt.dynamic_topology_toggle", icon='MOD_REMESH', text="")
+#    row.operator("sculpt.dynamic_topology_toggle", icon='MOD_REMESH', text="")
 # row.prop(sculpt, "detail_size", text="")
 
 
@@ -209,10 +209,10 @@ def sculpt_header(self, context):
 		col = row.column()
 		layout.prop(view, "use_auto_perspective", text="", icon="CAMERA_DATA")
 
-#	def prop_unified_strength(parent, context, brush, prop_name, icon='NONE', text="", slider=False):
-#		ups = context.tool_settings.unified_paint_settings
-#		ptr = ups if ups.use_unified_strength else brush
-#		parent.prop(ptr, prop_name, icon=icon, text=text, slider=slider)
+#   def prop_unified_strength(parent, context, brush, prop_name, icon='NONE', text="", slider=False):
+#   	ups = context.tool_settings.unified_paint_settings
+#   	ptr = ups if ups.use_unified_strength else brush
+#   	parent.prop(ptr, prop_name, icon=icon, text=text, slider=slider)
 
 
 
@@ -244,27 +244,28 @@ def texture_import(self, context):
 
 
 # class sculptmode_off_persp(bpy.types.Operator):
-# 	bl_idname = "object.sculptmode_off_persp"
-# 	bl_label = "sculptmode_off_persp"
+#   bl_idname = "object.sculptmode_off_persp"
+#   bl_label = "sculptmode_off_persp"
 #
 #
-# 	def execute(self, context):
-# 		# v = bpy.context.user_preferences.view
-# 		bpy.ops.sculpt.sculptmode_toggle()
-# 		bpy.context.user_preferences.view.use_auto_perspective = False
+#   def execute(self, context):
+#   	# v = bpy.context.user_preferences.view
+#   	bpy.ops.sculpt.sculptmode_toggle()
+#   	bpy.context.user_preferences.view.use_auto_perspective = False
 #
-# 		if bpy.context.object.mode == 'SCULPT':
+#   	if bpy.context.object.mode == 'SCULPT':
 #
-# 			bpy.ops.sculpt.sculptmode_toggle()
-# 			bpy.context.user_preferences.view.use_auto_perspective = True
+#   		bpy.ops.sculpt.sculptmode_toggle()
+#   		bpy.context.user_preferences.view.use_auto_perspective = True
 #
-# 		return {'FINISHED'}
+#   	return {'FINISHED'}
 
 
 
 class duplicate_mask(bpy.types.Operator):
 	bl_idname = "object.duplicate_mask"
 	bl_label = "duplicate_mask"
+
 
 
 	def execute(self, context):
@@ -274,12 +275,16 @@ class duplicate_mask(bpy.types.Operator):
 		bpy.ops.object.editmode_toggle() # 編集モード
 		bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
 		bpy.ops.mesh.reveal() # 隠しているものを表示
-		bpy.ops.mesh.duplicate_move() # 選択部分を複製
-		bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする
-		bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
+#   	 bpy.ops.mesh.duplicate_move(MESH_OT_duplicate={"mode":1}, TRANSFORM_OT_translate={"value":(0, 0, 0))
+		bpy.context.scene.tool_settings.use_mesh_automerge = False
+
+		bpy.ops.mesh.duplicate_move(MESH_OT_duplicate={"mode":1}) # 選択部分を複製
+#   	bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする
+#   	bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
 		bpy.ops.mesh.separate(type='SELECTED') # 選択部分を分離
 		bpy.ops.object.editmode_toggle() # オブジェクトモード
 		bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY') #重心に原点を配置して、回転しやすいように
+		bpy.context.scene.tool_settings.use_mesh_automerge = True
 
 		return {'FINISHED'}
 
@@ -299,8 +304,8 @@ class separate_mask(bpy.types.Operator):
 		bpy.ops.mesh.reveal() # 隠しているものを表示
 		# bpy.ops.mesh.duplicate_move() # 選択部分を複製
 		bpy.ops.mesh.split()
-		bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする(F2)
-		bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
+#   	bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする(F2)
+#   	bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
 		bpy.ops.mesh.separate(type='SELECTED') # 選択部分を分離
 		bpy.ops.object.editmode_toggle() # オブジェクトモード
 		bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY') #重心に原点を配置して、回転しやすいように
@@ -370,6 +375,60 @@ class mat_mask(bpy.types.Operator):
 
 		bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモード
 		return {'FINISHED'}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class random_mat(bpy.types.Operator):
+	bl_idname = "object.random_mat"
+	bl_label = "random_mat"
+
+
+
+
+	def execute(self, context):
+
+		ob = bpy.context.object
+		me = ob.data
+
+		mat_offset = len(me.materials)
+		mat_count = 1
+
+		mats = []
+		for i in range(mat_count):
+			mat = bpy.data.materials.new("Mat_%i" % i)
+			mat.diffuse_color = random(), random(), random()
+			me.materials.append(mat)
+
+		# Can't assign materials in editmode
+		bpy.ops.object.mode_set(mode='OBJECT')
+
+		i = 0
+		for poly in me.polygons:
+			if poly.select:
+				poly.material_index = i % mat_count + mat_offset
+				i += 1
+
+		if bpy.context.scene.render.engine == 'CYCLES':
+ 			bpy.context.object.active_material.use_nodes = True
+
+
+		bpy.ops.object.mode_set(mode='EDIT')
+
+		return {'FINISHED'}
+
+
+
 
 
 class cut_mat_group(bpy.types.Operator):
@@ -621,6 +680,7 @@ class Sculpt_menu_x(bpy.types.Panel):
 		row = layout.row(align=True)
 		row.operator("object.duplicate_mask", icon="UV_ISLANDSEL")
 		row.operator("object.separate_mask", icon="MOD_UVPROJECT")
+		row.operator("object.random_mat", icon="COLOR")
 		row = layout.row(align=True)
 		row.operator("object.mat_mask", icon="FACESEL_HLT")
 		row.operator("object.mat_select_mask", icon="RESTRICT_SELECT_OFF")
@@ -634,6 +694,22 @@ class Sculpt_menu_x(bpy.types.Panel):
 
 
 
+
+
+
+
+class automirror_apply_mod(bpy.types.Operator):
+	bl_idname = "object.automirror_apply_mod"
+	bl_label = "automirror_apply_mod"
+
+
+	def execute(self, context):
+		layout = self.layout
+		bpy.context.scene.AutoMirror_apply_mirror = True
+		bpy.ops.object.automirror()
+
+		bpy.context.scene.AutoMirror_apply_mirror = False
+		return {'FINISHED'}
 
 
 
@@ -672,11 +748,18 @@ def register():
 
 	kmi = km.keymap_items.new(grease_pencil_cut_v2.bl_idname, 'R', 'PRESS',shift=True)
 	addon_keymaps.append((km, kmi))
+	kmi = km.keymap_items.new(automirror_apply_mod.bl_idname, 'FOUR', 'PRESS',oskey=True)
+	addon_keymaps.append((km, kmi))
 
 	km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
 	kmi = km.keymap_items.new(grease_pencil_cut_v2.bl_idname, 'R', 'PRESS',shift=True)
 	addon_keymaps.append((km, kmi))
 
+	km = wm.keyconfigs.addon.keymaps.new(name='Mesh', space_type='EMPTY')
+
+
+	kmi = km.keymap_items.new(random_mat.bl_idname, 'TWO', 'PRESS',oskey=True)
+	addon_keymaps.append((km, kmi))
 
 
 
