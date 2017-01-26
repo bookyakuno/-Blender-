@@ -19,7 +19,7 @@
 bl_info = {
 	"name": "dup_x",
 	"author": "bookyakuno",
-	"version": (1,0),
+	"version": (1,1),
 	"location": "like a zbrush add parts",
 	"description": "Shift + cmd + T",
 	"warning": "",
@@ -174,19 +174,42 @@ class dup_x_reset(bpy.types.Operator):
 
 
 
+
+
+
+
+
+
+
+
+
+
+#
+# addon_keymaps = []
+# def register():
+# 	bpy.utils.register_class(dup_x_modal)
+# 	bpy.utils.register_class(dup_x)
+# 	bpy.utils.register_class(dup_x_01)
+# 	bpy.utils.register_class(dup_x_02)
+# 	bpy.utils.register_class(dup_x_03)
+# 	bpy.utils.register_class(dup_x_04)
+# 	bpy.utils.register_class(dup_x_05)
+# 	bpy.utils.register_class(dup_x_06)
+# 	bpy.utils.register_class(dup_x_reset)
+#
+# 	bpy.utils.register_module(__name__)
+# 	wm = bpy.context.window_manager
+
+
+
+
+		# store keymaps here to access after registration
 addon_keymaps = []
 def register():
-	bpy.utils.register_class(dup_x_modal)
-	bpy.utils.register_class(dup_x)
-	bpy.utils.register_class(dup_x_01)
-	bpy.utils.register_class(dup_x_02)
-	bpy.utils.register_class(dup_x_03)
-	bpy.utils.register_class(dup_x_04)
-	bpy.utils.register_class(dup_x_05)
-	bpy.utils.register_class(dup_x_06)
-	bpy.utils.register_class(dup_x_reset)
-
 	bpy.utils.register_module(__name__)
+	# ヘッダーメニューに項目追加
+
+
 	wm = bpy.context.window_manager
 
 	km = wm.keyconfigs.addon.keymaps.new(name = 'Object Mode', space_type = 'EMPTY')
