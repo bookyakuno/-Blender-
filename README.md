@@ -128,8 +128,14 @@ https://github.com/Mano-Wii/Addon-Snap-Utilities-Line/wiki
 # Sculpt_status_header.py  
   
 スカルプトモードでのステータスをヘッダーで確認できるアドオン。  
-シンメトリーとダイナトポが確認できます。  
-  
+* ヘッダーで対称とダイナトポのステータスを確認
+* ハイポリメッシュを多重解像度のレベルに変換する機能(convert_multiReso)
+* マスク部分の分離
+* マスク部分の複製
+* グリースペンシルで切り取り
+* グリースペンシルで囲った部分にマテリアルを割り当て(zbrushのポリグループっぽく)
+  <img src="https://github.com/bookyakuno/img/blob/master/convert_multiReso.jpg" alt="Sculpt_status_header">  
+
   
 # 45_rotate_gesture.py  
   
