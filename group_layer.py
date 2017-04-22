@@ -21,7 +21,7 @@ bl_info = {
 	"author": "bookyakuno",
 	"version": (1,0),
 	"location": "Outliner header",
-	"description": "like Layer Outliner Group.",
+	"description": "Outliner group like layer.",
 	"warning": "",
 	"category": "outliner"}
 
