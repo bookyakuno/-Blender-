@@ -19,40 +19,108 @@
 bl_info = {
 	"name": "group_layer",
 	"author": "bookyakuno",
-	"version": (1,0),
+	"version": (1,1),
 	"location": "Outliner header",
 	"description": "Outliner group like layer.",
 	"warning": "",
 	"category": "outliner"}
 
 
-# import the basic library
 import bpy
 
 class root_group_z(bpy.types.Operator):
 	bl_idname = "object.root_group_z"
 	bl_label = "root_group_z"
-	bl_description = "Create/add _root group."
+	bl_description = "Add object with no group to '_root'."
 
 	def execute(self, context):
-#		bpy.context.scene.objects.select = True #all select
+
+
+
+		x0 = bpy.context.scene.layers[0]
+		x1 = bpy.context.scene.layers[1]
+		x2 = bpy.context.scene.layers[2]
+		x3 = bpy.context.scene.layers[3]
+		x4 = bpy.context.scene.layers[4]
+		x5 = bpy.context.scene.layers[5]
+		x6 = bpy.context.scene.layers[6]
+		x7 = bpy.context.scene.layers[7]
+		x8 = bpy.context.scene.layers[8]
+		x9 = bpy.context.scene.layers[9]
+		x10 = bpy.context.scene.layers[10]
+		x11 = bpy.context.scene.layers[11]
+		x12 = bpy.context.scene.layers[12]
+		x13 = bpy.context.scene.layers[13]
+		x14 = bpy.context.scene.layers[14]
+		x15 = bpy.context.scene.layers[15]
+		x16 = bpy.context.scene.layers[16]
+		x17 = bpy.context.scene.layers[17]
+		x18 = bpy.context.scene.layers[18]
+		x19 = bpy.context.scene.layers[19]
+		#x20 = bpy.context.scene.layers[20]
+
+
+		bpy.context.scene.layers[0] = True
+		bpy.context.scene.layers[1] = True
+		bpy.context.scene.layers[2] = True
+		bpy.context.scene.layers[3] = True
+		bpy.context.scene.layers[4] = True
+		bpy.context.scene.layers[5] = True
+		bpy.context.scene.layers[6] = True
+		bpy.context.scene.layers[7] = True
+		bpy.context.scene.layers[8] = True
+		bpy.context.scene.layers[9] = True
+		bpy.context.scene.layers[10] = True
+		bpy.context.scene.layers[11] = True
+		bpy.context.scene.layers[12] = True
+		bpy.context.scene.layers[13] = True
+		bpy.context.scene.layers[14] = True
+		bpy.context.scene.layers[15] = True
+		bpy.context.scene.layers[16] = True
+		bpy.context.scene.layers[17] = True
+		bpy.context.scene.layers[18] = True
+		bpy.context.scene.layers[19] = True
+		#bpy.context.scene.layers[20] = True
 
 
 		for ob in bpy.context.scene.objects:
-			# if ob.type == 'MESH':
-				ob.select = True
+		   ob.select = True
 
 		for group in bpy.data.groups:
-			for object in group.objects:
+		    for object in group.objects:
 		#        print(object.name)
 		#        o = bpy.data.objects
 		#        o.select = True
-				ee = object
-				ee.select = False
+		        ee = object
+		        ee.select = False
 
-		#bpy.ops.group.create(name="_root")
-		bpy.ops.object.group_link(group='_root')
-		bpy.ops.group.objects_add_active(group='_root')
+
+		for o in bpy.context.selected_objects:
+		    bpy.data.groups["_root"].objects.link(o)
+
+
+		bpy.context.scene.layers[0] = x0
+		bpy.context.scene.layers[1] = x1
+		bpy.context.scene.layers[2] = x2
+		bpy.context.scene.layers[3] = x3
+		bpy.context.scene.layers[4] = x4
+		bpy.context.scene.layers[5] = x5
+		bpy.context.scene.layers[6] = x6
+		bpy.context.scene.layers[7] = x7
+		bpy.context.scene.layers[8] = x8
+		bpy.context.scene.layers[9] = x9
+		bpy.context.scene.layers[10] = x10
+		bpy.context.scene.layers[11] = x11
+		bpy.context.scene.layers[12] = x12
+		bpy.context.scene.layers[13] = x13
+		bpy.context.scene.layers[14] = x14
+		bpy.context.scene.layers[15] = x15
+		bpy.context.scene.layers[16] = x16
+		bpy.context.scene.layers[17] = x17
+		bpy.context.scene.layers[18] = x18
+		bpy.context.scene.layers[19] = x19
+		#bpy.context.scene.layers[20] = x20
+
 
 		return {'FINISHED'}
 
@@ -60,25 +128,195 @@ class root_group_z(bpy.types.Operator):
 class new_group_z(bpy.types.Operator):
 	bl_idname = "object.new_group_z"
 	bl_label = "new_group_z"
-	bl_description = "all remeve and Create new group."
+	bl_description = "all remove and Create new group."
 
 	def execute(self, context):
+
+
+		x0 = bpy.context.scene.layers[0]
+		x1 = bpy.context.scene.layers[1]
+		x2 = bpy.context.scene.layers[2]
+		x3 = bpy.context.scene.layers[3]
+		x4 = bpy.context.scene.layers[4]
+		x5 = bpy.context.scene.layers[5]
+		x6 = bpy.context.scene.layers[6]
+		x7 = bpy.context.scene.layers[7]
+		x8 = bpy.context.scene.layers[8]
+		x9 = bpy.context.scene.layers[9]
+		x10 = bpy.context.scene.layers[10]
+		x11 = bpy.context.scene.layers[11]
+		x12 = bpy.context.scene.layers[12]
+		x13 = bpy.context.scene.layers[13]
+		x14 = bpy.context.scene.layers[14]
+		x15 = bpy.context.scene.layers[15]
+		x16 = bpy.context.scene.layers[16]
+		x17 = bpy.context.scene.layers[17]
+		x18 = bpy.context.scene.layers[18]
+		x19 = bpy.context.scene.layers[19]
+		#x20 = bpy.context.scene.layers[20]
+
+
+		bpy.context.scene.layers[0] = True
+		bpy.context.scene.layers[1] = True
+		bpy.context.scene.layers[2] = True
+		bpy.context.scene.layers[3] = True
+		bpy.context.scene.layers[4] = True
+		bpy.context.scene.layers[5] = True
+		bpy.context.scene.layers[6] = True
+		bpy.context.scene.layers[7] = True
+		bpy.context.scene.layers[8] = True
+		bpy.context.scene.layers[9] = True
+		bpy.context.scene.layers[10] = True
+		bpy.context.scene.layers[11] = True
+		bpy.context.scene.layers[12] = True
+		bpy.context.scene.layers[13] = True
+		bpy.context.scene.layers[14] = True
+		bpy.context.scene.layers[15] = True
+		bpy.context.scene.layers[16] = True
+		bpy.context.scene.layers[17] = True
+		bpy.context.scene.layers[18] = True
+		bpy.context.scene.layers[19] = True
+		#bpy.context.scene.layers[20] = True
+
 		bpy.ops.group.objects_remove_all()
 		# bpy.ops.group.objects_add_active(group='z_')
 		bpy.ops.group.create(name="z_")
 
+
+		bpy.context.scene.layers[0] = x0
+		bpy.context.scene.layers[1] = x1
+		bpy.context.scene.layers[2] = x2
+		bpy.context.scene.layers[3] = x3
+		bpy.context.scene.layers[4] = x4
+		bpy.context.scene.layers[5] = x5
+		bpy.context.scene.layers[6] = x6
+		bpy.context.scene.layers[7] = x7
+		bpy.context.scene.layers[8] = x8
+		bpy.context.scene.layers[9] = x9
+		bpy.context.scene.layers[10] = x10
+		bpy.context.scene.layers[11] = x11
+		bpy.context.scene.layers[12] = x12
+		bpy.context.scene.layers[13] = x13
+		bpy.context.scene.layers[14] = x14
+		bpy.context.scene.layers[15] = x15
+		bpy.context.scene.layers[16] = x16
+		bpy.context.scene.layers[17] = x17
+		bpy.context.scene.layers[18] = x18
+		bpy.context.scene.layers[19] = x19
+		#bpy.context.scene.layers[20] = x20
+
+
+
+
 		return {'FINISHED'}
 
-
-class add_group_z(bpy.types.Operator):
-	bl_idname = "object.add_group_z"
-	bl_label = "add_group_z"
+class all_remove_group_z(bpy.types.Operator):
+	bl_idname = "object.all_remove_group_z"
+	bl_label = "all_remove_group_z"
+	bl_description = "all remove group.('object nothing group' data leave!! Better 'RMB > Delete Group')"
 
 	def execute(self, context):
+
+
+		x0 = bpy.context.scene.layers[0]
+		x1 = bpy.context.scene.layers[1]
+		x2 = bpy.context.scene.layers[2]
+		x3 = bpy.context.scene.layers[3]
+		x4 = bpy.context.scene.layers[4]
+		x5 = bpy.context.scene.layers[5]
+		x6 = bpy.context.scene.layers[6]
+		x7 = bpy.context.scene.layers[7]
+		x8 = bpy.context.scene.layers[8]
+		x9 = bpy.context.scene.layers[9]
+		x10 = bpy.context.scene.layers[10]
+		x11 = bpy.context.scene.layers[11]
+		x12 = bpy.context.scene.layers[12]
+		x13 = bpy.context.scene.layers[13]
+		x14 = bpy.context.scene.layers[14]
+		x15 = bpy.context.scene.layers[15]
+		x16 = bpy.context.scene.layers[16]
+		x17 = bpy.context.scene.layers[17]
+		x18 = bpy.context.scene.layers[18]
+		x19 = bpy.context.scene.layers[19]
+		#x20 = bpy.context.scene.layers[20]
+
+
+		bpy.context.scene.layers[0] = True
+		bpy.context.scene.layers[1] = True
+		bpy.context.scene.layers[2] = True
+		bpy.context.scene.layers[3] = True
+		bpy.context.scene.layers[4] = True
+		bpy.context.scene.layers[5] = True
+		bpy.context.scene.layers[6] = True
+		bpy.context.scene.layers[7] = True
+		bpy.context.scene.layers[8] = True
+		bpy.context.scene.layers[9] = True
+		bpy.context.scene.layers[10] = True
+		bpy.context.scene.layers[11] = True
+		bpy.context.scene.layers[12] = True
+		bpy.context.scene.layers[13] = True
+		bpy.context.scene.layers[14] = True
+		bpy.context.scene.layers[15] = True
+		bpy.context.scene.layers[16] = True
+		bpy.context.scene.layers[17] = True
+		bpy.context.scene.layers[18] = True
+		bpy.context.scene.layers[19] = True
+		#bpy.context.scene.layers[20] = True
+
 		bpy.ops.group.objects_remove_all()
-		bpy.ops.object.group_link()
+		# bpy.ops.group.objects_add_active(group='z_')
+		# bpy.ops.group.create(name="z_")
+
+
+		bpy.context.scene.layers[0] = x0
+		bpy.context.scene.layers[1] = x1
+		bpy.context.scene.layers[2] = x2
+		bpy.context.scene.layers[3] = x3
+		bpy.context.scene.layers[4] = x4
+		bpy.context.scene.layers[5] = x5
+		bpy.context.scene.layers[6] = x6
+		bpy.context.scene.layers[7] = x7
+		bpy.context.scene.layers[8] = x8
+		bpy.context.scene.layers[9] = x9
+		bpy.context.scene.layers[10] = x10
+		bpy.context.scene.layers[11] = x11
+		bpy.context.scene.layers[12] = x12
+		bpy.context.scene.layers[13] = x13
+		bpy.context.scene.layers[14] = x14
+		bpy.context.scene.layers[15] = x15
+		bpy.context.scene.layers[16] = x16
+		bpy.context.scene.layers[17] = x17
+		bpy.context.scene.layers[18] = x18
+		bpy.context.scene.layers[19] = x19
+		#bpy.context.scene.layers[20] = x20
+
+
+
 
 		return {'FINISHED'}
+
+
+class move_group_z(bpy.types.Operator):
+	bl_idname = "object.move_group_z"
+	bl_label = "move_group_z"
+	bl_description = "move to active group.(all remove and move to active object group)"
+
+	def execute(self, context):
+		#  アクティブオブジェクトの定義
+		active = bpy.context.active_object
+		#  一度、アクティブの選択を解除し、リネームする
+		active.select = False
+
+		bpy.ops.group.objects_remove_all()
+		# bpy.ops.object.group_link()
+		#  再度、アクティブを選択
+		active.select = True
+		bpy.ops.group.objects_add_active()
+
+
+
+		return {'FINISHED'}
+
 
 
 
@@ -98,10 +336,12 @@ def group_layer_menu(self, context):
 		row = layout.row()
 		row = layout.row(align=True)
 
-		row.operator("group.objects_remove", text="", icon='X')
-		row.operator("group.objects_remove_all", text="", icon='CANCEL')
-		row.operator("object.group_link", text="", icon='ZOOMIN')
+		# row.operator("group.objects_remove", text="", icon='X')
+		row.operator("object.all_remove_group_z", text="", icon='CANCEL')
+		# row.operator("object.group_link", text="", icon='ZOOMIN')
+		row.operator("object.move_group_z", text="", icon='EXPORT')
 		row.operator("object.new_group_z", text="", icon='NEW')
+		row.operator("object.root_group_z", text="", icon='FILE_BACKUP')
 
 	if space.display_mode == 'DATABLOCKS':
 		layout.menu("OUTLINER_MT_edit_datablocks")
@@ -112,22 +352,75 @@ def group_layer_menu(self, context):
 
 
 
+#
+# class move_group_z_01(bpy.types.Operator):
+# 	bl_idname = "object.move_group_z_01"
+# 	bl_label = "move_group_z_01"
+#
+# 	def execute(self, context):
+# 		bpy.ops.group.objects_remove_all()
+#
+# 		return {'FINISHED'}
+#
+# class move_group_z_02(bpy.types.Operator):
+# 	bl_idname = "object.move_group_z_02"
+# 	bl_label = "move_group_z_02"
+#
+# 	def execute(self, context):
+# 		bpy.ops.object.group_link()
+#
+#
+# 		return {'FINISHED'}
+#
+# class move_group_z_03(bpy.types.Operator):
+# 	bl_idname = "object.move_group_z_03"
+# 	bl_label = "move_group_z_03"
+#
+# 	def execute(self, context):
+# 		bpy.ops.group.objects_add_active()
+#
+# 		return {'FINISHED'}
+#
+#
+#
+#
+#
+#
+#
+# class move_group_z(bpy.types.Macro):
+# 	bl_idname = "object.move_group_z"
+# 	bl_label = "move_group_z"
+# 	bl_options = {'REGISTER','UNDO'}
+#
+# 	@classmethod
+# 	def poll(cls, context):
+# 		return context.active_object is not None
+#
+#
+
+
+
 
 
 
 def register():
-	bpy.utils.register_class(root_group_z)
-	bpy.utils.register_class(new_group_z)
-	bpy.utils.register_class(add_group_z)
+	# bpy.utils.register_class(root_group_z)
+	# bpy.utils.register_class(new_group_z)
+	# bpy.utils.register_class(move_group_z)
 
 	bpy.utils.register_module(__name__)
 	bpy.types.OUTLINER_HT_header.prepend(group_layer_menu)
 
+	# # マクロ登録
+	# move_group_z.define('OBJECT_OT_move_group_z_01')
+	# move_group_z.define('OBJECT_OT_move_group_z_02')
+	# move_group_z.define('OBJECT_OT_move_group_z_03')
+
 
 def unregister():
-	bpy.utils.unregister_class(root_group_z)
-	bpy.utils.unregister_class(new_group_z)
-	bpy.utils.unregister_class(add_group_z)
+	# bpy.utils.unregister_class(root_group_z)
+	# bpy.utils.unregister_class(new_group_z)
+	# bpy.utils.unregister_class(move_group_z)
 
 
 	bpy.utils.unregister_module(__name__)
