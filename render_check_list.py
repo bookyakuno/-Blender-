@@ -139,6 +139,26 @@ def render_final_resolution_ui_z(self, context):
 
 
 
+# =====================================================
+# ↓=====================================================
+
+	layout = self.layout
+
+	scene = context.scene
+	rd = scene.render
+
+	row = layout.row(align=True)
+	row.menu("RENDER_MT_presets", text=bpy.types.RENDER_MT_presets.bl_label)
+	row.operator("render.preset_add", text="", icon='ZOOMIN')
+	row.operator("render.preset_add", text="", icon='ZOOMOUT').remove_active = True
+
+	split = layout.split()
+
+	col = split.column()
+	sub = col.column(align=True)
+	subrow = sub.row(align=True)
+
+	# subrow.label(text="Resolution:")
 
 	rd = context.scene.render
 	layout = self.layout
@@ -148,17 +168,55 @@ def render_final_resolution_ui_z(self, context):
 
 	if rd.use_border:
 		final_res_x_border = round(
-			(final_res_x * (rd.border_max_x - rd.border_min_x)))
+		(final_res_x * (rd.border_max_x - rd.border_min_x)))
 		final_res_y_border = round(
-			(final_res_y * (rd.border_max_y - rd.border_min_y)))
-		layout.label(text="Reso: {} x {} [Border: {} x {}]".format(
-					 str(final_res_x)[:-2], str(final_res_y)[:-2],
-					 str(final_res_x_border), str(final_res_y_border)))
+		(final_res_y * (rd.border_max_y - rd.border_min_y)))
+		subrow.label(text="{} x {} [B:{} x {}]".format(
+		str(final_res_x)[:-2], str(final_res_y)[:-2],
+		str(final_res_x_border), str(final_res_y_border)))
 	else:
-		layout.label(text="Reso: {} x {}".format(
-					 str(final_res_x)[:-2], str(final_res_y)[:-2]))
+		subrow.label(text="{} x {}".format(
+		str(final_res_x)[:-2], str(final_res_y)[:-2]))
+
+	subrow.operator("object.x_y_change", text="", icon="FILE_REFRESH")
 
 
+	sub.prop(rd, "resolution_x", text="X")
+	sub.prop(rd, "resolution_y", text="Y")
+	sub.prop(rd, "resolution_percentage", text="")
+
+
+
+
+
+	row = col.row()
+	row.prop(rd, "use_border", text="", icon="BORDER_RECT")
+	sub = row.row()
+	sub.active = rd.use_border
+	sub.prop(rd, "use_crop_to_border", text="",icon="RENDER_REGION")
+
+
+	scn = context.scene
+	tt = scn.frame_end - scn.frame_start
+	# row = layout.row(align=True)
+	sub.label()
+	col = split.column()
+	sub = col.column(align=True)
+	sub.label(text="Frame Range:    " + str(tt))
+	# =====================================================
+	sub.prop(scene, "frame_start")
+	sub.prop(scene, "frame_end")
+
+	subrow = sub.row(align=True)
+
+	subrow.operator("object.now_f", text="",icon="EYEDROPPER")
+	subrow.operator("object.set_f", text="",icon="FILE_TICK")
+	subrow.prop(scene, "floatSample", text="")
+
+
+
+# ↑=====================================================
+# =====================================================
 
 
 
@@ -173,16 +231,17 @@ def render_final_resolution_ui_z(self, context):
 	row = col.row(align=True)
 
 
+
+
 	row.operator_context = 'EXEC_DEFAULT'
 	row.operator("render.render", text="Render", icon='RENDER_STILL')
-	row.operator("object.render_cycleslots", icon="RENDER_REGION")
+	row.operator("object.render_cycleslots", text="Slot", icon="RENDER_REGION")
 	row.operator("render.render", text="Animation", icon='RENDER_ANIMATION').animation = True
 	row.prop(rd, "use_lock_interface", icon_only=True)
 	row = col.row(align=True)
 
 
 
-	row.operator("object.x_y_change", icon="FILE_REFRESH")
 
 
 
@@ -218,12 +277,17 @@ def render_final_resolution_ui_z(self, context):
 
 # =====================================================
 # set flame
-	layout = self.layout
-	# row = layout.row(align=True)
-	row = col.row(align=True)
-	row.operator("object.now_f", text="now_f",icon="EYEDROPPER")
-	row.operator("object.set_f", text="set_f",icon="FILE_TICK")
-	row.prop(scene, "floatSample", text="")
+	# layout = self.layout
+	# scn = context.scene
+	# tt = scn.frame_end - scn.frame_start
+	# # row = layout.row(align=True)
+	# row = col.row(align=True)
+	# row.label(str(tt))
+	#
+	# row.operator("object.now_f", text="",icon="EYEDROPPER")
+	# row.operator("object.set_f", text="set_f",icon="FILE_TICK")
+	# row.prop(scene, "floatSample", text="")
+	#
 
 
 
@@ -236,24 +300,83 @@ def render_final_resolution_ui_z(self, context):
 
 
 
+# =====================================================
+
+# =====================================================
+
+	sub.label()
+	col = split.column()
+	sub = col.column(align=True)
+
+
+	#
+	#
+	# split = layout.split()
+	#
+	# col = split.column()
+	# sub = col.column(align=True)
+	sub.prop(scene, "frame_step")
 
 
 
 
 
+	sub.label(text="Frame Rate:")
 
+	self.draw_framerate(sub, rd)
+
+
+	sub.label()
+	col = split.column()
+	sub = col.column(align=True)
+
+
+	subrow = sub.row(align=True)
+	subrow.label(text="Time Remapping:")
+	subrow = sub.row(align=True)
+	subrow.prop(rd, "frame_map_old", text="Old")
+	subrow.prop(rd, "frame_map_new", text="New")
+
+
+	sub.label(text="Aspect Ratio:")
+	sub.prop(rd, "pixel_aspect_x", text="X")
+	sub.prop(rd, "pixel_aspect_y", text="Y")
+
+
+	# =====================================================
+
+	# =====================================================
+
+
+	# =====================================================
+
+	# =====================================================
+
+
+	original_draw_func = None
 
 def register():
 	bpy.utils.register_module(__name__)
 
-	bpy.types.RENDER_PT_dimensions.append(render_final_resolution_ui_z)
+	global original_draw_func
+	original_draw_func = bpy.types.RENDER_PT_dimensions.draw
+	bpy.types.RENDER_PT_dimensions.draw = render_final_resolution_ui_z
+
+
+	# bpy.types.RENDER_PT_dimensions.append(render_final_resolution_ui_z)
 	# bpy.types.Object.sample_props=PointerProperty(type=SampleProperties)
 
 
+	# scn = context.scene
+	# tt = scn.frame_end - scn.frame_start
 
 	bpy.types.Scene.floatSample = IntProperty(name="FloatPropSample", description="Number of sheets to be rendered", min=0, default=0)
 
 	# floatSample = IntProperty(name="FloatPropSample",min=-1, max=10000, default=0)
+
+
+
+
 
 
 def unregister():
