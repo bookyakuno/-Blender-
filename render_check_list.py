@@ -13,7 +13,7 @@
 #  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 bl_info = {
-	"name": "render check list",
+	"name": "render check list + misc",
 	"author": "bookyakuno",
 	"version": (1, 0, 2),
 	"blender": (2, 78),
@@ -38,9 +38,10 @@ from bpy.props import *
 
 
 
-class f_set(bpy.types.Operator):
-   bl_idname = "object.f_set"
-   bl_label = "f_set"
+class set_f(bpy.types.Operator):
+   bl_idname = "object.set_f"
+   bl_label = "set_f"
+   bl_description = "Change the number of sheets"
    def execute(self, context):
 
 	   scn = context.scene
@@ -53,6 +54,8 @@ class f_set(bpy.types.Operator):
 class now_f(bpy.types.Operator):
    bl_idname = "object.now_f"
    bl_label = "now_f"
+   bl_description = "Current number of sheets"
+
    def execute(self, context):
 
 	   scn = context.scene
@@ -219,7 +222,7 @@ def render_final_resolution_ui_z(self, context):
 	# row = layout.row(align=True)
 	row = col.row(align=True)
 	row.operator("object.now_f", text="now_f",icon="EYEDROPPER")
-	row.operator("object.f_set", text="f_set",icon="FILE_TICK")
+	row.operator("object.set_f", text="set_f",icon="FILE_TICK")
 	row.prop(scene, "floatSample", text="")
 
 
@@ -248,7 +251,7 @@ def register():
 
 
 
-	bpy.types.Scene.floatSample = IntProperty(name="FloatPropSample", description="First frame of the stepped range", min=0, default=0)
+	bpy.types.Scene.floatSample = IntProperty(name="FloatPropSample", description="Number of sheets to be rendered", min=0, default=0)
 
 	# floatSample = IntProperty(name="FloatPropSample",min=-1, max=10000, default=0)
 
