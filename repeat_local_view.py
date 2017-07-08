@@ -14,10 +14,10 @@
 
 bl_info = {
 	"name": "Repeat local view",
-	"author": "Saidenka,bookyakuno",
+	"author": "bookyakuno",
 	"version": (1, 0, 0),
 	"blender": (2, 78),
-	"location": "3D View",
+	"location": "3D View Q key",
 	"description": "Repeat local view as long as there are selected objects & Non zoom",
 	"warning": "",
 	"wiki_url": "",
@@ -42,31 +42,46 @@ class LocalViewEx_z(bpy.types.Operator):
 
 
 		if (context.space_data.local_view):
+			if context.mode =='EDIT_MESH':
+				self.report(type={'INFO'}, message="EDIT")
 
-			ff = bpy.context.selected_objects
-			bpy.ops.object.select_all(action='SELECT')
-			ww = len (context.selected_objects )
+				bpy.ops.object.editmode_toggle()
 
-			bpy.ops.object.select_all(action='DESELECT')
-			for obj in ff:
-				obj.select = True
+				ff = bpy.context.selected_objects
+				bpy.ops.object.select_all(action='SELECT')
+				ww = len (context.selected_objects )
+
+				bpy.ops.object.select_all(action='DESELECT')
+				for obj in ff:
+					obj.select = True
+
+				bpy.ops.object.editmode_toggle()
+			else:
+
+				ff = bpy.context.selected_objects
+				bpy.ops.object.select_all(action='SELECT')
+				ww = len (context.selected_objects )
+
+				bpy.ops.object.select_all(action='DESELECT')
+				for obj in ff:
+					obj.select = True
 
 
-			aax = len (context.selected_objects )
+				aax = len (context.selected_objects )
 
 			if  len (context.selected_objects ) == 0:
 				bpy.ops.view3d.local_view_ex_ops()
-				self.report(type={'INFO'}, message="0")
+				# self.report(type={'INFO'}, message="0")
 
 			elif  ww == 1:
 
-				self.report(type={'INFO'}, message="1")
+				# self.report(type={'INFO'}, message="1")
 
 				bpy.ops.view3d.local_view_ex_ops()
 			elif  len (context.selected_objects ) == ww:
 
 
-				self.report(type={'INFO'}, message="1")
+				# self.report(type={'INFO'}, message="1")
 
 				bpy.ops.view3d.local_view_ex_ops()
 
@@ -84,14 +99,14 @@ class LocalViewEx_z(bpy.types.Operator):
 
 
 				if context.mode =='EDIT_MESH':
-					self.report(type={'INFO'}, message="EDIT")
+					# self.report(type={'INFO'}, message="EDIT")
 
 					bpy.ops.object.editmode_toggle()
 
 					bpy.ops.view3d.local_view_ex_ops()
 					bpy.ops.object.editmode_toggle()
 				else:
-					self.report(type={'INFO'}, message="Repeat")
+					# self.report(type={'INFO'}, message="Repeat")
 
 					aa = bpy.context.selected_objects
 
