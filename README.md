@@ -10,6 +10,8 @@
 
 # w_pie.zip
 
+w_pie.jpg
+
 スマートに使えるパイメニューアドオン。
 
 必要な機能だけ・アクセスしやすく・使いやすいをコンセプトに、
@@ -17,6 +19,7 @@ Wazou Pie Menu の、多すぎる要素を削ぎ落としてコンパクトに�
 本家とは違った機能も追加している。
 
 
+<img src="https://github.com/bookyakuno/img/blob/master/w_pie.jpg" alt="multi_ob_bake">  
 
 
 | キーマップ | 機能 |
@@ -55,7 +58,12 @@ Wazou Pie Menu の、多すぎる要素を削ぎ落としてコンパクトに�
 グループをレイヤーとして扱う既知の問題
 * 階層化できない
 * グループを複数共有できてしまう
-  * このアドオンでグループ管理すれば複数共有が起きないよう修正。
+  * このアドオンでグループ管理すれば複数共有が起きないよう修正。<br><br>
+  
+  YouTube動画<br>
+[![group_layer Youtube動画](https://i.ytimg.com/vi/F6a5NU3-X8g/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDIjiEzlpaf5998sHad6_X2HXp8Ow)](https://www.youtube.com/watch?v=F6a5NU3-X8g)
+
+
 
 
 
