@@ -19,7 +19,7 @@
 bl_info = {
 	"name": "Keymap_Set",
 	"author": "bookyakuno",
-	"version": (0, 5),
+	"version": (0, 6),
 	"blender": (2, 79, 0),
 	"description": "Rational Keymap Set",
 	"location": "This addon Setting",
@@ -84,6 +84,29 @@ translation_dict = {
 
 
 
+
+class ViewSelected_smart(bpy.types.Operator):
+	bl_idname = "view3d.view_selected_smart"
+	bl_label = "Show Selected (non-zoom)"
+	bl_description = "Selected ones over center of 3D perspective not (zoom)"
+	bl_options = {'REGISTER'}
+
+	def execute(self, context):
+		pre_view_location = context.region_data.view_location[:]
+		smooth_view = context.user_preferences.view.smooth_view
+		context.user_preferences.view.smooth_view = 0
+		view_distance = context.region_data.view_distance
+		bpy.ops.view3d.view_selected()
+		context.region_data.view_distance = view_distance
+		context.user_preferences.view.smooth_view = smooth_view
+		context.region_data.update()
+		new_view_location = context.region_data.view_location[:]
+		context.region_data.view_location = pre_view_location[:]
+		pre_cursor_location = bpy.context.space_data.cursor_location[:]
+		bpy.context.space_data.cursor_location = new_view_location[:]
+		bpy.ops.view3d.view_center_cursor()
+		bpy.context.space_data.cursor_location = pre_cursor_location[:]
+		return {'FINISHED'}
 
 
 
@@ -670,21 +693,74 @@ def register():
 
 			# 1,2,3 + Ctrl
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-
 			kmi = km.keymap_items.new('view3d.viewnumpad', 'ONE', 'PRESS', ctrl=True)
 			kmi_props_setattr(kmi.properties, 'type', 'BACK')
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-
 			kmi = km.keymap_items.new('view3d.viewnumpad', 'TWO', 'PRESS', ctrl=True)
 			kmi_props_setattr(kmi.properties, 'type', 'LEFT')
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'THREE', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'BOTTOM')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
 
+
+#Object
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'ONE', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'BACK')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'TWO', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'LEFT')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'THREE', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'BOTTOM')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+#Mesh
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'ONE', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'BACK')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'TWO', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'LEFT')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'THREE', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'BOTTOM')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+#Sculpt
+			km = wm.keyconfigs.addon.keymaps.new('Sculpt', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'ONE', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'BACK')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sculpt', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.viewnumpad', 'TWO', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'type', 'LEFT')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sculpt', space_type='EMPTY', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('view3d.viewnumpad', 'THREE', 'PRESS', ctrl=True)
 			kmi_props_setattr(kmi.properties, 'type', 'BOTTOM')
 			kmi.active = True
@@ -724,9 +800,20 @@ def register():
 			kmi_props_setattr(kmi.properties, 'type', 'CAMERA')
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
+
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 			kmi = km.keymap_items.new('view3d.object_as_camera', 'FOUR', 'PRESS',shift=True, ctrl=True,)
 			kmi_props_setattr(kmi.properties, 'type', 'CAMERA')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.camera_to_view_selected', 'FOUR', 'PRESS',alt=True)
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.camera_to_view', 'FOUR', 'PRESS',ctrl=True,alt=True)
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
 
@@ -738,6 +825,26 @@ def register():
 			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('wm.context_toggle', 'FOUR', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('wm.context_toggle', 'FOUR', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sculpt', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('wm.context_toggle', 'FOUR', 'PRESS', ctrl=True)
+			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
 
 
 
@@ -831,6 +938,10 @@ def register():
 			kmi = km.keymap_items.new('view3d.zoom', 'ACTIONMOUSE', 'PRESS', oskey=True, ctrl=True)
 			kmi.active = True
 			view_control_keymap.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.zoom', 'MIDDLEMOUSE', 'PRESS', oskey=True, ctrl=True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
 
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
@@ -882,11 +993,11 @@ def register():
 			view_control_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-			kmi = km.keymap_items.new('view3d.view_selected', 'A', 'PRESS', shift=True, oskey=True)
+			kmi = km.keymap_items.new('view3d.view_selected_smart', 'A', 'PRESS', shift=True, oskey=True)
 			kmi.active = True
 			view_control_keymap.append((km, kmi))
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-			kmi = km.keymap_items.new('view3d.view_selected', 'Z', 'PRESS')
+			kmi = km.keymap_items.new('view3d.view_selected_smart', 'Z', 'PRESS')
 			kmi.active = True
 			view_control_keymap.append((km, kmi))
 
