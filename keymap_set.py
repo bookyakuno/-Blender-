@@ -17,17 +17,15 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-	"name": "Keymap Set",
+	"name": "Keymap_Set",
 	"author": "bookyakuno",
-	"version": (0, 4),
+	"version": (0, 5),
 	"blender": (2, 79, 0),
 	"description": "Rational Keymap Set",
 	"location": "This addon Setting",
 	"warning": "",
 	"category": "UI"}
 
-# 	このアドオンのkeymapリストによって変更しても保存されません。 "入力"タブの所で検索して変更してください。
-# チェックボックスによってkeymap を有功/無効にできます。それには再起動が必要です。
 #
 import bpy, os
 from bpy.types import Menu, Header
@@ -42,6 +40,82 @@ import rna_keymap_ui
 import bpy
 from bpy.app.translations import pgettext_iface as iface_
 from bpy.app.translations import contexts as i18n_contexts
+
+
+
+
+# 翻訳辞書
+translation_dict = {
+    "en_US": {
+        ("*", "Delete Face By Right Click"):
+            "Delete Face By Right Click",
+        ("*", "Sample3-7: Out of range"):
+            "Sample3-7: Out of range",
+        ("*", "Sample3-7: No face is selected"):
+            "Sample3-7: No face is selected",
+        ("*", "Sample3-7: Deleted Face"):
+            "Sample3-7: Deleted Face",
+        ("*", "Sample3-7: Start deleting faces"):
+            "Sample3-7: Start deleting faces",
+        ("*", "Sample3-7: %d face(s) are deleted"):
+            "Sample3-7: %d face(s) are deleted",
+        ("*", "Start"):
+            "Start",
+        ("*", "End"):
+            "End",
+        ("*", "Sample3-7: Enabled add-on 'Sample3-7'"):
+            "Sample3-7: Enabled add-on 'Sample3-7'",
+        ("*", "Sample3-7: Disabled add-on 'Sample3-7'"):
+            "Sample3-7: Disabled add-on 'Sample3-7'"
+    },
+    "ja_JP": {
+		("*", "It will not be saved if you change it with keymap list of this addon."):
+		"このアドオンのキーマップリストによってキー変更しても保存されません。",
+		("*", "Please search and change at the 'input' tab. "):
+		"「入力」タブの所で検索して変更してください。",
+        ("*", "A checkbox enables you to enable / disable keymap."):
+            "チェックボックスによってキーマップのグループを有功/無効にできます。",
+		("*", "Restart Blender to checkbox apply."):
+		"チェックボックスの反映には再起動が必要です",
+    }
+}
+
+
+
+
+
+
+
+
+class object_delete_silent(bpy.types.Operator):
+	bl_idname = "object.object_delete_silent"
+	bl_label = "object_delete_silent"
+	bl_description = "Delete without checking all selected object"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		bpy.ops.object.delete()
+		return {'FINISHED'}
+
+class graph_delete_silent(bpy.types.Operator):
+	bl_idname = "graph.graph_delete_silent"
+	bl_label = "graph_delete_silent"
+	bl_description = "Delete without checking all selected object"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		bpy.ops.graph.delete()
+		return {'FINISHED'}
+
+class action_delete_silent(bpy.types.Operator):
+	bl_idname = "action.action_delete_silent"
+	bl_label = "action_delete_silent"
+	bl_description = "Delete without checking all selected object"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		bpy.ops.action.delete()
+		return {'FINISHED'}
 
 
 class DeleteBySelectMode_x(bpy.types.Operator):
@@ -65,25 +139,17 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 	bl_idname = __name__
 
 
-
-
-
-	use_scene_refresh_z = bpy.props.BoolProperty(
-		name="Refresh Scene",
-		description="Specials Menu [W], or hit F5",
-		default=False,
-	)
-	boolean = BoolProperty(
-			name="Example Boolean",
-			default=False,
-			)
+	# boolean = BoolProperty(
+	# 		name="Example Boolean",
+	# 		default=False,
+	# 		)
 	select_border = BoolProperty(
-			name="select_border",
+			name="Border Select",
 			default=True,
 			)
 
 	select_link = BoolProperty(
-			name="select link",
+			name="Select Link",
 			default=True,
 			)
 
@@ -97,23 +163,60 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 			default=True,
 			)
 
-	etc = BoolProperty(
+	etc_keymap = BoolProperty(
 			name="Etc",
 			default=True,
 			)
+
+	delete_keymap = BoolProperty(
+			name="Delete",
+			default=True,
+			)
+	mesh_tool_keymap = BoolProperty(
+			name="Mesh Tool",
+			default=True,
+			)
+
+	view_control_keymap = BoolProperty(
+			name="View Control",
+			default=True,
+			)
+
+
+
+	modifier_keymap = BoolProperty(
+			name="Modifier",
+			default=True,
+			)
+
+
+	transform_keymap = BoolProperty(
+			name="Transform",
+			default=False,
+			)
+
+
+	view_control_keymap = BoolProperty(
+			name="View Control",
+			default=True,
+			)
+
+
+
+
 ######################################################
 ######################################################
 
 	bpy.types.Scene.select_border_tab = bpy.props.BoolProperty(default=False)
-
 	bpy.types.Scene.select_linked_tab = bpy.props.BoolProperty(default=False)
-
-	bpy.types.Scene.view_numpad_tab = bpy.props.BoolProperty(default=False)
-
-	bpy.types.Scene.mode_set_tab = bpy.props.BoolProperty(default=False)
-
-
-	bpy.types.Scene.select_border_tab_02 = bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.view_numpad_tab =   bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.mode_set_tab =      bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.etc_keymap          = bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.delete_keymap   = bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.mesh_tool_keymap    = bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.view_control_keymap = bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.modifier_keymap = bpy.props.BoolProperty(default=False)
+	bpy.types.Scene.transform_keymap = bpy.props.BoolProperty(default=False)
 
 
 
@@ -123,18 +226,9 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 		user_preferences = context.user_preferences
 		addon_prefs = user_preferences.addons[__name__].preferences
 
-		#######################################################
-		#######################################################
-
-
-		# layout.prop(self, "boolean")
-		# # layout.prop(self, "select_border")
-        #
-		# if addon_prefs.boolean == True:
-		# 	layout.label(
-		# 	text="Here you can enable or disable specific tools, "
-		# 	"in case they interfere with others or are just plain annoying")
-
+#######################################################
+#######################################################
+# UI
 
 
 		layout.label(
@@ -144,12 +238,14 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 		text="Please search and change at the 'input' tab. "
 		)
 		layout.label(
-		text=		"")
-		layout.label(
 		text=		"A checkbox enables you to enable / disable keymap.")
 		layout.label(
-		text=		"It requires a reboot.", icon='FILE_REFRESH')
+		text=		"Restart Blender to checkbox apply.", icon='FILE_REFRESH')
 
+
+
+		# 	このアドオンのkeymapリストによって変更しても保存されません。 "入力"タブの所で検索して変更してください。
+		# チェックボックスによってkeymap を有功/無効にできます。それには再起動が必要です。
 
 
 #######################################################
@@ -190,6 +286,25 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 
 #######################################################
 #######################################################
+#  view_control_keymap
+		col = layout.column(align=True)
+		row = col.row(align=True)
+		row.prop(self, "view_control_keymap")
+		row.prop(context.scene, "view_control_keymap", text="View Control  >> ", icon="URL")
+
+
+
+		if context.scene.view_control_keymap:
+			col = layout.column()
+			kc = bpy.context.window_manager.keyconfigs.addon
+			for km, kmi in view_control_keymap:
+				km = km.active()
+				col.context_pointer_set("keymap", km)
+				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
+
+
+#######################################################
+#######################################################
 #  view numpad
 		col = layout.column(align=True)
 		row = col.row(align=True)
@@ -225,20 +340,55 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
 
 
-
 #######################################################
 #######################################################
-#  etc
+#  etc_keymap
 		col = layout.column(align=True)
 		row = col.row(align=True)
-		row.prop(self, "etc")
-		row.prop(context.scene, "select_border_tab_02", text="etc...", icon="URL")
+		row.prop(self, "etc_keymap")
+		row.prop(context.scene, "etc_keymap", text="etc_keymap...", icon="URL")
 
 
-		if context.scene.select_border_tab_02:
+		if context.scene.etc_keymap:
 			col = layout.column()
 			kc = bpy.context.window_manager.keyconfigs.addon
-			for km, kmi in ccc:
+			for km, kmi in etc_keymap:
+				km = km.active()
+				col.context_pointer_set("keymap", km)
+				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
+
+
+#######################################################
+#######################################################
+#  delete_keymap
+		col = layout.column(align=True)
+		row = col.row(align=True)
+		row.prop(self, "delete_keymap")
+		row.prop(context.scene, "delete_keymap", text="Delete >> BACK SPACE", icon="URL")
+
+
+		if context.scene.delete_keymap:
+			col = layout.column()
+			kc = bpy.context.window_manager.keyconfigs.addon
+			for km, kmi in delete_keymap:
+				km = km.active()
+				col.context_pointer_set("keymap", km)
+				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
+
+
+#######################################################
+#######################################################
+#  transform_keymap
+		col = layout.column(align=True)
+		row = col.row(align=True)
+		row.prop(self, "transform_keymap")
+		row.prop(context.scene, "transform_keymap", text="translate,rotate >> A,D", icon="URL")
+
+
+		if context.scene.transform_keymap:
+			col = layout.column()
+			kc = bpy.context.window_manager.keyconfigs.addon
+			for km, kmi in transform_keymap:
 				km = km.active()
 				col.context_pointer_set("keymap", km)
 				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
@@ -246,15 +396,61 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 
 
 
+#######################################################
+#######################################################
+
 select_border_keymap = []
 
 select_linked_keymap = []
 
 view_numpad_keymap = []
 
+view_control_keymap = []
+
 mode_set_keymap = []
 
-ccc = []
+etc_keymap = []
+
+delete_keymap = []
+
+mesh_tool_keymap = []
+
+view_control_keymap = []
+
+modifier_keymap = []
+
+transform_keymap = []
+
+#######################################################
+#######################################################
+
+
+
+
+
+
+
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
+################################################################
 ################################################################
 # # # # # # # # プロパティの指定に必要なもの
 def kmi_props_setattr(kmi_props, attr, value):
@@ -286,6 +482,13 @@ def register():
 		# 矩形選択
 		if addon_prefs.select_border == True:
 
+			# km = wm.keyconfigs.addon.keymaps.new('Gesture Border', space_type='EMPTY', region_type='WINDOW', modal=True)
+			# kmi = km.keymap_items.new_modal('SELECT', 'LEFTMOUSE', 'PRESS', shift=True)
+			# kmi.active = True
+			# select_border_keymap.append((km, kmi))
+
+
+
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 			kmi = km.keymap_items.new('view3d.select_border', 'EVT_TWEAK_L', 'ANY')
 			kmi_props_setattr(kmi.properties, 'extend', False)
@@ -306,15 +509,6 @@ def register():
 
 
 
-			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-			kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
-			kmi.active = True
-			select_border_keymap.append((km, kmi))
-
-			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('mesh.select_all', 'A', 'PRESS', oskey=True)
-			kmi.active = True
-			select_border_keymap.append((km, kmi))
 
 
 
@@ -369,44 +563,73 @@ def register():
 
 
 
-
-
- # # # # # # # #
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('-- Delete >> BACK SPACE  --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- # # # # # # # #
+ #
+ #
+ # # # # # # # # #
+ # ################################################################
+	# 	km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+	# 	kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+	# 	kmi.active = False
+	# 	etc_keymap.append((km, kmi))
+ # ################################################################
 
 
 
+		if addon_prefs.etc_keymap == True:
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- Delete object (Nomessage) --', 'MINUS', 'PRESS')
+			kmi.active = False
+			delete_keymap.append((km, kmi))
+			################################################################
 
-		km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('object.delete', 'BACK_SPACE', 'PRESS')
-		kmi.active = True
-		ccc.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('object.object_delete_silent', 'BACK_SPACE', 'PRESS')
+			kmi.active = True
+			delete_keymap.append((km, kmi))
+
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- Delete Graph key (Nomessage) --', 'MINUS', 'PRESS')
+			kmi.active = False
+			delete_keymap.append((km, kmi))
+			################################################################
+
+			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('graph.graph_delete_silent', 'BACK_SPACE', 'PRESS')
+			kmi.active = True
+			delete_keymap.append((km, kmi))
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- Delete Dopesheet key (Nomessage) --', 'MINUS', 'PRESS')
+			kmi.active = False
+			delete_keymap.append((km, kmi))
+			################################################################
+
+			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('action.action_delete_silent', 'BACK_SPACE', 'PRESS')
+			kmi.active = True
+			delete_keymap.append((km, kmi))
+
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- Delete Mesh(Auto mesh type Delete) --', 'MINUS', 'PRESS')
+			kmi.active = False
+			delete_keymap.append((km, kmi))
+			################################################################
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('mesh.delete_by_select_mode_x', 'BACK_SPACE', 'PRESS')
+			kmi.active = True
+			delete_keymap.append((km, kmi))
 
 
 
-		km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('mesh.delete_by_select_mode_x', 'BACK_SPACE', 'PRESS')
-		kmi.active = True
-		ccc.append((km, kmi))
-
-
-
-		km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('mesh.dissolve_mode', 'BACK_SPACE', 'PRESS', alt=True)
-		kmi.active = True
-		ccc.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('mesh.dissolve_mode', 'BACK_SPACE', 'PRESS', alt=True)
+			kmi.active = True
+			delete_keymap.append((km, kmi))
 
 
 
@@ -468,36 +691,41 @@ def register():
 			view_numpad_keymap.append((km, kmi))
 
 			# align_active …… 1,2,3 + Alt
-
-			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-
-			kmi = km.keymap_items.new('view3d.viewnumpad', 'ONE', 'PRESS', alt=True)
-			kmi_props_setattr(kmi.properties, 'type', 'TOP')
-			kmi.active = True
-			view_numpad_keymap.append((km, kmi))
-			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-
-			kmi = km.keymap_items.new('view3d.viewnumpad', 'TWO', 'PRESS', alt=True)
-			kmi_props_setattr(kmi.properties, 'type', 'RIGHT')
-			kmi_props_setattr(kmi.properties, 'align_active', True)
-			kmi.active = True
-			view_numpad_keymap.append((km, kmi))
-
-
-			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-
-			kmi = km.keymap_items.new('view3d.viewnumpad', 'THREE', 'PRESS', alt=True)
-			kmi_props_setattr(kmi.properties, 'type', 'FRONT')
-			kmi_props_setattr(kmi.properties, 'align_active', True)
-			kmi.active = True
-			view_numpad_keymap.append((km, kmi))
-
+            #
+			# km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+            #
+			# kmi = km.keymap_items.new('view3d.viewnumpad', 'ONE', 'PRESS', alt=True)
+			# kmi_props_setattr(kmi.properties, 'type', 'TOP')
+			# kmi.active = True
+			# view_numpad_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+            #
+			# kmi = km.keymap_items.new('view3d.viewnumpad', 'TWO', 'PRESS', alt=True)
+			# kmi_props_setattr(kmi.properties, 'type', 'RIGHT')
+			# kmi_props_setattr(kmi.properties, 'align_active', True)
+			# kmi.active = True
+			# view_numpad_keymap.append((km, kmi))
+            #
+            #
+			# km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+            #
+			# kmi = km.keymap_items.new('view3d.viewnumpad', 'THREE', 'PRESS', alt=True)
+			# kmi_props_setattr(kmi.properties, 'type', 'FRONT')
+			# kmi_props_setattr(kmi.properties, 'align_active', True)
+			# kmi.active = True
+			# view_numpad_keymap.append((km, kmi))
+            #
 
 
 # Camera
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 			kmi = km.keymap_items.new('view3d.viewnumpad', 'FOUR', 'PRESS')
+			kmi_props_setattr(kmi.properties, 'type', 'CAMERA')
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.object_as_camera', 'FOUR', 'PRESS',shift=True, ctrl=True,)
 			kmi_props_setattr(kmi.properties, 'type', 'CAMERA')
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
@@ -510,6 +738,7 @@ def register():
 			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
+
 
 
 
@@ -532,61 +761,37 @@ def register():
 
 
 
- # # # # # # # #
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('-- Mesh Tool --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- # # # # # # # #
+ #
+ # # # # # # # # #
+ # ################################################################
+	# 	km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+	# 	kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+	# 	kmi.active = False
+	# 	etc_keymap.append((km, kmi))
+ # ################################################################
+ # ################################################################
+	# 	km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+	# 	kmi = km.keymap_items.new('-- Transform AXIS-Y >> C --', 'MINUS', 'PRESS')
+	# 	kmi.active = False
+	# 	etc_keymap.append((km, kmi))
+ # ################################################################
+ # # # # # # # # #
 
 
 
 
 
-
-		km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('mesh.knife_tool', 'Z', 'PRESS', ctrl=True)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-
-
-		km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('mesh.inset', 'S', 'PRESS', shift=True,alt=True)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-
-
-
-
-
-
-
-
-
- # # # # # # # #
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('-- Transform AXIS-Y >> C --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- # # # # # # # #
+        # #
+		# km = bpy.context.window_manager.keyconfigs.addon.keymaps.new('Transform Modal Map', space_type='EMPTY', region_type='WINDOW', modal=True)
+		# kmi = km.keymap_items.new_modal('PLANE_Y', 'C', 'PRESS', shift=True)
+		# kmi.active = True
+		# etc_keymap.append((km, kmi))
+        #
+		# km = bpy.context.window_manager.keyconfigs.addon.keymaps.new('Transform Modal Map', space_type='EMPTY', region_type='WINDOW', modal=True)
+		# kmi = km.keymap_items.new_modal('AXIS_Y', 'C', 'PRESS', any=True)
+		# kmi.active = True
+		# etc_keymap.append((km, kmi))
+        #
 
 
 
@@ -597,75 +802,100 @@ def register():
 
 
 
+		if addon_prefs.view_control_keymap == True:
 
 
 
- # # # # # # # #
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('-- View Rotate/move --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- # # # # # # # #
+			# # # # # # # #
+			################################################################
+			# km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+			# kmi.active = False
+			# view_control_keymap.append((km, kmi))
+			################################################################
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- View Rotate/move --', 'MINUS', 'PRESS')
+			kmi.active = False
+			view_control_keymap.append((km, kmi))
+			################################################################
+			# # # # # # # #
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.rotate', 'SELECTMOUSE', 'PRESS', oskey=True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.zoom', 'ACTIONMOUSE', 'PRESS', oskey=True, ctrl=True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.move', 'RIGHTMOUSE', 'PRESS', oskey=True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.move', 'MIDDLEMOUSE', 'PRESS', oskey=True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+			kmi.active = False
+			view_control_keymap.append((km, kmi))
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- show only render  >>   shift + alt Z', 'MINUS', 'PRESS')
+			kmi.active = False
+			view_control_keymap.append((km, kmi))
+			################################################################
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('wm.context_toggle', 'Z', 'PRESS', shift=True,alt=True)
+			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.show_only_render')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+
+
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+			kmi.active = False
+			view_control_keymap.append((km, kmi))
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- view all / selected  >>   --', 'MINUS', 'PRESS')
+			kmi.active = False
+			view_control_keymap.append((km, kmi))
+			################################################################
+
+
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.view_all', 'A', 'PRESS', ctrl=True, oskey=True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.view_selected', 'A', 'PRESS', shift=True, oskey=True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
 
 
 
 
-		km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-		kmi = km.keymap_items.new('view3d.rotate', 'SELECTMOUSE', 'PRESS', oskey=True)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-
-
-
-
-		km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-		kmi = km.keymap_items.new('view3d.move', 'MIDDLEMOUSE', 'PRESS', oskey=True)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-
-
- # # # # # # # #
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('-- view all / selected  >>   --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- # # # # # # # #
-
-
-
-		km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-		kmi = km.keymap_items.new('view3d.view_all', 'A', 'PRESS', ctrl=True, oskey=True)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-		km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-		kmi = km.keymap_items.new('view3d.view_selected', 'A', 'PRESS', shift=True, oskey=True)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-
-#
-		######################################################
-		######################################################
-		# mose set
+######################################################
+######################################################
+# mose set
 		if addon_prefs.mode_set == True:
 
 
@@ -747,53 +977,507 @@ def register():
 
 
 
+		if addon_prefs.etc_keymap == True:
+
+		 # # # # # # # #
+		 ################################################################
+				# km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+				# kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+				# kmi.active = False
+				# etc_keymap.append((km, kmi))
+		 ################################################################
+		 ################################################################
+				km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('-- Modifier --', 'MINUS', 'PRESS')
+				kmi.active = False
+				etc_keymap.append((km, kmi))
+		 ################################################################
+		 # # # # # # # #
+
+
+				km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+				kmi = km.keymap_items.new('object.modifier_add', 'FOUR', 'PRESS', ctrl=True, oskey=True)
+				kmi_props_setattr(kmi.properties, 'type', 'MIRROR')
+				kmi.active = True
+				etc_keymap.append((km, kmi))
+
+				km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+				kmi = km.keymap_items.new('object.subdivision_set', 'ONE', 'PRESS', oskey=True)
+				kmi_props_setattr(kmi.properties, 'level', 0)
+				kmi.active = True
+				etc_keymap.append((km, kmi))
+
+				km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+				kmi = km.keymap_items.new('object.subdivision_set', 'THREE', 'PRESS', oskey=True)
+				kmi_props_setattr(kmi.properties, 'level', 2)
+				kmi.active = True
+				etc_keymap.append((km, kmi))
+
+
+
+
+				# # # # # # # # #
+				# ################################################################
+				# km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+				# kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+				# kmi.active = False
+				# etc_keymap.append((km, kmi))
+				# ################################################################
+				# ################################################################
+				# km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+				# kmi = km.keymap_items.new('-- Mesh Tool --', 'MINUS', 'PRESS')
+				# kmi.active = False
+				# etc_keymap.append((km, kmi))
+				# ################################################################
+				# # # # # # # # #
+
+
+
+
+
+
+				# km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+				# kmi = km.keymap_items.new('mesh.knife_tool', 'Z', 'PRESS', ctrl=True)
+				# kmi.active = True
+				# etc_keymap.append((km, kmi))
+
+
+
+				# km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+				# kmi = km.keymap_items.new('mesh.inset', 'S', 'PRESS', shift=True,alt=True)
+				# kmi.active = True
+				# etc_keymap.append((km, kmi))
+
+
+
+				km = wm.keyconfigs.addon.keymaps.new('Window', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('wm.search_menu', 'SPACE', 'PRESS', shift=True,alt=True)
+				kmi.active = True
+				etc_keymap.append((km, kmi))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################
+################################################################
+
+################################################################
+################################################################
+
+
+		if addon_prefs.etc_keymap == True:
+
+
+
+	# # # # # # # #
+	################################################################
+
+	#Translate >> A
+
+	################################################################
+	# # # # # # # #
+			km = wm.keyconfigs.addon.keymaps.new('3D View Generic', space_type='VIEW_3D', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil Stroke Edit Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Pose', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Curve', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Armature', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Metaball', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Lattice', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Non-modal', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('UV Editor', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			# km = wm.keyconfigs.addon.keymaps.new('Transform Modal Map', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new_modal('ROTATE', 'A', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Node Editor', space_type='NODE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Logic Editor', space_type='LOGIC_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Graph Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Dopesheet Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+
+
+
+
+
+	# # # # # # # #
+	################################################################
+
+	#Rotate >> D
+
+	################################################################
+	# # # # # # # #
+			km = wm.keyconfigs.addon.keymaps.new('3D View Generic', space_type='VIEW_3D', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil Stroke Edit Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Pose', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Curve', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Armature', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Metaball', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Lattice', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Non-modal', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('UV Editor', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			# km = wm.keyconfigs.addon.keymaps.new('Transform Modal Map', space_type='EMPTY', region_type='WINDOW', modal=True)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Node Editor', space_type='NODE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Logic Editor', space_type='LOGIC_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Graph Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Dopesheet Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+
+
+###################################
+
+# select ndof_all
+
+###################################
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Animation Channels', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('anim.channels_select_all_toggle', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil Stroke Edit Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('gpencil.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Pose', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new('Particle', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('particle.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Curve', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('curve.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('mesh.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Armature', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('armature.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Metaball', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('mball.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Weight Paint Vertex Selection', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('paint.vert_select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Lattice', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('lattice.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			# km = wm.keyconfigs.addon.keymaps.new('Object Non-modal', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('UV Editor', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('uv.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Font', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('font.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			# km = wm.keyconfigs.addon.keymaps.new('Transform Modal Map', space_type='EMPTY', region_type='WINDOW', modal=True)
+			# kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('graph.select_all_toggle', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Node Editor', space_type='NODE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('node.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('action.select_all_toggle', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('nla.select_all_toggle', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			# km = wm.keyconfigs.addon.keymaps.new('Logic Editor', space_type='LOGIC_EDITOR', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('object.select_all', 'A', 'PRESS', oskey=True)
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('clip.select_all', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Graph Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('clip.graph_select_all_markers', 'A', 'PRESS', oskey=True)
+			kmi.active = True
+			transform_keymap.append((km, kmi))
+
+
+
+
 
  # # # # # # # #
  ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- ################################################################
-		km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-		kmi = km.keymap_items.new('-- Modifier Add --', 'MINUS', 'PRESS')
-		kmi.active = False
-		ccc.append((km, kmi))
- ################################################################
- # # # # # # # #
-
-
-		km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-		kmi = km.keymap_items.new('object.modifier_add', 'FOUR', 'PRESS', ctrl=True, oskey=True)
-		kmi_props_setattr(kmi.properties, 'type', 'MIRROR')
-		kmi.active = True
-		ccc.append((km, kmi))
-
-		km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-		kmi = km.keymap_items.new('object.subdivision_set', 'ONE', 'PRESS', oskey=True)
-		kmi_props_setattr(kmi.properties, 'level', 0)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-		km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-		kmi = km.keymap_items.new('object.subdivision_set', 'THREE', 'PRESS', oskey=True)
-		kmi_props_setattr(kmi.properties, 'level', 2)
-		kmi.active = True
-		ccc.append((km, kmi))
-
-
-
-
-
-
- # # # # # # # #
- ################################################################
 
 
  ################################################################
  # # # # # # # #
 
+		bpy.app.translations.register(__name__, translation_dict)   # 辞書の登録
 
 
 
@@ -801,10 +1485,50 @@ def register():
 def unregister():
 	bpy.utils.unregister_module(__name__)
 	# handle the keymap
-	for km, kmi in ccc:
+	for km, kmi in select_border_keymap:
 		km.keymap_items.remove(kmi)
-	ccc.clear()
+	for km, kmi in select_linked_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in view_numpad_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in mode_set_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in etc_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in delete_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in mesh_tool_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in view_control_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in modifier_keymap:
+		km.keymap_items.remove(kmi)
+	for km, kmi in transform_keymap:
+		km.keymap_items.remove(kmi)
+
+	select_border_keymap.clear()
+	select_linked_keymap.clear()
+	view_numpad_keymap.clear()
+	mode_set_keymap.clear()
+	etc_keymap.clear()
+	delete_keymap.clear()
+	mesh_tool_keymap.clear()
+	view_control_keymap.clear()
+	modifier_keymap.clear()
+	transform_keymap.clear()
+
+
+	bpy.app.translations.unregister(__name__)   # 辞書の削除
 
 
 	# clear the list
-	del ccc[:]
+	del select_border_keymap[:]
+	del select_linked_keymap[:]
+	del view_numpad_keymap[:]
+	del mode_set_keymap[:]
+	del etc_keymap[:]
+	del delete_keymap[:]
+	del mesh_tool_keymap[:]
+	del view_control_keymap[:]
+	del modifier_keymap[:]
+	del transform_keymap[:]
