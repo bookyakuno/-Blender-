@@ -41,6 +41,317 @@ Wazou Pie Menu の、多すぎる要素を削ぎ落としてコンパクトに�
 
 
 
+  
+# Keymap set  
+
+Blenderで「普通の操作」ができるキー設定を登録するアドオン<br>
+<br>
+<br>
+・ボックス選択 …… マウスドラッグ<br>
+・リンク選択 …… ダブルクリック<br>
+・削除 …… バックスペース<br>
+　　- メッセージなし削除<br>
+　　- メッシュ選択モードによる自動削除<br>
+・視点の操作……1,2,3,4,5<br>
+・モードセット……Tab<br>
+などがすぐに設定できます。<br>
+<br>
+
+<table border=0 cellpadding=0 cellspacing=0 width=438 style='border-collapse:
+ collapse;table-layout:fixed;width:438pt'>
+ <col class=xl66 width=255 style='mso-width-source:userset;mso-width-alt:10880;
+ width:255pt'>
+ <col class=xl66 width=183 style='mso-width-source:userset;mso-width-alt:7808;
+ width:183pt'>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl68 width=438 style='height:18.0pt;width:438pt'>ボックス<ruby><rb>選択</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>ボックス選択</td>
+  <td class=xl66 style='border-top:none;border-left:none'>マウスドラッグ</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>で追加選択</td>
+  <td class=xl66 style='border-top:none;border-left:none'>マウスドラッグ + shift</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl67 style='height:18.0pt'>すべてのウィンドウタイプに対応</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl67 style='height:18.0pt'>マウスドラッグでの<ruby><rb>移動</rb><span
+  style='display:none'></span></ruby>の<ruby><rb>代替</rb><span
+  style='display:none'></span></ruby>キーについては<ruby><rb>検討中</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl67 style='height:18.0pt;border-top:none'>　</td>
+  <td class=xl67 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>リンク<ruby><rb>選択</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>メッシュがつながっているものをすべて選択</td>
+  <td class=xl66 style='border-top:none;border-left:none'>ダブルクリック</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>追加選択</td>
+  <td class=xl66 style='border-top:none;border-left:none'>ダブルクリック + shift</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl67 style='height:18.0pt'>UVエディターのピースにも対応</td>
+ </tr>
+ <tr height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>　</td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>バックスペース</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>オブジェクトを「メッセージを表示せず」削除</td>
+  <td class=xl66 style='border-top:none;border-left:none'>BACKSPACE</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>メッシュ選択モードと同じ要素を自動削除</td>
+  <td class=xl66 style='border-top:none;border-left:none'>BACKSPACE</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>メッシュ選択モードと同じ要素を自動溶解</td>
+  <td class=xl66 style='border-top:none;border-left:none'>BACKSPACE + alt</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl69 style='border-right:.5pt solid black;
+  height:18.0pt'>ドープシート・グラフエディターのキー削除にも対応</td>
+ </tr>
+ <tr height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>　</td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><ruby><rb>視点</rb><span
+  style='display:none'></span></ruby>の<ruby><rb>操作</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>前右上</td>
+  <td class=xl66 style='border-top:none;border-left:none'>1,2,3</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>後左下</td>
+  <td class=xl66 style='border-top:none;border-left:none'>1,2,3 + ctrl</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>カメラ</td>
+  <td class=xl66 style='border-top:none;border-left:none'>4</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>「カメラをビューにロック」
+  の<ruby><rb>切</rb><span style='display:none'></span></ruby>り<ruby><rb>替</rb><span
+  style='display:none'></span></ruby>え</td>
+  <td class=xl66 style='border-top:none;border-left:none'>4 + ctrl</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>
+  <meta charset=utf-8>
+  <span>現在の視点にカメラを合わせる</span></td>
+  <td class=xl66 style='border-top:none;border-left:none'>4 + shift</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>アクティブオブジェクトをカメラにする</td>
+  <td class=xl66 style='border-top:none;border-left:none'>4 + shift + ctrl</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'><ruby><rb>選択</rb><span
+  style='display:none'></span></ruby>にカメラのフレームを<ruby><rb>合</rb><span
+  style='display:none'></span></ruby>わせる</td>
+  <td class=xl66 style='border-top:none;border-left:none'>4 + alt</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'><ruby><rb>現在</rb><span
+  style='display:none'></span></ruby>の<ruby><rb>視点</rb><span
+  style='display:none'></span></ruby>にカメラを<ruby><rb>合</rb><span
+  style='display:none'></span></ruby>わせる</td>
+  <td class=xl66 style='border-top:none;border-left:none'>4 + alt + ctrl</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>レンダリング</td>
+  <td class=xl66 style='border-top:none;border-left:none'>5</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl69 style='border-right:.5pt solid black;
+  height:18.0pt'>テンキーを必要とせず、左手で押しやすいものを用意。</td>
+ </tr>
+ <tr class=xl65 height=44 style='mso-height-source:userset;height:44.0pt'>
+  <td colspan=2 height=44 class=xl71 width=438 style='border-right:.5pt solid black;
+  height:44.0pt;width:438pt'>※Blenderには「テンキーを模倣」という機能が用意されているが、<br>
+  これだと単純に数字キー全てを置き換えるだけなので左手だけではアクセスしづらい。</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>トランスフォーム</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'><ruby><rb>移動</rb><span
+  style='display:none'></span></ruby></td>
+  <td class=xl66 style='border-top:none;border-left:none'>A</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'><ruby><rb>回転</rb><span
+  style='display:none'></span></ruby></td>
+  <td class=xl66 style='border-top:none;border-left:none'>D</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>すべて<ruby><rb>選択</rb><span
+  style='display:none'></span></ruby></td>
+  <td class=xl66 style='border-top:none;border-left:none'>A + cmd</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>すべてのウィンドウタイプに対応</td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>
+  <meta charset=utf-8>
+  <span>左手で押しやすく、XYZキーの近くするため</span></td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl69 style='border-right:.5pt solid black;
+  height:18.0pt'><ruby><rb>元</rb><span style='display:none'></span></ruby>のAキーの<ruby><rb>全選択</rb><span
+  style='display:none'></span></ruby>は A + cmd に<ruby><rb>設定</rb><span
+  style='display:none'></span></ruby>。Windowsユーザーは<ruby><rb>設定</rb><span
+  style='display:none'></span></ruby>する<ruby><rb>必要</rb><span
+  style='display:none'></span></ruby>あり</td>
+ </tr>
+ <tr class=xl65 height=34 style='mso-height-source:userset;height:34.0pt'>
+  <td colspan=2 height=34 class=xl73 width=438 style='height:34.0pt;width:438pt'>トランスフォーム<ruby><rb>中</rb><span
+  style='display:none'></span></ruby>のキー<ruby><rb>変更</rb><span
+  style='display:none'></span></ruby>は<ruby><rb>未実装</rb><span
+  style='display:none'></span></ruby>。<br>
+  <ruby><rb>使用</rb><span
+  style='display:none'></span></ruby>の<ruby><rb>場合</rb><span
+  style='display:none'></span></ruby>は<ruby><rb>手動</rb><span
+  style='display:none'></span></ruby>でTransform Modal Map に<ruby><rb>入</rb><span
+  style='display:none'></span></ruby>れる<ruby><rb>必要</rb><span
+  style='display:none'></span></ruby>がある</td>
+ </tr>
+ <tr class=xl65 height=20 style='mso-height-source:userset;height:20.0pt'>
+  <td colspan=2 height=20 class=xl69 style='border-right:.5pt solid black;
+  height:20.0pt'>
+  <meta charset=utf-8>
+  <span><ruby><rb>同</rb><span style='display:none'></span></ruby>じくAXIS-Y
+  をCキーに設定するとより<ruby><rb>良</rb><span style='display:none'></span></ruby>い。</span></td>
+ </tr>
+ <tr class=xl65 height=18 style='page-break-before:always;height:18.0pt'>
+  <td colspan=2 height=18 class=xl69 style='border-right:.5pt solid black;
+  height:18.0pt'>ダブルクリックの<ruby><rb>回転</rb><span style='display:none'></span></ruby>モーダルなどは<ruby><rb>未実装</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>　</td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>モード<ruby><rb>変更</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>編集/オブジェクト</td>
+  <td class=xl66 style='border-top:none;border-left:none'>Tab</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>スカルプト</td>
+  <td class=xl66 style='border-top:none;border-left:none'>Tab + shift</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>ポーズ</td>
+  <td class=xl66 style='border-top:none;border-left:none'>Tab + ctrl</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>テクスチャペイント</td>
+  <td class=xl66 style='border-top:none;border-left:none'>Tab + ctrl</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>ウェイトペイント</td>
+  <td class=xl66 style='border-top:none;border-left:none'>Tab + alt</td>
+ </tr>
+ <tr height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>　</td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl69 style='border-right:.5pt solid black;
+  height:18.0pt'>Tab + shift のスナップは、トランスフォーム<ruby><rb>中</rb><span
+  style='display:none'></span></ruby>にctrlで<ruby><rb>十分</rb><span
+  style='display:none'></span></ruby>なので<ruby><rb>代替</rb><span
+  style='display:none'></span></ruby>キーは<ruby><rb>未実装</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl69 style='border-right:.5pt solid black;
+  height:18.0pt'>Tab + ctrl のメッシュ<ruby><rb>選択</rb><span style='display:none'></span></ruby>モードは、w_pieアドオンの<ruby><rb>右クリック</rb><span
+  style='display:none'></span></ruby>パイメニューの<ruby><rb>利用</rb><span
+  style='display:none'></span></ruby>を<ruby><rb>推奨</rb><span
+  style='display:none'></span></ruby></td>
+ </tr>
+ <tr height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>　</td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>ビューコントロール</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>ビューを<ruby><rb>回転</rb><span
+  style='display:none'></span></ruby></td>
+  <td class=xl66 style='border-top:none;border-left:none'>cmd +<span
+  style="mso-spacerun:yes">&nbsp;</span><ruby><rb>左</rb><span style='display:
+  none'></span></ruby>クリック</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>ビューを<ruby><rb>移動</rb><span
+  style='display:none'></span></ruby></td>
+  <td class=xl66 style='border-top:none;border-left:none'>cmd +<span
+  style="mso-spacerun:yes">&nbsp;</span><ruby><rb>右</rb><span style='display:
+  none'></span></ruby>クリック/<ruby><rb>中</rb><span style='display:
+  none'></span></ruby>クリック</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>ビューをズーム</td>
+  <td class=xl66 style='border-top:none;border-left:none'>cmd + ctrl<span
+  style="mso-spacerun:yes">&nbsp;</span><ruby><rb>右</rb><span style='display:
+  none'></span></ruby>クリック/中<span style='display:none'>クリック</span></td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'><ruby><rb>選択部分</rb><span
+  style='display:none'></span></ruby>を<ruby><rb>表示</rb><span
+  style='display:none'></span></ruby>(<ruby><rb>すべてのウィンドウに対応</rb><span
+  style='display:none'></span></ruby>)</td>
+  <td class=xl66 style='border-top:none;border-left:none'>Z</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>レンダリングするもののみ<ruby><rb>表示</rb><span
+  style='display:none'></span></ruby></td>
+  <td class=xl66 style='border-top:none;border-left:none'>Z + shift + alt</td>
+ </tr>
+ <tr height=18 style='height:18.0pt'>
+  <td height=18 class=xl66 style='height:18.0pt;border-top:none'>　</td>
+  <td class=xl66 style='border-top:none;border-left:none'>　</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+  <td colspan=2 rowspan=2 height=36 class=xl73 width=438 style='height:36.0pt;
+  width:438pt'>Zのワイヤーフレーム<ruby><rb>表示</rb><span style='display:none'></span></ruby>は、<br>
+  w_pieアドオンの右クリック + shift + alt のシェーディングパイメニューの利用を推奨</td>
+ </tr>
+ <tr class=xl65 height=18 style='height:18.0pt'>
+ </tr>
+</table>
+
+
+
+
 
 
 # group_layer.py
@@ -394,38 +705,6 @@ Shift + Ctrl + 3
   
   
   
-# Keymap set  
-※ 再起動時に、アドオン設定画面で変更した設定が全て消える問題があるので、  
-  
-現状、変更は実質不可  
-  
-  
-簡単に使いやすいショートカットを設定するアドオン。  
-一般的なショートカットを設定することができます。  
-このアドオンの設定にて、追加するキーマップの編集が可能です。  
-  
-* 矩形選択 …… マウスドラッグ  
-* リンク選択 …… ダブルクリック  
-* 削除・溶解 …… バックスペース  
-メッシュ編集では、選択モードに応じて要素を削除するように  
-* テンキーでのビュー変更 …… 1,2,3キー  
-* カメラビューを4キー  
-* レンダリングを5キー  
-* トランスフォームY軸指定 …… Cキーでも可能に  
-(キーボード左下のZXCで軸指定しやすいように)  
-* ビューの回転と移動  
-好きな様に変更して下さい  
-* 全体を表示* 選択部分を表示  
-MayaのようなA,Fキーなど、好きな様に変更して下さい  
-* 対話モード …… Tab + 修飾キー  
-■ バグ  
-  
-このアドオンのチェックを何度かオン・オフしていると、  
-同じキーマップがいくつも生成されるが、重複するキーマップは、再起動に自動で消去される  
-  
-今の所3Dビューまわりのみだが、今後全エディターに対応する予定  
-  
-Mac基準(Cmdありき)のキー設定なので、Windowsユーザーは適宜キーマップを変更すること  
   
   
 # Blender-Bookyakuno-config  
