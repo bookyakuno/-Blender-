@@ -19,7 +19,7 @@
 bl_info = {
 	"name": "Keymap_Set",
 	"author": "bookyakuno",
-	"version": (0, 6),
+	"version": (0, 8),
 	"blender": (2, 79, 0),
 	"description": "Rational Keymap Set",
 	"location": "This addon Setting",
@@ -87,7 +87,7 @@ translation_dict = {
 
 class ViewSelected_smart(bpy.types.Operator):
 	bl_idname = "view3d.view_selected_smart"
-	bl_label = "Show Selected (non-zoom)"
+	bl_label = "view Selected (non-zoom)"
 	bl_description = "Selected ones over center of 3D perspective not (zoom)"
 	bl_options = {'REGISTER'}
 
@@ -176,7 +176,7 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 			default=True,
 			)
 
-	mode_set = BoolProperty(
+	mode_set_keymap = BoolProperty(
 			name="Mode Set",
 			default=True,
 			)
@@ -216,12 +216,6 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 	transform_keymap = BoolProperty(
 			name="Transform",
 			default=False,
-			)
-
-
-	view_control_keymap = BoolProperty(
-			name="View Control",
-			default=True,
 			)
 
 
@@ -332,7 +326,7 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 		col = layout.column(align=True)
 		row = col.row(align=True)
 		row.prop(self, "view_numpad")
-		row.prop(context.scene, "view_numpad_tab", text="view numpad  >> 1,2,3,4,5", icon="URL")
+		row.prop(context.scene, "view_numpad_tab", text="View Numpad  >> 1,2,3,4,5", icon="URL")
 
 
 
@@ -350,7 +344,7 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 #  Mode Set
 		col = layout.column(align=True)
 		row = col.row(align=True)
-		row.prop(self, "mode_set")
+		row.prop(self, "mode_set_keymap")
 		row.prop(context.scene, "mode_set_tab", text="Mode Set >> Tab", icon="URL")
 
 
@@ -361,25 +355,6 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 				km = km.active()
 				col.context_pointer_set("keymap", km)
 				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
-
-
-#######################################################
-#######################################################
-#  etc_keymap
-		col = layout.column(align=True)
-		row = col.row(align=True)
-		row.prop(self, "etc_keymap")
-		row.prop(context.scene, "etc_keymap", text="etc_keymap...", icon="URL")
-
-
-		if context.scene.etc_keymap:
-			col = layout.column()
-			kc = bpy.context.window_manager.keyconfigs.addon
-			for km, kmi in etc_keymap:
-				km = km.active()
-				col.context_pointer_set("keymap", km)
-				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
-
 
 #######################################################
 #######################################################
@@ -412,6 +387,25 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 			col = layout.column()
 			kc = bpy.context.window_manager.keyconfigs.addon
 			for km, kmi in transform_keymap:
+				km = km.active()
+				col.context_pointer_set("keymap", km)
+				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
+
+
+
+#######################################################
+#######################################################
+#  etc_keymap
+		col = layout.column(align=True)
+		row = col.row(align=True)
+		row.prop(self, "etc_keymap")
+		row.prop(context.scene, "etc_keymap", text="etc_keymap...", icon="URL")
+
+
+		if context.scene.etc_keymap:
+			col = layout.column()
+			kc = bpy.context.window_manager.keyconfigs.addon
+			for km, kmi in etc_keymap:
 				km = km.active()
 				col.context_pointer_set("keymap", km)
 				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
@@ -499,30 +493,204 @@ def register():
 		user_preferences = bpy.context.user_preferences
 		addon_prefs = user_preferences.addons[__name__].preferences
 
-		######################################################
-		######################################################
-		#boader select
+######################################################
+######################################################
+#boader select
 		# 矩形選択
 		if addon_prefs.select_border == True:
 
-			# km = wm.keyconfigs.addon.keymaps.new('Gesture Border', space_type='EMPTY', region_type='WINDOW', modal=True)
-			# kmi = km.keymap_items.new_modal('SELECT', 'LEFTMOUSE', 'PRESS', shift=True)
-			# kmi.active = True
-			# select_border_keymap.append((km, kmi))
+
+			######################################################
+			######################################################
+			# select mouse Drag
+			#
+
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+			kmi.active = False
+			select_border_keymap.append((km, kmi))
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- select mouse Drag --', 'MINUS', 'PRESS')
+			kmi.active = False
+			select_border_keymap.append((km, kmi))
+			################################################################
 
 
-
-			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('view3d.select_border', 'EVT_TWEAK_L', 'ANY')
 			kmi_props_setattr(kmi.properties, 'extend', False)
 			kmi.active = True
 			select_border_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			km = wm.keyconfigs.addon.keymaps.new('Animation Channels', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('anim.channels_select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil Stroke Edit Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('gpencil.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Weight Paint Vertex Selection', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('UV Editor', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('uv.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('graph.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Node Editor', space_type='NODE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('node.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('action.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('nla.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('sequencer.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('clip.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Graph Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('clip.select_border', 'EVT_TWEAK_L', 'ANY')
+			kmi_props_setattr(kmi.properties, 'extend', False)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			######################################################
+			######################################################
+			# select mouse Drag + shift
+			#
+
+
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('--  --', 'MINUS', 'PRESS')
+			kmi.active = False
+			select_border_keymap.append((km, kmi))
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- select mouse Drag + shift --', 'MINUS', 'PRESS')
+			kmi.active = False
+			select_border_keymap.append((km, kmi))
+			################################################################
+
+
+
+			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('view3d.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
 			kmi.active = True
 			select_border_keymap.append((km, kmi))
 
+			km = wm.keyconfigs.addon.keymaps.new('Animation Channels', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('anim.channels_select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Grease Pencil Stroke Edit Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('gpencil.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Weight Paint Vertex Selection', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+
+			km = wm.keyconfigs.addon.keymaps.new('UV Editor', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('uv.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('graph.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Node Editor', space_type='NODE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('node.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('action.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('nla.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('sequencer.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('clip.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Graph Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('clip.select_border', 'EVT_TWEAK_L', 'ANY', shift=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+
+
+
+
+
+
+
+
+
+######################################################
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 			kmi = km.keymap_items.new('view3d.manipulator', 'SELECTMOUSE', 'PRESS', any=True)
@@ -530,6 +698,7 @@ def register():
 			kmi.active = True
 			select_border_keymap.append((km, kmi))
 
+######################################################
 
 
 
@@ -980,12 +1149,18 @@ def register():
 			view_control_keymap.append((km, kmi))
 			################################################################
 			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('-- view all / selected  >>   --', 'MINUS', 'PRESS')
+			kmi = km.keymap_items.new('-- view all / selected  >>  Z --', 'MINUS', 'PRESS')
 			kmi.active = False
 			view_control_keymap.append((km, kmi))
 			################################################################
 
 
+
+
+
+			######################################################
+			######################################################
+			# view select
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 			kmi = km.keymap_items.new('view3d.view_all', 'A', 'PRESS', ctrl=True, oskey=True)
@@ -996,10 +1171,52 @@ def register():
 			kmi = km.keymap_items.new('view3d.view_selected_smart', 'A', 'PRESS', shift=True, oskey=True)
 			kmi.active = True
 			view_control_keymap.append((km, kmi))
+
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 			kmi = km.keymap_items.new('view3d.view_selected_smart', 'Z', 'PRESS')
 			kmi.active = True
 			view_control_keymap.append((km, kmi))
+			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('graph.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Image', space_type='IMAGE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('image.view_all', 'Z', 'PRESS')
+			kmi_props_setattr(kmi.properties, 'fit_view', True)
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Node Editor', space_type='NODE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('node.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('action.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('nla.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('sequencer.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('clip.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new('Timeline', space_type='TIMELINE', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('time.view_all', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
 
 
 
@@ -1007,7 +1224,7 @@ def register():
 ######################################################
 ######################################################
 # mose set
-		if addon_prefs.mode_set == True:
+		if addon_prefs.mode_set_keymap == True:
 
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
@@ -1166,7 +1383,11 @@ def register():
 				kmi.active = True
 				etc_keymap.append((km, kmi))
 
-
+				km = wm.keyconfigs.addon.keymaps.new('Window', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('screen.animation_play', 'SPACE', 'PRESS')
+				kmi_props_setattr(kmi.properties, 'sync', True)
+				kmi.active = True
+				etc_keymap.append((km, kmi))
 
 
 
@@ -1191,7 +1412,7 @@ def register():
 ################################################################
 
 
-		if addon_prefs.etc_keymap == True:
+		if addon_prefs.transform_keymap == True:
 
 
 
