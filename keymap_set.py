@@ -19,7 +19,7 @@
 bl_info = {
 	"name": "Keymap_Set",
 	"author": "bookyakuno",
-	"version": (0, 8),
+	"version": (0, 9),
 	"blender": (2, 79, 0),
 	"description": "Rational Keymap Set",
 	"location": "This addon Setting",
@@ -1504,7 +1504,8 @@ def register():
 			transform_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi = km.keymap_items.new('transform.transform', 'A', 'PRESS')
+			kmi_props_setattr(kmi.properties, 'mode', 'TIME_TRANSLATE')
 			kmi.active = True
 			transform_keymap.append((km, kmi))
 
@@ -1535,6 +1536,7 @@ def register():
 
 			km = wm.keyconfigs.addon.keymaps.new('Clip Dopesheet Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('transform.translate', 'A', 'PRESS')
+			kmi_props_setattr(kmi.properties, 'mode', 'TIME_TRANSLATE')
 			kmi.active = True
 			transform_keymap.append((km, kmi))
 
@@ -1565,45 +1567,45 @@ def register():
 			kmi.active = True
 			transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Pose', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Pose', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Curve', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Curve', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
+            #
+			# km = wm.keyconfigs.addon.keymaps.new('Armature', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Armature', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Metaball', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Metaball', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Lattice', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Lattice', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
-
-			km = wm.keyconfigs.addon.keymaps.new('Object Non-modal', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Object Non-modal', space_type='EMPTY', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
@@ -1630,40 +1632,40 @@ def register():
 			kmi.active = True
 			transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Dopesheet', space_type='DOPESHEET_EDITOR', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('NLA Editor', space_type='NLA_EDITOR', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Sequencer', space_type='SEQUENCE_EDITOR', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new('Logic Editor', space_type='LOGIC_EDITOR', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
 			kmi.active = True
 			transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Clip Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new('Clip Graph Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
 			kmi.active = True
 			transform_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Clip Dopesheet Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
-			kmi.active = True
-			transform_keymap.append((km, kmi))
+			# km = wm.keyconfigs.addon.keymaps.new('Clip Dopesheet Editor', space_type='CLIP_EDITOR', region_type='WINDOW', modal=False)
+			# kmi = km.keymap_items.new('transform.rotate', 'D', 'PRESS')
+			# kmi.active = True
+			# transform_keymap.append((km, kmi))
 
 
 
