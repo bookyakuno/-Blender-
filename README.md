@@ -64,7 +64,7 @@ Blenderで「普通の操作」ができるキー設定を登録するアドオ�
  <col class=xl66 width=183 style='mso-width-source:userset;mso-width-alt:7808;
  width:183pt'>
  <tr class=xl65 height=18 style='height:18.0pt'>
-  <td colspan=2 height=18 class=xl68 width=438 style='height:18.0pt;width:438pt'>ボックス<ruby><rb>選択</rb><span
+  <td colspan=2 height=18 class=xl68 width=438 style='height:18.0pt;width:438pt'><b>ボックス<ruby><rb>選択</b></rb><span
   style='display:none'></span></ruby></td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
@@ -89,8 +89,8 @@ Blenderで「普通の操作」ができるキー設定を登録するアドオ�
   <td class=xl67 style='border-top:none;border-left:none'>　</td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
-  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>リンク<ruby><rb>選択</rb><span
-  style='display:none'></span></ruby></td>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><b>リンク<ruby><rb>選択</rb><span
+  style='display:none'></span></ruby></b></td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
   <td height=18 class=xl66 style='height:18.0pt;border-top:none'>メッシュがつながっているものをすべて選択</td>
@@ -108,7 +108,7 @@ Blenderで「普通の操作」ができるキー設定を登録するアドオ�
   <td class=xl66 style='border-top:none;border-left:none'>　</td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
-  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>バックスペース</td>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><b>削除</b></td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
   <td height=18 class=xl66 style='height:18.0pt;border-top:none'>オブジェクトを「メッセージを表示せず」削除</td>
@@ -131,9 +131,9 @@ Blenderで「普通の操作」ができるキー設定を登録するアドオ�
   <td class=xl66 style='border-top:none;border-left:none'>　</td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
-  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><ruby><rb>視点</rb><span
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><b><ruby><rb>視点</rb><span
   style='display:none'></span></ruby>の<ruby><rb>操作</rb><span
-  style='display:none'></span></ruby></td>
+  style='display:none'></span></ruby></b></td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
   <td height=18 class=xl66 style='height:18.0pt;border-top:none'>前右上</td>
@@ -190,7 +190,7 @@ Blenderで「普通の操作」ができるキー設定を登録するアドオ�
   これだと単純に数字キー全てを置き換えるだけなので左手だけではアクセスしづらい。</td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
-  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>トランスフォーム</td>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><b>トランスフォーム</b></td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
   <td height=18 class=xl66 style='height:18.0pt;border-top:none'><ruby><rb>移動</rb><span
@@ -254,8 +254,8 @@ Blenderで「普通の操作」ができるキー設定を登録するアドオ�
   <td class=xl66 style='border-top:none;border-left:none'>　</td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
-  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>モード<ruby><rb>変更</rb><span
-  style='display:none'></span></ruby></td>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><b>モード<ruby><rb>変更</rb><span
+  style='display:none'></span></ruby></b></td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
   <td height=18 class=xl66 style='height:18.0pt;border-top:none'>編集/オブジェクト</td>
@@ -301,7 +301,7 @@ Blenderで「普通の操作」ができるキー設定を登録するアドオ�
   <td class=xl66 style='border-top:none;border-left:none'>　</td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
-  <td colspan=2 height=18 class=xl68 style='height:18.0pt'>ビューコントロール</td>
+  <td colspan=2 height=18 class=xl68 style='height:18.0pt'><b>ビューコントロール</b></td>
  </tr>
  <tr class=xl65 height=18 style='height:18.0pt'>
   <td height=18 class=xl66 style='height:18.0pt;border-top:none'>ビューを<ruby><rb>回転</rb><span
