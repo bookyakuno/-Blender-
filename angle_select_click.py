@@ -18,15 +18,18 @@
 bl_info = {
 	"name": "angle select Click",
 	"author": "bookyakuno",
-	"version": (1,0),
-	"location": "alt + Y or ctrl + ACTIONMOUSE",
+	"version": (1,1),
+	"location": "Mesh Dispkay Panel. alt + Y or ctrl + ACTIONMOUSE",
 	"description": "shift + alt + Y or ctrl + shift + ACTIONMOUSE = select multiple",
 	"warning": "This add-on uses hide. Hide information will be lost.",
-	"category": "3D View"}
+	"category": "Mesh"}
 
 import bpy
 import bmesh
 
+
+
+bpy.types.Scene.angle_select_click_threshold = bpy.props.FloatProperty(default= 0.14, min= 0.01, max= 1.00, description="Angle")
 
 class angle_select_click(bpy.types.Operator):
 	bl_idname = "object.angle_select_click"
@@ -39,7 +42,8 @@ class angle_select_click(bpy.types.Operator):
 
 
 		bpy.ops.view3d.select('INVOKE_DEFAULT')
-		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=0.14)
+		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=bpy.context.scene.angle_select_click_threshold)
+		# threshold= bpy.context.scene.angle_select_click_threshold
 		bpy.ops.mesh.hide(unselected=True) #選択以外非表示
 		bpy.ops.mesh.select_all(action='DESELECT') #選択解除
 		bpy.ops.view3d.select('INVOKE_DEFAULT') #マウス下選択
@@ -72,10 +76,7 @@ class angle_select_click_extend(bpy.types.Operator):
 		bpy.ops.object.vertex_group_assign_new()
 		bpy.ops.mesh.hide() #選択非表示
 		bpy.ops.view3d.select('INVOKE_DEFAULT',extend=True)
-		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=0.14)
-
-
-
+		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=bpy.context.scene.angle_select_click_threshold)
 
 		bpy.ops.mesh.hide(unselected=True) #選択以外非表示
 		bpy.ops.mesh.select_all(action='DESELECT') #選択解除
@@ -101,6 +102,17 @@ class angle_select_click_extend(bpy.types.Operator):
 		return {'FINISHED'}
 
 
+# ヘッダーに項目追加
+def angle_select_click_threshold_menu(self, context):
+
+	layout = self.layout
+	scene = context.scene
+
+	# row = layout.row(align=True)
+	layout.label(text="angle select click:", icon='LAMP_HEMI')
+	layout.prop(context.scene, "angle_select_click_threshold", text="Threshold")
+
+
 
 addon_keymaps = []
 def register():
@@ -120,8 +132,21 @@ def register():
 	kmi = km.keymap_items.new(angle_select_click_extend.bl_idname, 'ACTIONMOUSE', 'PRESS', ctrl=True,shift=True)
 	addon_keymaps.append((km, kmi))
 
+
+
+	# メニューに項目追加
+	bpy.types.VIEW3D_PT_view3d_meshdisplay.append(angle_select_click_threshold_menu)
+
+
 def unregister():
 	bpy.utils.unregister_module(__name__)
 	for km, kmi in addon_keymaps:
 		km.keymap_items.remove(kmi)
 	addon_keymaps.clear()
+
+
+	bpy.types.VIEW3D_PT_view3d_meshdisplay.remove(angle_select_click_threshold_menu)
+
+
+if __name__ == '__main__':
+	register()
