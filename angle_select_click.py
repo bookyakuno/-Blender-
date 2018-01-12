@@ -18,7 +18,7 @@
 bl_info = {
 	"name": "angle select Click",
 	"author": "bookyakuno",
-	"version": (1,1),
+	"version": (1,2),
 	"location": "Mesh Dispkay Panel. alt + Y or ctrl + ACTIONMOUSE",
 	"description": "shift + alt + Y or ctrl + shift + ACTIONMOUSE = select multiple",
 	"warning": "This add-on uses hide. Hide information will be lost.",
@@ -29,7 +29,8 @@ import bmesh
 
 
 
-bpy.types.Scene.angle_select_click_threshold = bpy.props.FloatProperty(default= 0.14, min= 0.01, max= 1.00, description="Angle")
+# bpy.types.Scene.angle_select_click_threshold = bpy.props.FloatProperty(default= 0.14, min= 0.01, max= 1.00, description="Angle")
+bpy.types.Scene.angle_select_click_threshold = bpy.props.FloatProperty(default= 30, min= 0.01, max= 180, description="Angle")
 
 class angle_select_click(bpy.types.Operator):
 	bl_idname = "object.angle_select_click"
@@ -41,8 +42,10 @@ class angle_select_click(bpy.types.Operator):
 		bm = bmesh.from_edit_mesh(obj.data)
 
 
+		angle_select_click_angle = bpy.context.scene.angle_select_click_threshold/180
+
 		bpy.ops.view3d.select('INVOKE_DEFAULT')
-		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=bpy.context.scene.angle_select_click_threshold)
+		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=angle_select_click_angle)
 		# threshold= bpy.context.scene.angle_select_click_threshold
 		bpy.ops.mesh.hide(unselected=True) #選択以外非表示
 		bpy.ops.mesh.select_all(action='DESELECT') #選択解除
@@ -73,10 +76,14 @@ class angle_select_click_extend(bpy.types.Operator):
 		obj = context.object
 		bm = bmesh.from_edit_mesh(obj.data)
 
+
+		angle_select_click_angle = bpy.context.scene.angle_select_click_threshold/180
+		# print(angle_select_click_angle)
+
 		bpy.ops.object.vertex_group_assign_new()
 		bpy.ops.mesh.hide() #選択非表示
 		bpy.ops.view3d.select('INVOKE_DEFAULT',extend=True)
-		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=bpy.context.scene.angle_select_click_threshold)
+		bpy.ops.mesh.select_similar(type='NORMAL', compare='EQUAL', threshold=angle_select_click_angle)
 
 		bpy.ops.mesh.hide(unselected=True) #選択以外非表示
 		bpy.ops.mesh.select_all(action='DESELECT') #選択解除
@@ -110,7 +117,7 @@ def angle_select_click_threshold_menu(self, context):
 
 	# row = layout.row(align=True)
 	layout.label(text="angle select click:", icon='LAMP_HEMI')
-	layout.prop(context.scene, "angle_select_click_threshold", text="Threshold")
+	layout.prop(context.scene, "angle_select_click_threshold", text="Angle")
 
 
 
