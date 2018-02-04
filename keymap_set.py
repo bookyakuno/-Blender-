@@ -19,7 +19,7 @@
 bl_info = {
 	"name": "Keymap_Set",
 	"author": "bookyakuno",
-	"version": (0, 9),
+	"version": (1, 0),
 	"blender": (2, 79, 0),
 	"description": "Rational Keymap Set",
 	"location": "This addon Setting",
@@ -45,7 +45,7 @@ from bpy.app.translations import contexts as i18n_contexts
 
 
 # 翻訳辞書
-translation_dict = {
+translation_dict_keymap_set = {
     "en_US": {
         ("*", "Delete Face By Right Click"):
             "Delete Face By Right Click",
@@ -75,14 +75,89 @@ translation_dict = {
 		"「入力」タブの所で検索して変更してください。",
         ("*", "A checkbox enables you to enable / disable keymap."):
             "チェックボックスによってキーマップのグループを有功/無効にできます。",
-		("*", "Restart Blender to checkbox apply."):
-		"チェックボックスの反映には再起動が必要です",
+        ("*", "Restart Blender to checkbox apply."):
+            "チェックボックスの反映には再起動が必要です。",
+		# ("*", "To reflect the check box, press the button below to 'Update all addons'."):
+		# "チェックボックスが反映には、下のボタンを押して'全てのアドオンを更新させます'。",
     }
 }
 
 
+# モジュール名をキー、ファイルパスと更新時間で構成される辞書を値とする辞書
+module_mtimes = None
+
+# 更新されたモジュール名を入れる
+module_updated = set()
 
 
+
+
+
+
+
+def reload_addon(context, module_name):
+    addons = context.user_preferences.addons
+    if module_name not in addons:
+        return False
+
+    addon = addons[module_name]
+    module_name = addon.module
+    if module_name in sys.modules:
+        mod = sys.modules[module_name]
+        try:
+            mod.unregister()
+        except:
+            traceback.print_exc()
+        del mod
+    ccc = []
+
+    for km, kmi in ccc:
+        km.keymap_items.remove(kmi)
+    # ccc.clear()
+
+
+    for key in list(sys.modules):
+        if key == module_name or key.startswith(module_name + '.'):
+            del sys.modules[key]
+
+    bpy.ops.wm.addon_refresh()
+    try:
+        mod = importlib.import_module(module_name)
+        mod.register()
+    except:
+        # for key in list(sys.modules):
+        #     if key == module_name or key.startswith(module_name + '.'):
+        #         del sys.modules[key]
+        # bpy.ops.wm.addon_disable(module=module_name)
+        traceback.print_exc()
+        return False
+
+    mtimes = get_module_mtimes(module_name)
+    module_mtimes[module_name] = mtimes[module_name]
+    if module_name in module_updated:
+        module_updated.remove(module_name)
+    print("Reload '{}'".format(module_name))
+    return True
+
+
+
+class WM_OT_addon_reload_all_x(bpy.types.Operator):
+    bl_idname = 'wm.addon_reload_all_x'
+    bl_label = 'Reload Add-ons'
+    bl_description = 'Reload updated add-ons'
+
+    def execute(self, context):
+        addons = context.user_preferences.addons
+        check_update()
+        result = False
+        for addon in addons:
+            if addon.module in module_updated:
+                result |= reload_addon(context, addon.module)
+        if not result:
+            return {'CANCELLED'}
+
+        redraw_userprefs(context)
+        return {'FINISHED'}
 
 
 class ViewSelected_smart(bpy.types.Operator):
@@ -182,7 +257,7 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 			)
 
 	view_numpad = BoolProperty(
-			name="View Numpad",
+			name="Navigation",
 			default=True,
 			)
 
@@ -258,6 +333,8 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 		text=		"A checkbox enables you to enable / disable keymap.")
 		layout.label(
 		text=		"Restart Blender to checkbox apply.", icon='FILE_REFRESH')
+		# text=		"To reflect the check box, press the button below to 'Update all addons'.", icon='FILE_REFRESH')
+		# layout.operator('wm.addon_reload_all_x', text='Reload',icon='FILE_REFRESH')
 
 
 
@@ -301,20 +378,20 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 
 
 
+
 #######################################################
 #######################################################
-#  view_control_keymap
+#  delete_keymap
 		col = layout.column(align=True)
 		row = col.row(align=True)
-		row.prop(self, "view_control_keymap")
-		row.prop(context.scene, "view_control_keymap", text="View Control  >> ", icon="URL")
+		row.prop(self, "delete_keymap")
+		row.prop(context.scene, "delete_keymap", text="Delete >> BACK SPACE", icon="URL")
 
 
-
-		if context.scene.view_control_keymap:
+		if context.scene.delete_keymap:
 			col = layout.column()
 			kc = bpy.context.window_manager.keyconfigs.addon
-			for km, kmi in view_control_keymap:
+			for km, kmi in delete_keymap:
 				km = km.active()
 				col.context_pointer_set("keymap", km)
 				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
@@ -358,17 +435,18 @@ class KeymapSetMenuPrefs(bpy.types.AddonPreferences):
 
 #######################################################
 #######################################################
-#  delete_keymap
+#  view_control_keymap
 		col = layout.column(align=True)
 		row = col.row(align=True)
-		row.prop(self, "delete_keymap")
-		row.prop(context.scene, "delete_keymap", text="Delete >> BACK SPACE", icon="URL")
+		row.prop(self, "view_control_keymap")
+		row.prop(context.scene, "view_control_keymap", text="View Control  >> ", icon="URL")
 
 
-		if context.scene.delete_keymap:
+
+		if context.scene.view_control_keymap:
 			col = layout.column()
 			kc = bpy.context.window_manager.keyconfigs.addon
-			for km, kmi in delete_keymap:
+			for km, kmi in view_control_keymap:
 				km = km.active()
 				col.context_pointer_set("keymap", km)
 				rna_keymap_ui.draw_kmi([], kc, km, kmi, col, 0)
@@ -516,6 +594,34 @@ def register():
 			kmi.active = False
 			select_border_keymap.append((km, kmi))
 			################################################################
+
+
+
+			# Map Gesture Border
+			# km = wm.keyconfigs.addon.keymaps.new('Gesture Border', space_type='EMPTY', region_type='WINDOW', modal=True)
+            #
+			# kmi = km.keymap_items.new_modal('DESELECT', 'RIGHTMOUSE', 'PRESS', alt=True)
+			# kmi.active = True
+			# select_border_keymap.append((km, kmi))
+
+
+			# km = wm.keyconfigs.addon.keymaps.new('Gesture Border', space_type='EMPTY', region_type='WINDOW', modal=True)
+			# kmi = km.keymap_items.new_modal('DESELECT', 'H', 'RELEASE')
+			# kmi.active = True
+			# select_border_keymap.append((km, kmi))
+
+
+			km = wm.keyconfigs.addon.keymaps.new('Gesture Border', space_type='EMPTY', region_type='WINDOW', modal=True)
+			kmi = km.keymap_items.new_modal('DESELECT', 'RIGHTMOUSE', 'RELEASE', alt=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
+
+
+
+			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('view3d.select_border', 'EVT_TWEAK_R', 'ANY', alt=True)
+			kmi.active = True
+			select_border_keymap.append((km, kmi))
 
 
 			km = wm.keyconfigs.addon.keymaps.new('3D View', space_type='VIEW_3D', region_type='WINDOW', modal=False)
@@ -825,6 +931,12 @@ def register():
 
 
 
+			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('mesh.merge', 'BACK_SPACE', 'PRESS', shift=True)
+			kmi_props_setattr(kmi.properties, 'type', 'CENTER')
+			kmi.active = True
+			delete_keymap.append((km, kmi))
+
 
 
 
@@ -977,7 +1089,7 @@ def register():
 			view_numpad_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-			kmi = km.keymap_items.new('view3d.camera_to_view_selected', 'FOUR', 'PRESS',alt=True)
+			kmi = km.keymap_items.new('view3d.view_persportho', 'FOUR', 'PRESS',shift=True)
 			kmi.active = True
 			view_numpad_keymap.append((km, kmi))
 
@@ -996,23 +1108,7 @@ def register():
 			view_numpad_keymap.append((km, kmi))
 
 
-			km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('wm.context_toggle', 'FOUR', 'PRESS', ctrl=True)
-			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
-			kmi.active = True
-			view_numpad_keymap.append((km, kmi))
 
-			km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('wm.context_toggle', 'FOUR', 'PRESS', ctrl=True)
-			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
-			kmi.active = True
-			view_numpad_keymap.append((km, kmi))
-
-			km = wm.keyconfigs.addon.keymaps.new('Sculpt', space_type='EMPTY', region_type='WINDOW', modal=False)
-			kmi = km.keymap_items.new('wm.context_toggle', 'FOUR', 'PRESS', ctrl=True)
-			kmi_props_setattr(kmi.properties, 'data_path', 'space_data.lock_camera')
-			kmi.active = True
-			view_numpad_keymap.append((km, kmi))
 
 
 
@@ -1029,6 +1125,39 @@ def register():
 
 
 
+			# # # # # # # #
+			################################################################
+			km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+			kmi = km.keymap_items.new('-- Modifier --', 'MINUS', 'PRESS')
+			kmi.active = False
+			view_numpad_keymap.append((km, kmi))
+	   		 ################################################################
+	   		 # # # # # # # #
+
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('object.subdivision_set', 'ONE', 'PRESS', oskey=True)
+			kmi_props_setattr(kmi.properties, 'level', 0)
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('object.subdivision_set', 'THREE', 'PRESS', oskey=True)
+			kmi_props_setattr(kmi.properties, 'level', 2)
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('object.subdivision_set', 'ONE', 'PRESS', alt=True)
+			kmi_props_setattr(kmi.properties, 'level', 0)
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('object.subdivision_set', 'THREE', 'PRESS', alt=True)
+			kmi_props_setattr(kmi.properties, 'level', 2)
+			kmi.active = True
+			view_numpad_keymap.append((km, kmi))
 
 
 
@@ -1168,14 +1297,20 @@ def register():
 			view_control_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-			kmi = km.keymap_items.new('view3d.view_selected_smart', 'A', 'PRESS', shift=True, oskey=True)
+			kmi = km.keymap_items.new('view3d.view_all', 'Z', 'PRESS', shift=True)
 			kmi.active = True
 			view_control_keymap.append((km, kmi))
 
 			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-			kmi = km.keymap_items.new('view3d.view_selected_smart', 'Z', 'PRESS')
+			kmi = km.keymap_items.new('view3d.view_selected', 'A', 'PRESS', shift=True, oskey=True)
 			kmi.active = True
 			view_control_keymap.append((km, kmi))
+
+			km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
+			kmi = km.keymap_items.new('view3d.view_selected', 'Z', 'PRESS')
+			kmi.active = True
+			view_control_keymap.append((km, kmi))
+
 			km = wm.keyconfigs.addon.keymaps.new('Graph Editor', space_type='GRAPH_EDITOR', region_type='WINDOW', modal=False)
 			kmi = km.keymap_items.new('graph.view_selected', 'Z', 'PRESS')
 			kmi.active = True
@@ -1314,30 +1449,10 @@ def register():
 				# kmi.active = False
 				# etc_keymap.append((km, kmi))
 		 ################################################################
-		 ################################################################
-				km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
-				kmi = km.keymap_items.new('-- Modifier --', 'MINUS', 'PRESS')
-				kmi.active = False
-				etc_keymap.append((km, kmi))
-		 ################################################################
-		 # # # # # # # #
-
 
 				km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
 				kmi = km.keymap_items.new('object.modifier_add', 'FOUR', 'PRESS', ctrl=True, oskey=True)
 				kmi_props_setattr(kmi.properties, 'type', 'MIRROR')
-				kmi.active = True
-				etc_keymap.append((km, kmi))
-
-				km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-				kmi = km.keymap_items.new('object.subdivision_set', 'ONE', 'PRESS', oskey=True)
-				kmi_props_setattr(kmi.properties, 'level', 0)
-				kmi.active = True
-				etc_keymap.append((km, kmi))
-
-				km = wm.keyconfigs.addon.keymaps.new(name = '3D View', space_type = 'VIEW_3D')
-				kmi = km.keymap_items.new('object.subdivision_set', 'THREE', 'PRESS', oskey=True)
-				kmi_props_setattr(kmi.properties, 'level', 2)
 				kmi.active = True
 				etc_keymap.append((km, kmi))
 
@@ -1360,14 +1475,10 @@ def register():
 				# # # # # # # # #
 
 
-
-
-
-
-				# km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
-				# kmi = km.keymap_items.new('mesh.knife_tool', 'Z', 'PRESS', ctrl=True)
-				# kmi.active = True
-				# etc_keymap.append((km, kmi))
+				km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('mesh.knife_tool', 'Z', 'PRESS', alt=True)
+				kmi.active = True
+				etc_keymap.append((km, kmi))
 
 
 
@@ -1390,13 +1501,38 @@ def register():
 				etc_keymap.append((km, kmi))
 
 
+				km = wm.keyconfigs.addon.keymaps.new('Frames', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('screen.frame_jump', 'RET', 'PRESS')
+				kmi.active = True
+				etc_keymap.append((km, kmi))
 
 
+				km = wm.keyconfigs.addon.keymaps.new('Screen', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('screen.userpref_show', 'COMMA', 'PRESS', ctrl=True)
+				kmi.active = True
+				etc_keymap.append((km, kmi))
 
 
+				# # # # # # # # #
+				# ################################################################
+				# km = wm.keyconfigs.addon.keymaps.new('Info',space_type='EMPTY', region_type='WINDOW', modal=False)
+				# kmi = km.keymap_items.new('-- release "C" key, the circle selection mode is canceled --', 'MINUS', 'PRESS')
+				# kmi.active = False
+				# etc_keymap.append((km, kmi))
+		   		#  ################################################################
+		   		#  # # # # # # # #
+                #
+				# km = wm.keyconfigs.addon.keymaps.new('View3D Gesture Circle', space_type='EMPTY', region_type='WINDOW', modal=True)
+				# kmi = km.keymap_items.new_modal('CONFIRM', 'C', 'RELEASE')
+				# kmi.active = True
+				# etc_keymap.append((km, kmi))
 
 
-
+				km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('mesh.separate', 'J', 'PRESS', ctrl=True)
+				kmi_props_setattr(kmi.properties, 'type', 'SELECTED')
+				kmi.active = True
+				etc_keymap.append((km, kmi))
 
 
 
@@ -1811,13 +1947,16 @@ def register():
  ################################################################
  # # # # # # # #
 
-		bpy.app.translations.register(__name__, translation_dict)   # 辞書の登録
+		bpy.app.translations.register(__name__, translation_dict_keymap_set)   # 辞書の登録
 
 
 
 
 def unregister():
 	bpy.utils.unregister_module(__name__)
+	bpy.app.translations.unregister(__name__)   # 辞書の削除
+
+
 	# handle the keymap
 	for km, kmi in select_border_keymap:
 		km.keymap_items.remove(kmi)
@@ -1852,7 +1991,6 @@ def unregister():
 	transform_keymap.clear()
 
 
-	bpy.app.translations.unregister(__name__)   # 辞書の削除
 
 
 	# clear the list
@@ -1866,3 +2004,6 @@ def unregister():
 	del view_control_keymap[:]
 	del modifier_keymap[:]
 	del transform_keymap[:]
+
+	if __name__ == "__main__":
+		register()
