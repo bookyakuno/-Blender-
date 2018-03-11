@@ -25,13 +25,15 @@ import os.path
 import os, sys
 import subprocess
 import fnmatch
+from bpy.props import IntProperty, FloatProperty, EnumProperty
+from bpy.props import FloatVectorProperty, StringProperty
 
 
 # アドオン情報
 bl_info = {
 	"name" : "info_header_useful",
 	"author" : "Bookyakuno",
-	"version" : (0, 3),
+	"version" : (0, 4),
 	"blender" : (2, 79),
 	"location" : "info > header > left, 3D view > header > left",
 	"description" : "check the important stator with the header.",
@@ -43,6 +45,12 @@ bl_info = {
 
 
 from bpy.types import Operator, AddonPreferences
+
+
+###
+import struct
+
+
 
 
 
@@ -59,24 +67,41 @@ translation_dict = {
 		"・自動キーフレームモード",
 		("*", "- Recently opened file list, latest automatic backup"):
 		"・最近開いたファイル一覧、最新の自動バックアップ",
-		("*", "    - Splash screen becomes unnecessary"):
-		"    ・スプラッシュスクリーンが不要になります",
 		("*", "- Change object name"):
 		"・オブジェクト名の変更",
 		("*", "- Mirror in various modes"):
 		"・各種モードでのミラー",
 		("*", "- If global undo is turned off, a warning indication"):
 		"・グローバルアンドゥがオフになっていると警告表示",
+		("*", "- When Automatic keyframe insertion is ON, the header BG color becomes Red"):
+		"・自動キーフレームモードがオンだとヘッダー背景色を「赤」に変更",
+		("*", "- When Dyntopo is ON, the header BG color becomes Yellow"):
+		"・Dyntopoがオンだとヘッダー背景色を「黄色」に変更",
+		("*", "- Dyntopo"):
+		"・Dyntopo",
 	}
 }
+
 
 
 class info_header_useful_MenuPrefs(bpy.types.AddonPreferences):
 	bl_idname = __name__
 
-
+	# def_header_col = bpy.props.FloatVectorProperty(name="Default", default=(0.2, 0.2, 0.2, 1), size=4, subtype="COLOR", min=0, max=1)
+	# header_color = bpy.props.BoolProperty(
+    #         name="header_color",
+    #         description="header_color",
+    #         default=False)
 	def draw(self, context):
+
+
 		layout = self.layout
+		split = layout.split()
+		col = split.column()
+		# col.prop(self, "def_header_col")
+		# col.prop(self, "header_color")
+
+
 		layout.label(
 		text="- current frame")
 		layout.label(
@@ -84,20 +109,18 @@ class info_header_useful_MenuPrefs(bpy.types.AddonPreferences):
 		layout.label(
 		text="- Recently opened file list, latest automatic backup")
 		layout.label(
-		text="    - Splash screen becomes unnecessary")
-		layout.label(
 		text="- Change object name")
 		layout.label(
 		text="- Mirror in various modes")
 		layout.label(
-		text="- If global undo is turned off, a warning indication")
-		# text="- Link -")
-		row = layout.row()
+		text="- When Automatic keyframe insertion is ON, the header BG color becomes Red")
+		layout.label(
+		text="- When Dyntopo is ON, the header BG color becomes Yellow")
+		layout.label(
+		text="- Dyntopo")
 
 		# row.operator("wm.url_open", text="Download : github").url = "https://github.com/bookyakuno/-Blender-/blob/master/angle_select_click.py"
 		# row.operator("wm.url_open", text="Donation $3 : gumroad").url = "https://gumroad.com/l/LXbX"
-
-
 
 
 
@@ -173,6 +196,27 @@ def veiw3d_header_menu_x(self, context):
 	edit = userpref.edit
 	row = layout.row()
 	col = row.column()
+
+	# # # ヘッダーカラー
+
+
+
+	current_theme = bpy.context.user_preferences.themes.items()[0][0]
+	texed = bpy.context.user_preferences.themes[current_theme].view_3d
+
+	def hex_to_rgb_dyn(rgb_str):
+	    int_tuple = struct.unpack('BBB', bytes.fromhex(rgb_str))
+	    return tuple([val/255 for val in int_tuple])
+	if context.mode == 'SCULPT':
+		if bpy.context.sculpt_object.use_dynamic_topology_sculpting == True:
+			texed.space.header = hex_to_rgb_dyn('654600')
+		else:
+			texed.space.header = hex_to_rgb_dyn('333333')
+	else:
+		texed.space.header = hex_to_rgb_dyn('333333')
+	# # # ヘッダーカラー
+
+
 	# =====================================================
 	# グローバルアンドゥを有功
 	# =====================================================
@@ -260,34 +304,53 @@ def veiw3d_header_menu_x(self, context):
 		sculpt = toolsettings.sculpt
 
 		if len(context.selected_objects) >= 1 :
-				#Detail Size
-				row.separator()
-				row = layout.row(align=True)
-				row.operator("object.update_dyntopo", text=" ", icon='FILE_TICK')
-				row.scale_x = 0.5
-				row.prop(WM, "detail_size", text="")
-	#   			row.scale_x = 1.2
-				row.separator()
-				if context.sculpt_object.use_dynamic_topology_sculpting:
-					row.operator("sculpt.dynamic_topology_toggle", icon='CANCEL', text="")
-				else:
-					row.operator("sculpt.dynamic_topology_toggle", icon='MOD_REMESH', text="")
 
-				row.separator()
 
-				if not bpy.context.object.mode == 'SCULPT':
-						layout.prop(WM, "subdivide_mesh", text="Subdivide")
-						if WM.subdivide_mesh:
-								layout.prop(WM, "use_sharps", text="Sharp Edges")
-				layout.prop(WM, "smooth_mesh", text="", icon='MOD_SMOOTH')
-				layout.prop(WM, "update_detail_flood_fill", text="", icon='MOD_DECIM')
+
+
+
+			# if bpy.context.scene.tool_settings.use_keyframe_insert_auto == True:
+			#     texed.space.header = hex_to_rgb('670000')
+
+			#Detail Size
+			row.separator()
+			row = layout.row(align=True)
+			row.operator("object.update_dyntopo", text=" ", icon='FILE_TICK')
+			row.scale_x = 0.5
+			row.prop(WM, "detail_size", text="")
+#   			row.scale_x = 1.2
+			row.separator()
+			if context.sculpt_object.use_dynamic_topology_sculpting:
+				row.operator("sculpt.dynamic_topology_toggle", icon='CANCEL', text="")
+
+			else:
+				row.operator("sculpt.dynamic_topology_toggle", icon='MOD_REMESH', text="")
+
+			row.separator()
+
+			if not bpy.context.object.mode == 'SCULPT':
+					layout.prop(WM, "subdivide_mesh", text="Subdivide")
+					if WM.subdivide_mesh:
+							layout.prop(WM, "use_sharps", text="Sharp Edges")
+			layout.prop(WM, "smooth_mesh", text="", icon='MOD_SMOOTH')
+			layout.prop(WM, "update_detail_flood_fill", text="", icon='MOD_DECIM')
+
+
+
+
+		if (sculpt.detail_type_method == 'CONSTANT'):
+			layout.prop(sculpt, "constant_detail_resolution", text="")
+			# layout.operator("sculpt.sample_detail_size", text="", icon='EYEDROPPER')
+		elif (sculpt.detail_type_method == 'BRUSH'):
+			layout.prop(sculpt, "detail_percent", text="")
+		else:
+			layout.prop(sculpt, "detail_size", text="")
+
+
 
 		userpref = context.user_preferences
 		view = userpref.view
-		row = layout.row()
-		col = row.column()
 		layout.prop(view, "use_auto_perspective", text="", icon="CAMERA_DATA")
-
 
 
 
@@ -309,6 +372,14 @@ def info_header_menu_x(self, context):
 	layout.prop(scene, "frame_current", text="")
 
 
+
+
+
+
+
+
+
+
 	toolsettings = context.tool_settings
 	screen = context.screen
 	userprefs = context.user_preferences
@@ -316,11 +387,33 @@ def info_header_menu_x(self, context):
 	row = layout.row(align=True)
 	row.prop(toolsettings, "use_keyframe_insert_auto", text="", toggle=True)
 	if toolsettings.use_keyframe_insert_auto:
+
+		current_theme = bpy.context.user_preferences.themes.items()[0][0]
+		texed = bpy.context.user_preferences.themes[current_theme].view_3d
+
+		def hex_to_rgb_auto_key(rgb_str):
+		    int_tuple = struct.unpack('BBB', bytes.fromhex(rgb_str))
+		    return tuple([val/255 for val in int_tuple])
+
+		if bpy.context.scene.tool_settings.use_keyframe_insert_auto == True:
+			texed.space.header = hex_to_rgb_auto_key('670000')
+		else:
+			texed.space.header = hex_to_rgb_auto_key('333333')
+
+		# if bpy.context.sculpt_object.use_dynamic_topology_sculpting == True:
+		#     texed.space.header = hex_to_rgb('654600')
+
+
 		row.prop(toolsettings, "use_keyframe_insert_keyingset", text="", toggle=True)
 
 	if screen.is_animation_playing and not userprefs.edit.use_keyframe_insert_available:
+
 		subsub = row.row(align=True)
 		subsub.prop(toolsettings, "use_record_with_nla", toggle=True)
+
+
+
+
 
 	# 最近使ったファイル
 #    self.layout.menu('INFO_MT_file_open_recent', icon='OPEN_RECENT', text="")
@@ -495,12 +588,14 @@ def register():
 	bpy.utils.register_module(__name__)
 	bpy.types.INFO_HT_header.prepend(info_header_menu_x)
 	bpy.types.VIEW3D_MT_editor_menus.prepend(veiw3d_header_menu_x)
+	# bpy.types.VIEW3D_MT_editor_menus.prepend(header_color_change)
 	bpy.types.VIEW3D_HT_header.prepend(veiw3d_header_menu_x)
 	bpy.app.translations.register(__name__, translation_dict)   # 辞書の登録
 
 def unregister():
 	bpy.utils.unregister_module(__name__)
 	bpy.types.INFO_HT_header.remove(info_header_menu_x)
+	# bpy.types.INFO_HT_header.remove(header_color_change)
 	bpy.types.VIEW3D_MT_editor_menus.remove(veiw3d_header_menu_x)
 	bpy.types.VIEW3D_HT_header.remove(veiw3d_header_menu_x)
 	bpy.app.translations.unregister(__name__)   # 辞書の削除
