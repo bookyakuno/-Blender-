@@ -17,6 +17,7 @@ import sys
 from . import w_pie
 from . import add_pie
 from . import uv_pie
+from . import misc_pie
 # from . import prefs
 from bpy.types import Operator, AddonPreferences
 
@@ -33,7 +34,7 @@ import sys
 bl_info = {
     "name": "w_pie",
     "author": "Bookyakuno & Cédric Lepiller & Jimmy & DavideDozza & Lapineige & Leafar & 0rAngE",
-    "version": (0, 2, 6),
+    "version": (0, 2, 7),
     "blender": (2, 79, 0),
     "description": "Extend Right click with pie menu.",
     "category": "3D View",}
@@ -78,8 +79,24 @@ translation_dict = {
 		"(選択マウスは左という前提で記入します)",
 		("*", "-shortcut-"):
 		"ーショートカットー",
+		("*", "-Setting-"):
+		"ー設定ー",
+		("*", "-Use Addon-"):
+		"ー使用するアドオンー",
+		("*", "You can access the following addon with Pie misc with Ctrl + F."):
+		"Ctrl + Fキーでのmisc_pieで、下記のアドオンにアクセスできます。",
+		("*", "You can access the following addon In the mesh select mode with the Right click."):
+		"右クリックキーでのメッシュ選択モードで、下記のアドオンにアクセスできます。",
+		("*", "Mesh modeling toolkit (Installed by default. But it is disabled). "):
+		"円化・ブリッジなどのモデリング補助アドオン(元からBlenderに無効化状態で同梱されています)。",
+		("*", "Boolean toolkit (Installed by default. But it is disabled). "):
+		"ブーリアンを簡単にするアドオン。(元からBlenderに無効化状態で同梱されています。)",
+		("*", "a quick way to create one UV Layout for multiple objects."):
+		"複数オブジェクトのUVを一括編集するアドオン。",
     }
 }
+
+
 
 
 
@@ -108,6 +125,13 @@ class w_pie_Prefs(bpy.types.AddonPreferences):
             layout.label(text="Key setting with centering on Right click.")
             layout.label(text="Other, addition of objects, selection with UV editor, fine addition function, etc.")
             layout.label(text="")
+
+            # # # # # # # # # # # # # # # # # # # # # # # #
+            #
+            # # # # # # # # # # # # # # # # # # # # # # # #
+            row = layout.row(align=False)
+            box = row.box()
+            box.label(text="-Setting-")
             layout.label(text="Change the the system setting select button to the LEFT!!", icon="ERROR")
             input_prefs = context.user_preferences.inputs
             row = layout.row()
@@ -117,9 +141,39 @@ class w_pie_Prefs(bpy.types.AddonPreferences):
             row.label(text="Select With:")
             row.row().prop(input_prefs, "select_mouse", expand=True)
 
+            # # # # # # # # # # # # # # # # # # # # # # # #
+            #
+            # # # # # # # # # # # # # # # # # # # # # # # #
+
+            row = layout.row()
+            col = row.column()
+            sub = col.column()
+            col.label(text="")
+            box = col.box()
+            box.label(text="-Use Addon-")
+            col.label(text="You can access the following addon with Pie misc with Ctrl + F.")
+            row = col.row(align=True)
+            row.label(text="- LoopTools", icon='META_EMPTY')
+            row.label(text="Mesh modeling toolkit (Installed by default. But it is disabled). ")
+            row = col.row(align=True)
+            row.label(text="- Bool Tool", icon='ROTATECOLLECTION')
+            row.label(text="Boolean toolkit (Installed by default. But it is disabled). ")
+            row = col.row(align=True)
+            row.separator()
+            row.label(text="You can access the following addon In the mesh select mode with the Right click.")
+            row = col.row(align=True)
+            row.operator("wm.url_open", text="- Multi Object UV Editing" , icon="URL").url = "https://github.com/ndee85/Multi-Object-UV-Editing"
+            row.label(text="a quick way to create one UV Layout for multiple objects.")
+
+
+            # # # # # # # # # # # # # # # # # # # # # # # #
+            #
+            # # # # # # # # # # # # # # # # # # # # # # # #
 
             layout.label(text="")
-            layout.label(text="-shortcut-")
+            row = layout.row(align=False)
+            box = row.box()
+            box.label(text="-Shortcut-")
             layout.label(text="(SELECTMOUSE is write it as a LEFT)")
 
             # このアドオンは、"wazou pie menu" をコンパクトに改造し、さらに機能を追加したものです。
@@ -143,22 +197,22 @@ class w_pie_Prefs(bpy.types.AddonPreferences):
             # col = split.column()
             row = col.row(align=True)
             row.label(text="– Object/Edit mode & Vertex/Edge/face >", icon='FACESEL')
-            row.label(text="Right mouse")
+            row.label(text="Right Mouse")
 
             split = layout.split()
             row = col.row(align=True)
             row.label(text="– add object >", icon='MONKEY')
-            row.label(text="Right mouse + shift")
+            row.label(text="Right Mouse + Shift")
 
             split = layout.split()
             row = col.row(align=True)
             row.label(text="– Shading >", icon='MATERIAL')
-            row.label(text="Right mouse + shift + alt")
+            row.label(text="Right Mouse + Shift + Alt")
 
             split = layout.split()
             row = col.row(align=True)
             row.label(text="– Pivot point   >", icon='ROTATECOLLECTION')
-            row.label(text="Right mouse + alt")
+            row.label(text="Right Mouse + Alt")
 
 
             split = layout.split()
@@ -184,7 +238,12 @@ class w_pie_Prefs(bpy.types.AddonPreferences):
             split = layout.split()
             row = col.row(align=True)
             row.label(text="– UV >", icon='OUTLINER_OB_LATTICE')
-            row.label(text="ctrl D")
+            row.label(text="Ctrl + D")
+
+            split = layout.split()
+            row = col.row(align=True)
+            row.label(text="– Misc and modeling toolkit >", icon='COLOR')
+            row.label(text="Ctrl + F")
 
 
 
@@ -196,15 +255,19 @@ class w_pie_Prefs(bpy.types.AddonPreferences):
 
             layout.label(text="This add-on is a compact modified 'wazou pie menu'and added functions.")
             layout.label(text="Combined add-ons")
-            layout.label(text="> Wazou Pie Menus")
             layout.label(text="> Jimmy_pie_uv")
             layout.label(text="> Add Object Pie Menu")
+            layout.operator("wm.url_open", text="Wazou Pie Menus" , icon="URL").url = "https://github.com/pitiwazou/Scripts-Blender/blob/Older-Scripts/Wazou_Pie_Menus"
+            layout.operator("wm.url_open", text="Multi Object UV Editing" , icon="URL").url = "https://github.com/ndee85/Multi-Object-UV-Editing"
+            layout.operator("wm.url_open", text="Project From Normal" , icon="URL").url = "https://github.com/chaosdesk/blender_uv_prj_from_normal/blob/master/uv_prj_from_normal.py"
+            layout.separator()
             row = layout.row()
-            row.operator("wm.url_open", text="Pitiwazou.com").url = "http://www.pitiwazou.com/"
-            row.operator("wm.url_open", text="Wazou's Ghitub").url = "https://github.com/pitiwazou/Scripts-Blender"
-            row.operator("wm.url_open", text="BlenderLounge Forum ").url = "http://blenderlounge.fr/forum/"
+            row.operator("wm.url_open", text="Bookyakuno github" , icon="URL").url = "https://github.com/bookyakuno/-Blender-/blob/master/w_pie.zip"
             row = layout.row()
-            row.operator("wm.url_open", text="bookyakuno github").url = "https://github.com/bookyakuno/-Blender-/blob/master/w_pie.zip"
+            row.operator("wm.url_open", text="Pitiwazou.com" , icon="URL").url = "http://www.pitiwazou.com/"
+            row.operator("wm.url_open", text="Wazou's Ghitub" , icon="URL").url = "https://github.com/pitiwazou/Scripts-Blender"
+            row.operator("wm.url_open", text="BlenderLounge Forum" , icon="URL").url = "http://blenderlounge.fr/forum/"
+            row = layout.row()
 
 
 
@@ -282,6 +345,15 @@ def register():
         kmi = km.keymap_items.new('wm.call_menu_pie', 'D', 'PRESS', ctrl=True)
         kmi.properties.name = "pie.uv_pie"
 
+        #misc_pie
+        km = wm.keyconfigs.addon.keymaps.new(name = 'Object Mode')
+        kmi = km.keymap_items.new('wm.call_menu_pie', 'F', 'PRESS', ctrl=True)
+        kmi.properties.name = "pie.misc_pie"
+
+        #misc_edit_pie
+        km = wm.keyconfigs.addon.keymaps.new(name = 'Mesh')
+        kmi = km.keymap_items.new('wm.call_menu_pie', 'F', 'PRESS', ctrl=True)
+        kmi.properties.name = "pie.misc_edit_pie"
 
 
 ############################################
@@ -329,8 +401,8 @@ def register():
         ############################################
         ############################################
         # UV pie select mode
-        km = wm.keyconfigs.addon.keymaps.new(name='Image',
-                                             space_type='IMAGE_EDITOR')
+        # km = wm.keyconfigs.addon.keymaps.new(name='Image', space_type='IMAGE_EDITOR')
+        km = kc.keymaps.new('UV Editor', space_type='EMPTY', region_type='WINDOW', modal=False)
         kmi = km.keymap_items.new('wm.call_menu_pie', 'ACTIONMOUSE', 'PRESS')
         kmi.properties.name = "pie.uv_select_mode"
 

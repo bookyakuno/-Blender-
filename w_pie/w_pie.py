@@ -38,51 +38,6 @@ import math
 
 
 
-class live_unwrap_toggle(bpy.types.Operator):
-    bl_idname = "uv.live_unwrap_toggle"
-    bl_label = "live_unwrap_toggle"
-
-    def execute(self, context):
-        if bpy.context.scene.tool_settings.edge_path_live_unwrap == (False):
-           bpy.context.scene.tool_settings.edge_path_live_unwrap = True
-        else:
-           bpy.context.scene.tool_settings.edge_path_live_unwrap = False
-        return {'FINISHED'}
-
-
-
-# bpy.ops.uv.unwrap(method='ANGLE_BASED', margin=0.02)
-# bpy.ops.uv.project_from_view(camera_bounds=False, correct_aspect=True, scale_to_bounds=False)
-
-# uv pie menu
-class uv_pie(Menu):
-    bl_idname = "pie.uv_pie"
-    bl_label = "uv_pie"
-
-    def draw(self, context):
-        layout = self.layout
-        pie = layout.menu_pie()
-        #4 - LEFT
-        pie.operator("uv.unwrap", icon='LOOPSEL').margin=0.00
-        #6 - RIGHT
-        pie.operator("uv.smart_project", icon='UV_ISLANDSEL')
-        #2 - BOTTOM
-        pie.operator("uv.seams_from_islands", icon='MOD_MESHDEFORM')
-        # tool_settings = context.tool_settings
-        # pie.prop(tool_settings, "edge_path_live_unwrap")
-        #8 - TOP
-        pie.operator("uv.project_from_view", icon='RENDER_REGION')
-        #7 - TOP - LEFT
-        pie.operator("uv.pack_islands", icon='MOD_TRIANGULATE').rotate=False
-        #9 - TOP - RIGHT
-        pie.operator("uv.live_unwrap_toggle", icon='COLOR_RED')
-        #1 - BOTTOM - LEFT
-        # pie.operator("uv.copy_uv_map", icon='COPYDOWN')
-        #3 - BOTTOM - RIGHT
-        # pie.operator("uv.paste_uv_map", icon='PASTEDOWN')
-
-
-
 
 
 
@@ -1861,7 +1816,7 @@ class PieVertexEdgesFacesModes(Menu):
 # Pie Select Mode - Tab
 class PieObjectEditMode(Menu):
     bl_idname = "pie.objecteditmode"
-    bl_label = "Select Mode"
+    bl_label = "Mesh Select Mode"
 
     def draw(self, context):
         layout = self.layout
@@ -2003,7 +1958,7 @@ class PieViewallSelGlobEtc(Menu):
 #Pie Views - Space
 class PieAreaViews(Menu):
     bl_idname = "pie.areaviews"
-    bl_label = "Pie Views"
+    bl_label = "Views"
 
     def draw(self, context):
         layout = self.layout
@@ -2088,7 +2043,7 @@ class PieCamera(Menu):
 #Pie views numpad - Q
 class PieViewNumpad(Menu):
     bl_idname = "pie.viewnumpad"
-    bl_label = "Pie Views Ortho"
+    bl_label = "Views Ortho"
 
     def draw(self, context):
         layout = self.layout
@@ -2206,7 +2161,7 @@ class PieOriginPivot(Menu):
 #Pie Pivot Point - Shit + S
 class PiePivotPoint(Menu):
     bl_idname = "pie.pivotpoint"
-    bl_label = "Pie Pivot Point"
+    bl_label = "Pivot Point"
 
     def draw(self, context):
         layout = self.layout
@@ -2733,29 +2688,29 @@ class PieAnimation(Menu):
 #Pie Save/Open
 class Pieview_misc(Menu):
     bl_idname = "pie.view_misc"
-    bl_label = "Pie view_misc"
+    bl_label = "Views misc"
 
     def draw(self, context):
         layout = self.layout
         pie = layout.menu_pie()
 
         #4 - LEFT
-        pie.operator("split.horizontal", text="Split Horizontal", icon= 'TRIA_DOWN')
+        pie.operator("split.horizontal", text="Split Window H", icon= 'TRIA_DOWN_BAR')
 #        pie.operator("wm.read_homefile", text="New", icon='NEW')
 
         #6 - RIGHT
-        pie.operator("split.vertical", text="Split Vertical", icon= 'TRIA_RIGHT')
+        pie.operator("split.vertical", text="Split Window V", icon= 'UV_ISLANDSEL')
 #        pie.operator("file.save_incremental", text="Incremental Save", icon='SAVE_COPY')
 
         #2 - BOTTOM
-        pie.operator("area.joinarea", text="Split Horizontal", icon= 'TRIA_DOWN')
+        pie.operator("area.joinarea", text="Merge Window", icon= 'FULLSCREEN')
 
         #8 - TOP
         pie.operator("object.view_menu", text="NLA Editor", icon= 'NLA').variable="NLA_EDITOR"
 
 
         #7 - TOP - LEFT
-        pie.operator("object.view_menu", text="Movie Clip Editor", icon= 'RENDER_ANIMATION').variable="CLIP_EDITOR"
+        pie.operator("object.view_menu", text="Outliner", icon= 'OOPS').variable="OUTLINER"
 
         #9 - TOP - RIGHT
         box = pie.split().column()
@@ -2764,7 +2719,7 @@ class Pieview_misc(Menu):
         box.operator("export_scene.obj", text="Export OBJ", icon='EXPORT')
         box.operator("import_scene.fbx", text="Import FBX", icon='IMPORT')
         box.operator("export_scene.fbx", text="Export FBX", icon='EXPORT')
-        box.operator("object.view_menu", text="Outliner", icon= 'OOPS').variable="OUTLINER"
+        box.operator("object.view_menu", text="Movie Clip Editor", icon= 'RENDER_ANIMATION').variable="CLIP_EDITOR"
 
 #         box = pie.split().column()
 #         row = box.row(align=True)

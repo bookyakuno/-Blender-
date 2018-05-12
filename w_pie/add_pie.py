@@ -256,7 +256,7 @@ class VIEW3D_PIE_Add_Other(Menu):
 
 class VIEW3D_PIE_Add_Menu(Menu):
     bl_idname = "add.menu"
-    bl_label = "Add Menu_x"
+    bl_label = "Add"
 
 
     def draw(self, context):
