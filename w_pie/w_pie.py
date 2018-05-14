@@ -1095,10 +1095,11 @@ class SplitVertical(bpy.types.Operator):
 
 # Join area
 class JoinArea(bpy.types.Operator):
-    """Join 2 area, clic on the second area to join"""
+    # """Join 2 area, clic on the second area to join"""
     bl_idname = "area.joinarea"
     bl_label = "Join Area"
     bl_options = {'REGISTER', 'UNDO'}
+    bl_description = "Click on the window you want to merge after execution."
 
     min_x = IntProperty()
     min_y = IntProperty()
@@ -1827,7 +1828,7 @@ class PieObjectEditMode(Menu):
             #4 - LEFT
             pie.operator("class.vertex", text="Vertex", icon='VERTEXSEL')
             #6 - RIGHT
-            pie.operator("screen.redo_last", text="Setting", icon='SETTINGS')
+            pie.operator("screen.redo_last", icon='SETTINGS')
             #2 - BOTTOM
             pie.operator("class.face", text="Face", icon='FACESEL')
             #8 - TOP

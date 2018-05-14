@@ -232,7 +232,7 @@ class SplitAndGrab(bpy.types.Operator):
 
 class live_unwrap_toggle(bpy.types.Operator):
     bl_idname = "uv.live_unwrap_toggle"
-    bl_label = "live_unwrap_toggle"
+    bl_label = "Live Unwrap"
 
     def execute(self, context):
         if bpy.context.scene.tool_settings.edge_path_live_unwrap == (False):
