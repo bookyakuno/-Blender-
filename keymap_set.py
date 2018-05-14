@@ -16,10 +16,11 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+
 bl_info = {
 	"name": "Keymap_Set",
 	"author": "bookyakuno",
-	"version": (1, 1),
+	"version": (1, 2),
 	"blender": (2, 79, 0),
 	"description": "Rational Keymap Set",
 	"location": "This addon Setting",
@@ -141,6 +142,62 @@ def reload_addon(context, module_name):
 
 
 
+
+
+
+class reveal_no_select(bpy.types.Operator):
+	bl_idname = "mesh.reveal_no_select"
+	bl_label = "reveal_no_select"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		obj = context.object
+		bm = bmesh.from_edit_mesh(obj.data)
+
+
+		# 現在の選択を頂点グループにバックアップ
+		bpy.ops.object.vertex_group_assign_new()
+		bpy.context.object.vertex_groups.active.name = "reveal_no_select_vgroups"
+
+		# 表示
+		bpy.ops.mesh.reveal()
+		bpy.ops.mesh.select_all(action='DESELECT') #選択解除
+
+		# 保持した頂点グループを選択
+		bpy.ops.object.vertex_group_set_active(group='reveal_no_select_vgroups')
+		bpy.ops.object.vertex_group_select()
+
+		# reveal_vgroupsを除去
+		bpy.ops.object.vertex_group_remove()
+
+		return {'FINISHED'}
+
+
+class reveal_no_select_object(bpy.types.Operator):
+	bl_idname = "object.reveal_no_select_object"
+	bl_label = "reveal_no_select_object"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+
+
+		obj = context.object
+
+		if len(bpy.context.selected_objects) == 0:
+			bpy.ops.object.hide_view_clear()
+		else:
+			#  アクティブオブジェクトの定義
+			# selob = bpy.context.selected_objects
+			bpy.ops.group.create(name="reveal_no_select_object_gp")
+
+			# 表示
+			bpy.ops.object.hide_view_clear()
+			bpy.ops.object.select_all(action='DESELECT') #選択解除
+			bpy.ops.object.select_same_group(group="reveal_no_select_object_gp")
+			bpy.ops.group.objects_remove(group='reveal_no_select_object_gp')
+
+
+		return {'FINISHED'}
 
 
 
@@ -1598,6 +1655,17 @@ def register():
 				kmi.active = True
 				etc_keymap.append((km, kmi))
 
+				km = wm.keyconfigs.addon.keymaps.new('Mesh', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('mesh.reveal_no_select', 'W', 'PRESS', alt=True)
+				kmi_props_setattr(kmi.properties, 'type', 'SELECTED')
+				kmi.active = True
+				etc_keymap.append((km, kmi))
+
+
+				km = wm.keyconfigs.addon.keymaps.new('Object Mode', space_type='EMPTY', region_type='WINDOW', modal=False)
+				kmi = km.keymap_items.new('object.reveal_no_select_object', 'W', 'PRESS', alt=True)
+				kmi.active = True
+				etc_keymap.append((km, kmi))
 
 
 
