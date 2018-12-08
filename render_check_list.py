@@ -15,8 +15,8 @@
 bl_info = {
 	"name": "render check list + misc",
 	"author": "bookyakuno",
-	"version": (1, 0, 2),
-	"blender": (2, 78),
+	"version": (1, 0, 3),
+	"blender": (2, 79),
 	"location": "Dimensions",
 	"description": "render check list + misc",
 	"warning": "",
@@ -68,12 +68,6 @@ class now_f(bpy.types.Operator):
 
 
 
-# class SampleProperties(bpy.types.PropertyGroup):
-# 	# boolSample = BoolProperty()
-# 	floatSample = IntProperty(name="FloatPropSample",min=-1, max=10000, default=0)
-# 	# floatVectorSample = FloatVectorProperty(name="Vector")
-	# stringSample=StringProperty(name="text")
-
 
 class SampleUI_PT_object(bpy.types.Panel):
 	bl_label = "UI For Sample Prop"
@@ -82,10 +76,7 @@ class SampleUI_PT_object(bpy.types.Panel):
 	bl_region_type = "WINDOW"
 
 	def draw(self, context):
-		# self.layout.prop(context.object.sample_props,"boolSample")
 		self.layout.prop(context.object.sample_props,"floatSample")
-		# self.layout.prop(context.object.sample_props,"floatVectorSample")
-		# self.layout.prop(context.object.sample_props,"stringSample")
 
 		layout = self.layout
 		row = layout.row(align=True)
@@ -123,14 +114,6 @@ class x_y_change(bpy.types.Operator):
 		scene.render.resolution_y = old_x
 
 		return {'FINISHED'}
-
-
-
-
-
-
-
-
 
 
 
@@ -184,9 +167,7 @@ def render_final_resolution_ui_z(self, context):
 	sub.prop(rd, "resolution_x", text="X")
 	sub.prop(rd, "resolution_y", text="Y")
 	sub.prop(rd, "resolution_percentage", text="")
-
-
-
+	sub.separator()
 
 
 	row = col.row()
@@ -204,14 +185,19 @@ def render_final_resolution_ui_z(self, context):
 	sub = col.column(align=True)
 	sub.label(text="Frame Range:    " + str(tt))
 	# =====================================================
+
 	sub.prop(scene, "frame_start")
 	sub.prop(scene, "frame_end")
+	sub.separator()
+	sub.prop(scene, "frame_current")
+	sub.separator()
 
 	subrow = sub.row(align=True)
 
 	subrow.operator("object.now_f", text="",icon="EYEDROPPER")
 	subrow.operator("object.set_f", text="",icon="FILE_TICK")
 	subrow.prop(scene, "floatSample", text="")
+
 
 
 
@@ -253,44 +239,26 @@ def render_final_resolution_ui_z(self, context):
 
 	split = layout.split()
 	row = col.row(align=True)
-	row.prop(rd, "use_stamp", icon="OUTLINER_DATA_FONT")
+	row.prop(context.scene, 'save_after_render', text='Auto Save Image', icon="IMAGE_DATA", toggle=False)
+
 	row.prop(cscene, "use_square_samples", icon="IPO_QUAD")
 
 
 
 
+
+	row = col.row(align=True)
+	row.prop(rd, "use_stamp", icon="OUTLINER_DATA_FONT")
+	row.prop(cscene, "samples", text="samples")
+
+
 	row = col.row(align=True)
 	row.prop(rd, "use_persistent_data", text="Persistent Images")
-	row.prop(cscene, "samples", text="samples")
-	row = col.row(align=True)
 
-	row.prop(scene, "frame_current")
 	row.prop(cscene, "preview_samples", text="Preview")
 
 
 	# draw_samples_info(layout, context)
-
-	row = col.row(align=True)
-
-	row.prop(context.scene, 'save_after_render', text='Auto Save Image', toggle=False)
-
-
-# =====================================================
-# set flame
-	# layout = self.layout
-	# scn = context.scene
-	# tt = scn.frame_end - scn.frame_start
-	# # row = layout.row(align=True)
-	# row = col.row(align=True)
-	# row.label(str(tt))
-	#
-	# row.operator("object.now_f", text="",icon="EYEDROPPER")
-	# row.operator("object.set_f", text="set_f",icon="FILE_TICK")
-	# row.prop(scene, "floatSample", text="")
-	#
-
-
-
 
 
 
@@ -309,12 +277,6 @@ def render_final_resolution_ui_z(self, context):
 	sub = col.column(align=True)
 
 
-	#
-	#
-	# split = layout.split()
-	#
-	# col = split.column()
-	# sub = col.column(align=True)
 	sub.prop(scene, "frame_step")
 
 
@@ -363,25 +325,14 @@ def register():
 	bpy.types.RENDER_PT_dimensions.draw = render_final_resolution_ui_z
 
 
-	# bpy.types.RENDER_PT_dimensions.append(render_final_resolution_ui_z)
-	# bpy.types.Object.sample_props=PointerProperty(type=SampleProperties)
-
-
-	# scn = context.scene
-	# tt = scn.frame_end - scn.frame_start
 
 	bpy.types.Scene.floatSample = IntProperty(name="FloatPropSample", description="Number of sheets to be rendered", min=0, default=0)
-
-	# floatSample = IntProperty(name="FloatPropSample",min=-1, max=10000, default=0)
-
-
 
 
 
 
 def unregister():
 	bpy.types.RENDER_PT_dimensions.remove(render_final_resolution_ui_z)
-	# del bpy.types.Object.sample_props
 
 
 
