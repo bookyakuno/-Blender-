@@ -22,32 +22,30 @@
 bl_info = {
         "name": "SHARP Knife (Snap Utilities Line bk.Edit)",
     "author": "Germano Cavalcante, Arrange by bookyakuno",
-    "version": (5, 7 + 0,1,1),
-    "blender": (2, 77),
+    "version": (0,1,1),
+    "blender": (2, 7, 9),
     "location": "mesh.snap_utilities_line",
     "description": "Vertex or Center only Powerful snap Knife tool.",
     "wiki_url" : "http://blenderartists.org/forum/showthread.php?363859-Addon-CAD-Snap-Utilities",
     "category": "Mesh"}
-    
-    
+
+
 
 ################################################################
 # # # # # # # #
 
 
-## 『##』 で始まるコメントアウトに変更点を書いたので検索して下さい。
-    
-    
-# # # # # # # #    
-################################################################    
-    
-    
-    
-    
-    
-    
-    
-    
+##cme 『##cme』 で始まるコメントアウトに変更点を書いたので検索して下さい。
+
+
+# # # # # # # #
+################################################################
+
+
+
+
+
+
 import bpy, bgl, bmesh
 from mathutils import Vector
 from mathutils.geometry import (
@@ -150,7 +148,7 @@ def out_Location(rv3d, region, orig, vector):
 
     hit = intersect_ray_tri(Vector((1,0,0)), Vector((0,1,0)), Vector((0,0,0)), (vector), (orig), False)
     if hit == None:
-        hit = intersect_ray_tri(v1, v2, Vector((0,0,0)), (vector), (orig), False)        
+        hit = intersect_ray_tri(v1, v2, Vector((0,0,0)), (vector), (orig), False)
     if hit == None:
         hit = intersect_ray_tri(v1, v2, Vector((0,0,0)), (-vector), (orig), False)
     if hit == None:
@@ -196,7 +194,7 @@ def snap_utilities(self,
             self.bvert = bm_geom
             self.vert = obj_matrix_world * self.bvert.co
             #self.Pvert = location_3d_to_region_2d(region, rv3d, self.vert)
-        
+
         if constrain:
             #self.location = (self.vert-self.const).project(vector_constrain) + self.const
             location = intersect_point_line(self.vert, constrain[0], constrain[1])
@@ -214,12 +212,12 @@ def snap_utilities(self,
             self.Pcent = location_3d_to_region_2d(region, rv3d, self.po_cent)
             self.Pvert0 = location_3d_to_region_2d(region, rv3d, self.vert0)
             self.Pvert1 = location_3d_to_region_2d(region, rv3d, self.vert1)
-        
+
             if previous_vert and previous_vert not in self.bedge.verts:
                     pvert_co = obj_matrix_world*previous_vert.co
                     point_perpendicular = intersect_point_line(pvert_co, self.vert0, self.vert1)
                     self.po_perp = point_perpendicular[0]
-                    #factor = point_perpendicular[1] 
+                    #factor = point_perpendicular[1]
                     self.Pperp = location_3d_to_region_2d(region, rv3d, self.po_perp)
 
         if constrain:
@@ -233,13 +231,13 @@ def snap_utilities(self,
                 self.location = location[0]
             else:
                 self.location = constrain[0]
-        
+
         elif hasattr(self, 'Pperp') and abs(self.Pperp[0]-mcursor[0]) < 10 and abs(self.Pperp[1]-mcursor[1]) < 10:
             self.type = 'PERPENDICULAR'
             self.location = self.po_perp
 
 
-## 値を10 から 1000 に変更
+##cme 値を10 から 1000 に変更
         elif abs(self.Pcent[0]-mcursor[0]) < 1000 and abs(self.Pcent[1]-mcursor[1]) < 1000:
             self.type = 'CENTER'
             self.location = self.po_cent
@@ -315,7 +313,7 @@ def snap_utilities(self,
             end = orig + view_vector * 1000
 
             result, self.out_obj, self.out_mat, self.location, normal = context.scene.ray_cast(orig, end)
-            
+
             if result and self.out_obj != ignore_obj:
                 self.type = 'FACE'
                 if outer_verts:
@@ -396,7 +394,7 @@ def draw_line(self, obj, Bmesh, bm_geom, location):
         else:
             vertices = bmesh.ops.create_vert(Bmesh, co=(location))
             self.list_verts.append(vertices['vert'][0])
-        
+
     elif isinstance(bm_geom, bmesh.types.BMEdge):
         self.list_edges.append(bm_geom)
         vector_p0_l = (bm_geom.verts[0].co-location)
@@ -417,7 +415,7 @@ def draw_line(self, obj, Bmesh, bm_geom, location):
         self.list_faces.append(bm_geom)
         vertices = (bmesh.ops.create_vert(Bmesh, co=(location)))
         self.list_verts.append(vertices['vert'][0])
-    
+
     # draw, split and create face
     if len(self.list_verts) >= 2:
         V1 = self.list_verts[-2]
@@ -435,7 +433,7 @@ def draw_line(self, obj, Bmesh, bm_geom, location):
                 link_two_faces = V1.link_faces and V2.link_faces
                 if link_two_faces:
                     self.list_faces = [f for f in V2.link_faces if f in V1.link_faces]
-                    
+
                 elif not self.list_faces:
                     faces, co2 = (V1.link_faces, V2.co.copy()) if V1.link_faces else (V2.link_faces, V1.co.copy())
                     for face in faces:
@@ -458,7 +456,7 @@ def draw_line(self, obj, Bmesh, bm_geom, location):
                     if not self.intersect or not facesp['edges']:
                         edge = Bmesh.edges.new([V1, V2])
                         self.list_edges.append(edge)
-                    else:   
+                    else:
                         for edge in facesp['edges']:
                             self.list_edges.append(edge)
                 bmesh.update_edit_mesh(obj.data, tessface=True, destructive=True)
@@ -479,12 +477,12 @@ def draw_line(self, obj, Bmesh, bm_geom, location):
             #print('face created')
 
     return [obj.matrix_world*a.co for a in self.list_verts]
-    
+
 class CharMap:
     ascii = {
         ".", ",", "-", "+", "1", "2", "3",
         "4", "5", "6", "7", "8", "9", "0",
-         "m", "d", "k", "h", "a", ## CをY軸固定にするため、"c"を削除
+         "m", "d", "k", "h", "a", ##cme CをY軸固定にするため、"c"を削除
         " ", "/", "*", "'", "\""
         #"="
         }
@@ -523,7 +521,8 @@ class SnapUtilitiesLine(bpy.types.Operator):
 
     constrain_keys = {
         'X': Vector((1,0,0)),
-        'C': Vector((0,1,0)), ## Y から C に変更
+        'Y': Vector((0,1,0)),
+        'C': Vector((0,1,0)), ##cme CをY軸として追加
         'Z': Vector((0,0,1)),
         'RIGHT_SHIFT': 'shift',
         'LEFT_SHIFT': 'shift',
@@ -533,9 +532,10 @@ class SnapUtilitiesLine(bpy.types.Operator):
     def poll(cls, context):
         preferences = context.user_preferences.addons[__name__].preferences
         return (context.mode in {'EDIT_MESH', 'OBJECT'} and
-                preferences.create_new_obj or 
+                preferences.create_new_obj or
                 (context.object is not None and
                 context.object.type == 'MESH'))
+
 
     def modal_navigation(self, context, event):
         #TO DO:
@@ -553,12 +553,21 @@ class SnapUtilitiesLine(bpy.types.Operator):
                     self.keys_rotate.add((key.alt, key.ctrl, key.shift, key.type, key.value))
                 if key.idname == 'view3d.move':
                     self.keys_move.add((key.alt, key.ctrl, key.shift, key.type, key.value))
+
+
                 if key.idname == 'view3d.zoom':
                     self.keys_zoom.add((key.alt, key.ctrl, key.shift, key.type, key.value, key.properties.delta))
+
+
                     if key.type == 'WHEELINMOUSE':
                         self.keys_zoom.add((key.alt, key.ctrl, key.shift, 'WHEELDOWNMOUSE', key.value, key.properties.delta))
+
+
+
                     if key.type == 'WHEELOUTMOUSE':
                         self.keys_zoom.add((key.alt, key.ctrl, key.shift, 'WHEELUPMOUSE', key.value, key.properties.delta))
+
+
 
         evkey = (event.alt, event.ctrl, event.shift, event.type, event.value)
         if evkey in self.keys_rotate:
@@ -578,6 +587,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
                         rv3d.view_location -= delta*(self.location - rv3d.view_location)/6
                     break
 
+
     def draw_callback_px(self, context):
         # draw 3d point OpenGL in the 3D View
         bgl.glEnable(bgl.GL_BLEND)
@@ -593,7 +603,9 @@ class SnapUtilitiesLine(bpy.types.Operator):
                 bgl.glEnd()
             if vc[2] == 'X':
                 Color4f = (self.axis_x_color + (1.0,))
-            elif vc[2] == 'C': ## Y から C に変更
+            elif vc[2] == 'Y': ##cme Y から C に変更
+                Color4f = (self.axis_y_color + (1.0,))
+            elif vc[2] == 'C': ##cme Y から C に変更
                 Color4f = (self.axis_y_color + (1.0,))
             elif vc[2] == 'Z':
                 Color4f = (self.axis_z_color + (1.0,))
@@ -601,7 +613,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
                 Color4f = self.constrain_shift_color
         else:
             if self.type == 'OUT':
-                Color4f = self.out_color 
+                Color4f = self.out_color
             elif self.type == 'FACE':
                 Color4f = self.face_color
             elif self.type == 'EDGE':
@@ -612,7 +624,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
                 Color4f = self.center_color
             elif self.type == 'PERPENDICULAR':
                 Color4f = self.perpendicular_color
-                
+
         bgl.glColor4f(*Color4f)
         bgl.glDepthRange(0,0)
         bgl.glPointSize(10)
@@ -624,15 +636,15 @@ class SnapUtilitiesLine(bpy.types.Operator):
         # draw 3d line OpenGL in the 3D View
         bgl.glEnable(bgl.GL_BLEND)
         bgl.glDepthRange(0,0.9999)
-        bgl.glColor4f(1.0, 0.8, 0.0, 1.0)    
-        bgl.glLineWidth(2)    
+        bgl.glColor4f(1.0, 0.8, 0.0, 1.0)
+        bgl.glLineWidth(2)
         bgl.glEnable(bgl.GL_LINE_STIPPLE)
         bgl.glBegin(bgl.GL_LINE_STRIP)
         for vert_co in self.list_verts_co:
-            bgl.glVertex3f(*vert_co)        
-        bgl.glVertex3f(*self.location)        
+            bgl.glVertex3f(*vert_co)
+        bgl.glVertex3f(*self.location)
         bgl.glEnd()
-            
+
         # restore opengl defaults
         bgl.glDepthRange(0,1)
         bgl.glPointSize(1)
@@ -640,11 +652,11 @@ class SnapUtilitiesLine(bpy.types.Operator):
         bgl.glDisable(bgl.GL_BLEND)
         bgl.glDisable(bgl.GL_LINE_STIPPLE)
         bgl.glColor4f(0.0, 0.0, 0.0, 1.0)
-    
+
     def modal(self, context, event):
         if context.area:
             context.area.tag_redraw()
-            
+
         if event.ctrl and event.type == 'Z' and event.value == 'PRESS':
             bpy.ops.ed.undo()
             self.vector_constrain = None
@@ -680,12 +692,12 @@ class SnapUtilitiesLine(bpy.types.Operator):
                 previous_vert = self.list_verts[-1]
             else:
                 previous_vert = None
-            
-            
+
+
             outer_verts = self.outer_verts and not self.keytab
 
-            snap_utilities(self, 
-                context, 
+            snap_utilities(self,
+                context,
                 self.obj_matrix,
                 self.geom,
                 self.bool_update,
@@ -696,7 +708,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
                 ignore_obj = self.obj,
                 increment = self.incremental,
                 )
-            
+
             if self.snap_to_grid and self.type == 'OUT':
                 loc = self.location/self.rd
                 self.location = Vector((round(loc.x),
@@ -718,10 +730,10 @@ class SnapUtilitiesLine(bpy.types.Operator):
                     vc = lloc+vec
                     try:
                         if vc != self.vector_constrain[1]:
-                            type = 'X' if vec.x else 'C' if vec.y else 'Z' if vec.z else 'shift' ## Y から C に変更
+                            type = 'X' if vec.x else 'Y' if vec.y else 'C' if vec.y else 'Z' if vec.z else 'shift' ##cme Y から C に変更
                             self.vector_constrain = [lloc, vc, type]
                     except:
-                        type = 'X' if vec.x else 'C' if vec.y else 'Z' if vec.z else 'shift' ## Y から C に変更
+                        type = 'X' if vec.x else 'Y' if vec.y else 'C' if vec.y else 'Z' if vec.z else 'shift' ##cme Y から C に変更
                         self.vector_constrain = [lloc, vc, type]
 
         if event.value == 'PRESS':
@@ -764,10 +776,10 @@ class SnapUtilitiesLine(bpy.types.Operator):
                 self.vector_constrain = None
                 self.list_verts_co = draw_line(self, self.obj, self.bm, geom2, Lsnap_3d)
                 bpy.ops.ed.undo_push(message="Undo draw line*")
-# 
+#
 #             elif event.type == 'TAB':
 #                 self.keytab = self.keytab == False
-#                 if self.keytab:            
+#                 if self.keytab:
 #                     context.tool_settings.mesh_select_mode = (False, False, True)
 #                 else:
 #                     context.tool_settings.mesh_select_mode = (True, True, True)
@@ -777,7 +789,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
                 self.keyf8 = self.keyf8 == False
 
         elif event.value == 'RELEASE':
-            if event.type in {'NUMPAD_ENTER'}: ## 'RET'を削除して終了にした
+            if event.type in {'NUMPAD_ENTER'}: ##cme 'RET'を削除して終了にした
                 if self.length_entered != "" and self.list_verts_co:
                     try:
                         text_value = bpy.utils.units.to_value(self.unit_system, 'LENGTH', self.length_entered)
@@ -790,20 +802,20 @@ class SnapUtilitiesLine(bpy.types.Operator):
 
                     except:# ValueError:
                         self.report({'INFO'}, "Operation not supported yet")
-## 'MIDDLEMOUSE', 'A', 'SPACE', 'RET' を追加
+##cme 'MIDDLEMOUSE', 'A', 'SPACE', 'RET' を追加
             elif event.type in {'RIGHTMOUSE','ESC','MIDDLEMOUSE', 'A', 'SPACE', 'RET'}:
-#                 if self.list_verts_co == [] or event.type == 'ESC':                
+#                 if self.list_verts_co == [] or event.type == 'ESC':
                 bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
                 context.tool_settings.mesh_select_mode = self.select_mode
                 context.area.header_text_set()
                 context.user_preferences.view.use_rotate_around_active = self.use_rotate_around_active
-## 無駄なポリゴンを削除                    
-                bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')         
-                bpy.ops.mesh.select_non_manifold(extend=False, use_wire=True, use_boundary=False)
-                bpy.ops.mesh.delete(type='EDGE')
-                bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='VERT')
-                bpy.ops.mesh.select_loose(extend=True)
-                bpy.ops.mesh.delete(type='VERT')
+##cme 無駄なポリゴンを削除
+                # bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')
+                # bpy.ops.mesh.select_non_manifold(extend=False, use_wire=True, use_boundary=False)
+                # bpy.ops.mesh.delete(type='EDGE')
+                # bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='VERT')
+                # bpy.ops.mesh.select_loose(extend=True)
+                # bpy.ops.mesh.delete(type='VERT')
 
 
                 if not self.is_editmode:
@@ -814,8 +826,8 @@ class SnapUtilitiesLine(bpy.types.Operator):
 #                 self.list_verts = []
 #                 self.list_verts_co = []
 #                 self.list_faces = []
-                    
-        a = ""        
+
+        a = "...... Finish = Esc, Return, Space, A "
         if self.list_verts_co:
             if self.length_entered:
                 pos = self.line_pos
@@ -829,7 +841,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
         self.modal_navigation(context, event)
         return {'RUNNING_MODAL'}
 
-    def invoke(self, context, event):        
+    def invoke(self, context, event):
         if context.space_data.type == 'VIEW_3D':
             #print('name', __name__, __package__)
             preferences = context.user_preferences.addons[__name__].preferences
@@ -845,7 +857,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
             self.is_editmode = bpy.context.object.data.is_editmode
             bpy.ops.object.mode_set(mode='EDIT')
             context.space_data.use_occlude_geometry = True
-            
+
             self.scale = context.scene.unit_settings.scale_length
             self.unit_system = context.scene.unit_settings.system
             self.separate_units = context.scene.unit_settings.use_separate
@@ -861,17 +873,17 @@ class SnapUtilitiesLine(bpy.types.Operator):
 
             self.use_rotate_around_active = context.user_preferences.view.use_rotate_around_active
             context.user_preferences.view.use_rotate_around_active = True
-            
+
             self.select_mode = context.tool_settings.mesh_select_mode[:]
             context.tool_settings.mesh_select_mode = (True, True, True)
-            
+
             self.region = context.region
             self.rv3d = context.region_data
             self.rotMat = self.rv3d.view_matrix.copy()
             self.obj = bpy.context.active_object
             self.obj_matrix = self.obj.matrix_world.copy()
             self.bm = bmesh.from_edit_mesh(self.obj.data)
-            
+
             self.location = Vector()
             self.list_verts = []
             self.list_verts_co = []
@@ -883,7 +895,7 @@ class SnapUtilitiesLine(bpy.types.Operator):
             self.len = 0
             self.length_entered = ""
             self.line_pos = 0
-            
+
             self.out_color = preferences.out_color
             self.face_color = preferences.face_color
             self.edge_color = preferences.edge_color
@@ -919,7 +931,7 @@ class PanelSnapUtilities(bpy.types.Panel) :
 #     def poll(cls, context):
 #         preferences = context.user_preferences.addons[__name__].preferences
 #         return (context.mode in {'EDIT_MESH', 'OBJECT'} and
-#                 preferences.create_new_obj or 
+#                 preferences.create_new_obj or
 #                 (context.object is not None and
 #                 context.object.type == 'MESH'))
 
@@ -984,7 +996,7 @@ class SnapAddonPreferences(bpy.types.AddonPreferences):
             name="Expand",
             description="Expand, to display the settings",
             default=False)
-            
+
     increments_grid = bpy.props.BoolProperty(
             name="Increments of Grid",
             description="Snap to increments of grid",
@@ -1016,9 +1028,9 @@ class SnapAddonPreferences(bpy.types.AddonPreferences):
     face_color = bpy.props.FloatVectorProperty(name="FACE", default=(1.0, 0.8, 0.0, 1.0), size=4, subtype="COLOR", min=0, max=1)
     edge_color = bpy.props.FloatVectorProperty(name="EDGE", default=(0.0, 0.8, 1.0, 1.0), size=4, subtype="COLOR", min=0, max=1)
 
-    vert_color = bpy.props.FloatVectorProperty(name="VERT", default=(0.0, 1.0, 0.0, 1.0), size=4, subtype="COLOR", min=0, max=1)## 緑に変更
+    vert_color = bpy.props.FloatVectorProperty(name="VERT", default=(0.0, 1.0, 0.0, 1.0), size=4, subtype="COLOR", min=0, max=1)##cme 緑に変更
 
-    center_color = bpy.props.FloatVectorProperty(name="CENTER", default=(1.0,  0.0, 1.0, 1.0), size=4, subtype="COLOR", min=0, max=1)## ピンクに変更
+    center_color = bpy.props.FloatVectorProperty(name="CENTER", default=(1.0,  0.0, 1.0, 1.0), size=4, subtype="COLOR", min=0, max=1)##cme ピンクに変更
     perpendicular_color = bpy.props.FloatVectorProperty(name="PERPENDICULAR", default=(0.1, 0.5, 0.5, 1.0), size=4, subtype="COLOR", min=0, max=1)
     constrain_shift_color = bpy.props.FloatVectorProperty(name="SHIFT CONSTRAIN", default=(0.8, 0.5, 0.4, 1.0), size=4, subtype="COLOR", min=0, max=1)
 
@@ -1034,7 +1046,7 @@ class SnapAddonPreferences(bpy.types.AddonPreferences):
         col = split.column()
         col.prop(self, "face_color")
         col = split.column()
-        col.prop(self, "edge_color")        
+        col.prop(self, "edge_color")
         col = split.column()
         col.prop(self, "vert_color")
         col = split.column()
@@ -1066,7 +1078,7 @@ def register():
     print('Addon', __name__, 'registered')
     bpy.utils.register_class(SnapAddonPreferences)
     bpy.utils.register_class(SnapUtilitiesLine)
-## ツールシェルフに追加を無効
+##cme ツールシェルフに追加を無効
 #    bpy.utils.register_class(PanelSnapUtilities)
 
     update_panel(None, bpy.context)
@@ -1074,7 +1086,7 @@ def register():
 def unregister():
     bpy.utils.unregister_class(SnapUtilitiesLine)
     bpy.utils.unregister_class(SnapAddonPreferences)
-## ツールシェルフに追加を無効
+##cme ツールシェルフに追加を無効
 #    bpy.utils.unregister_class(PanelSnapUtilities)
 
 if __name__ == "__main__":
