@@ -1,11 +1,45 @@
-# ▼ 下記アドオンはBlender2.8に伴い、配布をgumroadに移動しました
+# ▼ Blender2.8に伴い、下記アドオンは配布サイトをgumroadに移動しました
 
-## keymap_set
-## w_pie(keymap_setに結合)
-## info_header_useful
-## isolate_select
+- keymap_set
+- w_pie (keymap_setに結合)
+- info_header_useful
+- isolate_select
 
 <a href="https://gumroad.com/bookyakuno" target="_blank">Blender2.8系アドオン - gumroad</a>
+<br>
+
+
+
+
+
+<hr>
+# Mask Tools Blender2.8
+
+スカルプトでのマスクを自在に操作するアドオン。<br>
+既存のBlender2.79系 アドオンである"Mask Tools"を<br>
+Blender2.8に対応させ、機能を追加しました。<br>
+
+- マスクを頂点グループに保存
+- 頂点グループをマスクにする
+- マスクをスムースする
+
+ver 0,36,0 アップデート内容
+・メニューを分類。実行ボタンを大きくした
+・マスクを太らせる・小さくする機能を追加
+・スムース・太らせる・小さくする機能のリピート回数を設定できるように
+・マスクをシャープにする機能を追加
+
+<hr>
+
+# Auto Mirror Blender2.8
+既存のBlender2.79系 アドオンである"Auto Mirror"を<br>
+Blender2.8に対応させました。<br>
+
+ミラーするための一連の作業を自動化するアドオン。<br>
+- 半分を削除
+- ミラーモディファイアを設定
+- クリッピングを設定
+
 
 
 <link href="https://github.com/bookyakuno/img/blob/master/Blender_readme.css
