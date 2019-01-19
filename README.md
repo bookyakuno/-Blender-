@@ -1,3 +1,21 @@
+# ▼ 下記アドオンはBlender2.8に伴い、配布をgumroadに移動しました
+
+## keymap_set
+## w_pie(keymap_setに結合)
+## info_header_useful
+## isolate_select
+
+<a href="https://gumroad.com/bookyakuno" target="_blank">Blender2.8系アドオン - gumroad</a>
+
+
+<link href="https://github.com/bookyakuno/img/blob/master/Blender_readme.css
+" rel="stylesheet"></link>
+
+
+
+<link href="https://github.com/bookyakuno/img/blob/master/Blender_readme.css
+" rel="stylesheet"></link>
+
 <!--
 <link href="https://github.com/bookyakuno/img/blob/master/Blender_readme.css
 " rel="stylesheet"></link>
