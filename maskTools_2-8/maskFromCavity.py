@@ -424,6 +424,157 @@ class MaskSharpThick(bpy.types.Operator):
 
         return {'FINISHED'}
 
+class MaskLattice(bpy.types.Operator):
+    ''' Mask Lattice '''
+    bl_idname = "mesh.mask_lattice"
+    bl_label = "Mask Lattice Deform"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+
+    def poll(cls, context):
+
+        return context.active_object is not None and context.active_object.mode == 'SCULPT'
+    bpy.types.Scene.mask_sharp_thick = bpy.props.IntProperty(name = "Mask Sharp Thick", default = 50, min = 0)
+
+    def execute(self, context):
+        mask_sharp_thick = context.scene.mask_sharp_thick # update property from user input
+
+
+        dynatopoEnabled = False
+
+        if context.active_object.mode == 'SCULPT' :
+
+           bpy.ops.mesh.masktovgroup()
+           bpy.ops.mesh.masktovgroup_append()
+           bpy.ops.paint.hide_show(action='HIDE', area='MASKED')
+           bpy.ops.sculpt.sculptmode_toggle()
+           bpy.ops.object.mode_set(mode="EDIT")
+           bpy.ops.mesh.select_all(action='DESELECT')
+           bpy.ops.mesh.reveal()
+           bpy.ops.view3d.snap_cursor_to_selected()
+           bpy.ops.object.mode_set(mode="OBJECT")
+
+
+           #  アクティブオブジェクトの定義
+           # active = bpy.context.scene.active_object.name
+           active = bpy.context.active_object
+           name = active.name
+
+           #  "cv_" + アクティブオブジェクト名に定義
+           objname = "cv_" + name
+           #  一度、アクティブの選択を解除し、リネームする
+           # bpy.data.objects[active].select_set(state = False)
+           bpy.ops.object.select_all(action='DESELECT')
+           bpy.ops.object.add(type='LATTICE', view_align=False, enter_editmode=False)
+           for obj in bpy.context.selected_objects:
+               obj.name = objname
+           #  再度、アクティブを選択
+           bpy.ops.object.select_all(action='DESELECT')
+
+           # bpy.data.objects[name].select_set(state = True)
+           bpy.context.scene.objects.active = name
+           bpy.ops.object.modifier_add(type='LATTICE')
+           bpy.context.object.modifiers["Lattice"].object = objname
+
+           bpy.data.objects[objname].select_set(state = True)
+           bpy.ops.object.mode_set(mode="EDIT")
+           bpy.ops.lattice.select_all()
+
+
+           # ーーーーーーーーーーーーーーーーーーーーーーーーー
+           # ーーーーーーーーーーーーーーーーーーーーーーーーー
+           #  モディファイアを設定ーーーーーーーーーーーーーーーーーーーーーーーーー
+
+           # 配列複製モディファイアを追加
+           bpy.ops.object.modifier_add(type='ARRAY')
+
+           # # bm = bmesh.from_edit_mesh(bpy.context.active_object.data)
+           # obj = context.object
+           # bm = bmesh.from_edit_mesh(obj.data)
+           # selected_verts = [i.co for i in bm.verts if i.select]
+           #
+           # top = None
+           # bottom = None
+           # left = None
+           # right = None
+           # front = None
+           # back = None
+           # for v in selected_verts:
+           #     	if top == None:
+           #     		top = v[2]
+           #     	elif top < v[2]:
+           #     		top = v[2]
+           #
+           #     	if bottom == None:
+           #     		bottom = v[2]
+           #     	elif bottom > v[2]:
+           #     		bottom = v[2]
+           #
+           #     	if left == None:
+           #     		left = v[1]
+           #     	elif left > v[1]:
+           #     		left = v[1]
+           #
+           #     	if right == None:
+           #     		right = v[1]
+           #     	elif right < v[1]:
+           #     		right = v[1]
+           #
+           #     	if front == None:
+           #     		front = v[0]
+           #     	elif front < v[0]:
+           #     		front = v[0]
+           #
+           #     	if back == None:
+           #     		back = v[0]
+           #     	elif back > v[0]:
+           #     		back = v[0]
+           #
+           # bpy.ops.mesh.select_all(action='DESELECT')
+           #
+           # lattice = bpy.data.lattices.new("Lattice")
+           # lattice_ob = bpy.data.objects.new("Lattice", lattice)
+           #
+           # # x_scale = (front - back) / (lattice.points[5].co[0] - lattice.points[4].co[0])
+           # # y_scale = (right - left) / (lattice.points[7].co[1] - lattice.points[5].co[1])
+           # # z_scale = (top - bottom) / (lattice.points[5].co[2] - lattice.points[1].co[2])
+           # #
+           # # lattice_ob.scale = (x_scale, y_scale, z_scale)
+           # lattice_ob.location = ((front+back) / 2, (right+left) / 2, (top+bottom) / 2)
+           #
+           # scene = bpy.context.scene
+           #
+           # lattice_mod = obj.modifiers.new("Lattice", 'LATTICE')
+           # lattice_mod.object = lattice_ob
+           # lattice_mod.vertex_group = bpy.context.object.vertex_groups.active.name
+           #
+           # scene.objects.link(lattice_ob)
+           # scene.update()
+           #
+           # for o in bpy.context.scene.objects:
+           #     	o.select = False
+           # lattice_ob.select = True
+           # bpy.context.scene.objects.active = lattice_ob
+           # bpy.ops.object.mode_set(mode='OBJECT')
+           # bpy.ops.object.editmode_toggle()
+
+
+
+
+
+
+           bpy.ops.sculpt.sculptmode_toggle()
+           bpy.ops.paint.mask_flood_fill(mode='VALUE', value=0)
+           bpy.ops.mesh.vgrouptomask_append()
+           bpy.ops.object.vertex_group_remove(all=False, all_unlocked=False)
+
+
+           if dynatopoEnabled :
+               bpy.ops.sculpt.dynamic_topology_toggle()
+
+        return {'FINISHED'}
+
 class MaskDuplicate(bpy.types.Operator):
     ''' Mask Duplicate '''
     bl_idname = "mesh.duplicate"
@@ -464,6 +615,108 @@ class MaskDuplicate(bpy.types.Operator):
                bpy.ops.sculpt.dynamic_topology_toggle()
 
         return {'FINISHED'}
+
+
+class MaskArmture(bpy.types.Operator):
+    ''' Mask Armture '''
+    bl_idname = "mesh.mask_armature"
+    bl_label = "Mask Armture"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+
+    def poll(cls, context):
+
+        return context.active_object is not None and context.active_object.mode == 'SCULPT'
+
+    def execute(self, context):
+        mask_sharp_thick = context.scene.mask_sharp_thick # update property from user input
+
+
+        dynatopoEnabled = False
+
+        if context.active_object.mode == 'SCULPT' :
+           bpy.ops.sculpt.sculptmode_toggle()
+           #bpy.ops.object.vertex_group_remove(all=True)
+           #bpy.ops.object.delete_all_modifiers()
+           bpy.ops.object.vertex_group_add()
+           #bpy.context.object.name = "armmask"
+           bpy.ops.sculpt.sculptmode_toggle()
+           bpy.ops.mesh.masktovgroup_append()
+           bpy.context.object.name = "deform_bone"
+           bpy.ops.sculpt.sculptmode_toggle()
+           sculptobj = bpy.context.active_object.name
+           bpy.ops.object.armature_add()
+           # bpy.data.objects[sculptobj].select = True
+           bpy.data.objects[sculptobj].select_set(state = True)
+           bpy.ops.object.editmode_toggle()
+           # bpy.context.object.show_x_ray = True
+           # bpy.context.scene.tool_settings.use_snap = True
+           # bpy.context.scene.tool_settings.snap_element = 'VOLUME'
+           # bpy.context.space_data.context = 'BONE'
+           # bpy.context.object.data.name = "deform_bone"
+           # bpy.ops.object.mode_set(mode="OBJECT")
+           # bpy.ops.object.parent_set(type='ARMATURE_NAME')
+           #
+
+
+           objarm = bpy.context.selected_objects[0].name
+           objmesh = bpy.context.selected_objects[1].name
+           bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+           active = bpy.data.objects[objmesh]
+           activearm = bpy.data.objects[objarm]
+           bpy.context.scene.objects.active = active
+           bpy.context.object.modifiers["Armature"].vertex_group = "Group"
+           #bpy.context.object.modifiers["Armature"].invert_vertex_group = True
+           bpy.context.scene.objects.active = activearm
+           bpy.ops.object.posemode_toggle()
+
+
+
+
+
+           if dynatopoEnabled :
+               bpy.ops.sculpt.dynamic_topology_toggle()
+
+        return {'FINISHED'}
+
+
+class MaskPolygonRemove(bpy.types.Operator):
+    ''' Mask PolygonRemove '''
+    bl_idname = "mesh.mask_polygon_remove"
+    bl_label = "Mask Polygon Remove"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+
+    def poll(cls, context):
+
+        return context.active_object is not None and context.active_object.mode == 'SCULPT'
+
+
+    def execute(self, context):
+
+
+        dynatopoEnabled = False
+
+        if context.active_object.mode == 'SCULPT' :
+
+
+
+           bpy.ops.paint.hide_show(action='HIDE', area='MASKED')
+           bpy.ops.object.mode_set(mode="EDIT")
+           bpy.ops.mesh.select_all(action='DESELECT')
+           bpy.ops.mesh.reveal()
+           bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='FACE')
+           bpy.ops.mesh.dissolve_mode()
+           bpy.ops.sculpt.sculptmode_toggle()
+
+
+           if dynatopoEnabled :
+               bpy.ops.sculpt.dynamic_topology_toggle()
+
+        return {'FINISHED'}
+
 
 
 def register():
