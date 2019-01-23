@@ -87,8 +87,6 @@ class MaskFromCavity(bpy.types.Operator) :
                bpy.ops.sculpt.dynamic_topology_toggle()
 
 
-           bpy.ops.screen.space_type_set_or_cycle(space_type="NODE_EDITOR")
-           bpy.ops.screen.space_type_set_or_cycle(space_type="VIEW_3D")
 
         return {'FINISHED'}
 
@@ -179,10 +177,6 @@ class MaskFromEdges(bpy.types.Operator):
 
                bpy.ops.sculpt.dynamic_topology_toggle()
 
-
-           bpy.ops.screen.space_type_set_or_cycle(space_type="NODE_EDITOR")
-           bpy.ops.screen.space_type_set_or_cycle(space_type="VIEW_3D")
-
         return {'FINISHED'}
 
 
@@ -199,7 +193,7 @@ class MaskSmoothAll(bpy.types.Operator):
         return context.active_object is not None and context.active_object.mode == 'SCULPT'
 
 
-    bpy.types.Scene.mask_smooth_strength = bpy.props.IntProperty(name = "Mask Smooth Strength", default = 20, min = 0)
+    bpy.types.Scene.mask_smooth_strength = bpy.props.IntProperty(name = "Mask Smooth Strength", default = 1, min = 0)
 
 
     def execute(self, context):
@@ -220,9 +214,6 @@ class MaskSmoothAll(bpy.types.Operator):
            bpy.ops.paint.mask_flood_fill(mode='VALUE', value=0)
            bpy.ops.mesh.vgrouptomask_append()
            bpy.ops.object.vertex_group_remove(all=False, all_unlocked=False)
-
-
-
            # if context.sculpt_object.use_dynamic_topology_sculpting :
            #
            #    dynatopoEnabled = True
@@ -403,7 +394,7 @@ class MaskSharpThick(bpy.types.Operator):
         return context.active_object is not None and context.active_object.mode == 'SCULPT'
 
 
-    bpy.types.Scene.mask_sharp_thick = bpy.props.IntProperty(name = "Mask Sharp Thick", default = 20, min = 0)
+    bpy.types.Scene.mask_sharp_thick = bpy.props.IntProperty(name = "Mask Sharp Thick", default = 50, min = 0)
 
 
 

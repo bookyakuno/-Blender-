@@ -1,9 +1,9 @@
 bl_info = {
 	"name": "Mask Tools",
 	"author": "Stanislav Blinov,Yigit Savtur,Bookyakuno (2.8Update)",
-	"version": (0, 38,0),
-	"blender": (2, 80,0),
-	"location": "3d View > Properties shelf (N) > Sculpt",
+	"version": (0, 37,0),
+	"blender": (2, 79,0),
+	"location": "3d View > Tool shelf (T) > Sculpt",
 	"description": "Tools for Converting Sculpt Masks to Vertex groups",
 	"warning": "",
 	"wiki_url": "",
@@ -84,16 +84,16 @@ class MASKTOOLS_AddonPreferences(bpy.types.AddonPreferences):
 
 		col = layout.column(align=True)
 		row = col.row(align=True)
-		row.label(text="– Fat", icon='KEY_HLT')
+		row.label(text="– Fat", icon='ZOOMIN')
 		row.label(text="LEFT MOUSE   : DoubleClick + Alt",icon="MOUSE_LMB")
 
 		col = layout.column(align=True)
 		row = col.row(align=True)
-		row.label(text="– Less", icon='KEY_DEHLT')
+		row.label(text="– Less", icon='ZOOMOUT')
 		row.label(text="RIGHT MOUSE : DoubleClick + Alt",icon="MOUSE_RMB")
 		col = layout.column(align=True)
 		row = col.row(align=True)
-		row.label(text="– Remove", icon='KEY_DEHLT')
+		row.label(text="– Remove", icon='X')
 		row.label(text="BACKSPACE")
 
 
@@ -107,11 +107,16 @@ class MASKTOOLS_AddonPreferences(bpy.types.AddonPreferences):
 
 class MaskToolsPanel(Panel):
 	"""Creates a Mask Tool Box in the Viewport Tool Panel"""
+	# bl_category = "Sculpt"
+	# bl_idname = "MESH_OT_masktools"
+	# bl_space_type = 'VIEW_3D'
+	# bl_region_type = 'UI'
+	# bl_label = "Mask Tools"
 	bl_category = "Sculpt"
+	bl_label = "Mask Tools"
 	bl_idname = "MESH_OT_masktools"
 	bl_space_type = 'VIEW_3D'
-	bl_region_type = 'UI'
-	bl_label = "Mask Tools"
+	bl_region_type = 'TOOLS'
 
 
 
@@ -130,8 +135,6 @@ class MaskToolsPanel(Panel):
 		row = layout.row(align = True)
 		row.operator("mesh.masktovgroup_append", text = "Add VGroup", icon = 'EXPORT')
 		row.operator("mesh.masktovgroup_remove", text = "Difference VGroup", icon = 'UNLINKED')
-		row = layout.row(align = True)
-		row.operator("object.vertex_group_remove", icon = 'REMOVE')
 
 		space = layout.row()
 
@@ -158,7 +161,7 @@ class MaskToolsPanel(Panel):
 		row = layout.row(align = True)
 		# row.label(text = "Mask Smooth", icon = 'MOD_MASK')
 		row.scale_y = 1.3
-		row.operator("mesh.mask_smooth_all", text = "Smooth", icon = 'MOD_SMOOTH')
+		row.operator("mesh.mask_smooth_all", text = "Smooth", icon = 'SMOOTH')
 		row.operator("mesh.mask_sharp", text = "Sharp", icon = 'IMAGE_ALPHA')
 
 		row = layout.row(align = False)
@@ -171,11 +174,11 @@ class MaskToolsPanel(Panel):
 
 		###############################################################
 		row = layout.row(align = True)
-		row.label(text = "Mask Fat/Less :", icon = 'ONIONSKIN_ON')
+		row.label(text = "Mask Fat/Less :", icon = 'ZOOMIN')
 		row = layout.row(align = True)
 		row.scale_y = 1.3
-		row.operator("mesh.mask_fat", text = "Mask Fat", icon = 'KEY_HLT')
-		row.operator("mesh.mask_less", text = "Mask Less", icon = 'KEY_DEHLT')
+		row.operator("mesh.mask_fat", text = "Mask Fat", icon = 'ZOOMIN')
+		row.operator("mesh.mask_less", text = "Mask Less", icon = 'ZOOMOUT')
 
 		row = layout.row(align = True)
 		row.prop(bpy.context.scene,"mask_fat_repeat", text = "Mask Fat Repeat", icon='MOD_MASK',slider = True)
@@ -222,8 +225,8 @@ class MaskToolsPanel(Panel):
 		row = layout.row(align = True)
 		row.operator("mesh.mask_sharp_thick", text = "Mask Sharp (Thick)", icon = 'NONE')
 		row = layout.row(align = True)
-		row = layout.row(align = False)
-		row.prop(bpy.context.scene,"mask_sharp_thick", text = "Mask Sharp Thick Strength", icon='MOD_MASK',slider = True)
+		maskCavity = layout.row(align = False)
+		maskCavity.prop(bpy.context.scene,"mask_sharp_thick", text = "Mask Sharp Thick Strength", icon='MOD_MASK',slider = True)
 
 		# space = layout.row()
 		# row = layout.row(align = True)
@@ -234,6 +237,7 @@ class MaskToolsPanel(Panel):
 		space = layout.row()
 		row = layout.row(align = True)
 		row.operator("mesh.mask_polygon_remove", text = "Mask Polygon Remove")
+
 
 
 
@@ -253,7 +257,6 @@ class MaskToolsPanel(Panel):
 		row = layout.row(align = True)
 		row = layout.row(align = False)
 		row.prop(bpy.context.scene,"maskmod_smooth_strength", icon='MOD_MASK',slider = True)
-
 
 
 
@@ -400,6 +403,11 @@ def register():
 	kmi = km.keymap_items.new('mesh.mask_polygon_remove', 'BACK_SPACE', 'PRESS')
 	kmi.active = True
 	addon_keymaps.append((km, kmi))
+
+
+
+
+
 
 
 
