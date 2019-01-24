@@ -228,9 +228,9 @@ class MaskToolsPanel(Panel):
 		maskCavity = layout.row(align = False)
 		maskCavity.prop(bpy.context.scene,"mask_sharp_thick", text = "Mask Sharp Thick Strength", icon='MOD_MASK',slider = True)
 
-		# space = layout.row()
-		# row = layout.row(align = True)
-		# row.operator("mesh.duplicate", text = "Mask Duplicate")
+		space = layout.row()
+		row = layout.row(align = True)
+		row.operator("mesh.mask_duplicate", text = "Mask Duplicate")
 		# space = layout.row()
 		# row = layout.row(align = True)
 		# row.operator("mesh.mask_lattice", text = "Mask Lattice")

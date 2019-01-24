@@ -1,7 +1,7 @@
 bl_info = {
 	"name": "Mask Tools",
 	"author": "Stanislav Blinov,Yigit Savtur,Bookyakuno (2.8Update)",
-	"version": (0, 38,0),
+	"version": (0, 38,1),
 	"blender": (2, 80,0),
 	"location": "3d View > Properties shelf (N) > Sculpt",
 	"description": "Tools for Converting Sculpt Masks to Vertex groups",
@@ -128,9 +128,13 @@ class MaskToolsPanel(Panel):
 		row.scale_y = 1.3
 		row.operator("mesh.masktovgroup", text = "Create VGroup", icon = 'GROUP_VERTEX')
 		row = layout.row(align = True)
+
+
 		row.operator("mesh.masktovgroup_append", text = "Add VGroup", icon = 'EXPORT')
 		row.operator("mesh.masktovgroup_remove", text = "Difference VGroup", icon = 'UNLINKED')
 		row = layout.row(align = True)
+
+
 		row.operator("object.vertex_group_remove", icon = 'REMOVE')
 
 		space = layout.row()
@@ -212,6 +216,25 @@ class MaskToolsPanel(Panel):
 		space = layout.row()
 		space = layout.row()
 
+		###############################################################
+
+		row = layout.row(align = True)
+		row.label(text = "Modifier :", icon = 'FORCE_VORTEX')
+		box = layout.box()
+		split = box.split()
+		col = split.column(align=True)
+		col.scale_x = 1.5
+		col.operator("mesh.maskmod_displace",text="Displace", icon = 'MOD_DISPLACE')
+		col.prop(bpy.context.scene,"maskmod_displace_apply",text="", icon='FILE_TICK')
+		col.prop(bpy.context.scene,"maskmod_displace_strength", icon='MOD_MASK',slider = True)
+		space = layout.row()
+		split = box.split()
+		col = split.column(align=True)
+		col.scale_x = 1.5
+		col.operator("mesh.maskmod_smooth",text="Smooth", icon = 'MOD_SMOOTH')
+		col.prop(bpy.context.scene,"maskmod_smooth_strength", icon='MOD_MASK',slider = True)
+
+
 
 
 		###############################################################
@@ -219,42 +242,13 @@ class MaskToolsPanel(Panel):
 		row.label(text = "Mask Misc :", icon = 'FORCE_VORTEX')
 
 		space = layout.row()
-		row = layout.row(align = True)
-		row.operator("mesh.mask_sharp_thick", text = "Mask Sharp (Thick)", icon = 'NONE')
-		row = layout.row(align = True)
-		row = layout.row(align = False)
-		row.prop(bpy.context.scene,"mask_sharp_thick", text = "Mask Sharp Thick Strength", icon='MOD_MASK',slider = True)
-
-		# space = layout.row()
-		# row = layout.row(align = True)
-		# row.operator("mesh.duplicate", text = "Mask Duplicate")
-		# space = layout.row()
-		# row = layout.row(align = True)
-		# row.operator("mesh.mask_lattice", text = "Mask Lattice")
-		space = layout.row()
-		row = layout.row(align = True)
-		row.operator("mesh.mask_polygon_remove", text = "Mask Polygon Remove")
-
-
-
-		space = layout.row()
-		space = layout.row()
-		space = layout.row()
-		row = layout.row(align = True)
-		row.operator("mesh.maskmod_displace", icon = 'MOD_DISPLACE')
-		row = layout.row(align = True)
-		row = layout.row(align = False)
-		row.prop(bpy.context.scene,"maskmod_displace_apply", icon='MOD_MASK')
-		row.prop(bpy.context.scene,"maskmod_displace_strength", icon='MOD_MASK',slider = True)
-
-		space = layout.row()
-		row = layout.row(align = True)
-		row.operator("mesh.maskmod_smooth", icon = 'MOD_SMOOTH')
-		row = layout.row(align = True)
-		row = layout.row(align = False)
-		row.prop(bpy.context.scene,"maskmod_smooth_strength", icon='MOD_MASK',slider = True)
-
-
+		box = layout.box()
+		split = box.split()
+		col = split.column(align=True)
+		col.operator("mesh.mask_polygon_remove", text = "Remove")
+		col.operator("mesh.mask_duplicate", text = "Duplicate")
+		col.operator("mesh.mask_sharp_thick", text = "Mask Sharp (Thick)", icon = 'NONE')
+		col.prop(bpy.context.scene,"mask_sharp_thick", text = "Mask Sharp Thick Strength", icon='MOD_MASK',slider = True)
 
 
 

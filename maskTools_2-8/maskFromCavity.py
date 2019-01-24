@@ -586,7 +586,7 @@ class MaskLattice(bpy.types.Operator):
 
 class MaskDuplicate(bpy.types.Operator):
     ''' Mask Duplicate '''
-    bl_idname = "mesh.duplicate"
+    bl_idname = "mesh.mask_duplicate"
     bl_label = "Mask Duplicate"
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -597,7 +597,7 @@ class MaskDuplicate(bpy.types.Operator):
         return context.active_object is not None and context.active_object.mode == 'SCULPT'
 
     def execute(self, context):
-        mask_sharp_thick = context.scene.mask_sharp_thick # update property from user input
+        # mask_sharp_thick = context.scene.mask_sharp_thick # update property from user input
 
 
         dynatopoEnabled = False

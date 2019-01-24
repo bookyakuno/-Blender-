@@ -577,7 +577,7 @@ class MaskLattice(bpy.types.Operator):
 
 class MaskDuplicate(bpy.types.Operator):
     ''' Mask Duplicate '''
-    bl_idname = "mesh.duplicate"
+    bl_idname = "mesh.mask_duplicate"
     bl_label = "Mask Duplicate"
     bl_options = {'REGISTER', 'UNDO'}
 
