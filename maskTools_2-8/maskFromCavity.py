@@ -584,47 +584,6 @@ class MaskLattice(bpy.types.Operator):
 
         return {'FINISHED'}
 
-class MaskDuplicate(bpy.types.Operator):
-    ''' Mask Duplicate '''
-    bl_idname = "mesh.mask_duplicate"
-    bl_label = "Mask Duplicate"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    @classmethod
-
-    def poll(cls, context):
-
-        return context.active_object is not None and context.active_object.mode == 'SCULPT'
-
-    def execute(self, context):
-        # mask_sharp_thick = context.scene.mask_sharp_thick # update property from user input
-
-
-        dynatopoEnabled = False
-
-        if context.active_object.mode == 'SCULPT' :
-           bpy.ops.paint.hide_show(action='HIDE', area='MASKED') # マスク部分を非表示
-           bpy.ops.sculpt.sculptmode_toggle() # オブジェクトモードに戻す
-           bpy.ops.object.select_all(action='DESELECT') #全選択解除で最後に選択するものを複製したものだけにする
-           bpy.ops.object.editmode_toggle() # 編集モード
-           bpy.ops.mesh.select_all(action='DESELECT') #全選択解除
-           bpy.ops.mesh.reveal() # 隠しているものを表示
-           #   	 bpy.ops.mesh.duplicate_move(MESH_OT_duplicate={"mode":1}, TRANSFORM_OT_translate={"value":(0, 0, 0))
-           bpy.context.scene.tool_settings.use_mesh_automerge = False
-           bpy.ops.mesh.duplicate_move(MESH_OT_duplicate=None, TRANSFORM_OT_translate=None)
-           # bpy.ops.mesh.duplicate_move() # 選択部分を複製
-           #   	bpy.ops.mesh.edge_face_add() # 閉じたオブジェクトにする
-           #   	bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY') # 閉じた面を三角形化
-           bpy.ops.mesh.separate(type='SELECTED') # 選択部分を分離
-           bpy.ops.object.editmode_toggle() # オブジェクトモード
-           bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY') #重心に原点を配置して、回転しやすいように
-           bpy.context.scene.tool_settings.use_mesh_automerge = True
-
-           if dynatopoEnabled :
-               bpy.ops.sculpt.dynamic_topology_toggle()
-
-        return {'FINISHED'}
-
 
 class MaskArmture(bpy.types.Operator):
     ''' Mask Armture '''
@@ -679,7 +638,7 @@ class MaskArmture(bpy.types.Operator):
 class MaskPolygonRemove(bpy.types.Operator):
     ''' Mask PolygonRemove '''
     bl_idname = "mesh.mask_polygon_remove"
-    bl_label = "Mask Polygon Remove"
+    bl_label = "Mask Polygon Remove"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
