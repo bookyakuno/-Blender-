@@ -1,14 +1,15 @@
-# ▼ Blender2.8に伴い、下記アドオンは配布サイトをgumroadに移動しました
+# ▼ 配布サイトをgumroadに移動しました
+# 今後のアップデートや配布はgumroadになります
 
+アップデート・移行したアドオンリスト(2019-04-14)
 - keymap_set
 - w_pie (keymap_setに結合)
 - info_header_useful
 - isolate_select
+- Render_Check_List 
 
 <a href="https://gumroad.com/bookyakuno" target="_blank">Blender2.8系アドオン - gumroad</a>
 <br>
-
-
 
 
 
