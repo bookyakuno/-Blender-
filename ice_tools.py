@@ -1,9 +1,9 @@
 bl_info = {
 	"name": "Ice Tools",
 	"author": "Ian Lloyd Dela Cruz, Bookyakuno (2.8Update)",
-	"version": (2, 0, 2),
+	"version": (2, 1, 0),
 	"blender": (2, 80, 0),
-	"location": "3d View > property shelf > Retopology > Ice Tools",
+	"location": "3d View > property shelf > Sculpt > Ice Tools",
 	"description": "Retopology support",
 	"warning": "",
 	"wiki_url": "",
@@ -17,7 +17,8 @@ from bpy.props import *
 
 def add_mod(mod, link, meth, offset):
 	md = bpy.context.active_object.modifiers.new(mod, 'SHRINKWRAP')
-	md.target = bpy.data.objects[link]
+	# md.target = bpy.data.objects[link]
+	md.target = bpy.context.scene.sw_target
 	md.wrap_method = meth
 	if md.wrap_method == "PROJECT":
 		md.use_negative_direction = True
@@ -29,49 +30,25 @@ def add_mod(mod, link, meth, offset):
 	md.show_on_cage = False
 	md.show_expanded = False
 
+
+
 def sw_clipping(obj, autoclip, clipcenter):
+	o = bpy.data.objects[obj]
+
 	if "Mirror" in bpy.data.objects[obj].modifiers:
-		pre_cursor_location = bpy.context.scene.cursor_location.copy()
-		bpy.ops.object.editmode_toggle()
-		bpy.ops.view3d.snap_cursor_to_selected()
-		bpy.ops.object.editmode_toggle()
 
-		obj = bpy.context.active_object
-		bm = bmesh.from_edit_mesh(obj.data)
-		vcount = 0
-		EPSILON = 1.0e-3
+		bpy.ops.mesh.bisect(
+				plane_co=(
+				o.location[0],
+				o.location[1],
+				o.location[2]
+				),
+				plane_no=(1,0,0),
+				use_fill= False,
+				clear_inner= True,
+				clear_outer= 0,
+				threshold= 0.0001)
 
-		if clipcenter == True:
-			EPSILON_sel = 1.0e-1
-			for v in bm.verts:
-				if -EPSILON_sel <= v.co.x <= EPSILON_sel:
-					if v.select == True: v.co.x = 0
-		else:
-			if autoclip == True:
-				bpy.ops.mesh.select_all(action='DESELECT')
-				for v in bm.verts:
-					if -EPSILON <= v.co.x <= EPSILON:
-						v.select = True
-						bm.select_history.add(v)
-						v1 = v
-						vcount += 1
-					if vcount > 1:
-
-						bpy.ops.mesh.select_axis(orientation='CURSOR', sign='NEG')
-						bpy.context.scene.cursor_location = pre_cursor_location
-
-						# bpy.ops.mesh.select_axis(mode='ALIGNED')
-						# bpy.ops.mesh.select_axis()
-						bpy.ops.mesh.loop_multi_select()
-						# for vert in bpy.context.active_object.data.vertices:
-						# 	co = [vert.co.x, vert.co.y, vert.co.z][int(self.axis)]
-						# 	direct = int(self.direction)
-						# 	if (self.offset * direct <= co * direct + self.threshold):
-						# 		vert.select = True
-
-						for v in bm.verts:
-							if v.select == True: v.co.x = 0
-						break
 
 def sw_Update(meshlink, wrap_offset, wrap_meth, autoclip, clipcenter):
 	activeObj = bpy.context.active_object
@@ -194,14 +171,20 @@ class SetUpRetopoMesh(bpy.types.Operator):
 		context.object.show_all_edges = True
 		bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='VERT')
 
+		bpy.context.object.show_in_front = True
+
+
 		#establish link for shrinkwrap update function
-		scn.sw_target = oldObj
-		scn.sw_mesh = activeObj.name
+		scn.sw_target = bpy.data.objects[oldObj]
+		scn.sw_mesh = bpy.data.objects[activeObj.name]
 
 		for SelectedObject in context.selected_objects :
 			if SelectedObject != activeObj :
 				SelectedObject.select = False
 		activeObj.select_set(state = True)
+
+
+
 		return {'FINISHED'}
 
 class ShrinkUpdate(bpy.types.Operator):
@@ -210,11 +193,11 @@ class ShrinkUpdate(bpy.types.Operator):
 	bl_label = "Shrinkwrap Update"
 	bl_options = {'REGISTER', 'UNDO'}
 
-	apply_mod = bpy.props.BoolProperty(name = "Auto-apply Shrinkwrap", default = True)
-	sw_autoclip = bpy.props.BoolProperty(name = "Auto-Clip (X)", default = True)
-	sw_clipcenter = bpy.props.BoolProperty(name = "Clip Selected Verts (X)", default = False)
-	sw_offset = bpy.props.FloatProperty(name = "Offset:", min = -0.5, max = 0.5, step = 0.1, precision = 3, default = 0)
-	sw_wrapmethod = bpy.props.EnumProperty(
+	apply_mod : bpy.props.BoolProperty(name = "Auto-apply Shrinkwrap", default = True)
+	sw_autoclip : bpy.props.BoolProperty(name = "Auto-Clip (X)", default = True)
+	sw_clipcenter : bpy.props.BoolProperty(name = "Clip Selected Verts (X)", default = False)
+	sw_offset : bpy.props.FloatProperty(name = "Offset:", min = -0.5, max = 0.5, step = 0.1, precision = 3, default = 0)
+	sw_wrapmethod : bpy.props.EnumProperty(
 		name = 'Wrap Method',
 		items = (
 			('NEAREST_VERTEX', 'Nearest Vertex',""),
@@ -240,7 +223,9 @@ class ShrinkUpdate(bpy.types.Operator):
 				if SelectedObject != activeObj :
 					SelectedObject.select_set(state = False)
 
-		if scn.sw_mesh != activeObj.name:
+		m = 0
+		if m == 1:
+		# if scn.sw_mesh != activeObj.name:
 			self.report({'WARNING'}, "Establish Link First!")
 			return {'FINISHED'}
 		else:
@@ -303,6 +288,20 @@ class ThawFrozenVerts(bpy.types.Operator):
 
 		return {'FINISHED'}
 
+class set_target_active(bpy.types.Operator):
+	bl_idname = "icetool.set_target_active"
+	bl_label = "Set Target Active"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None
+
+	def execute(self, context):
+		activeObj = bpy.context.active_object
+		bpy.context.scene.sw_target = activeObj
+		return {'FINISHED'}
+
 class ShowFrozenVerts(bpy.types.Operator):
 	'''Show frozen verts'''
 	bl_idname = "show_freeze_verts.retopo"
@@ -330,30 +329,62 @@ class RetopoSupport(bpy.types.Panel):
 	bl_label = "Ice Tools"
 	bl_idname = "OBJECT_PT_retosuppo"
 	bl_space_type = 'VIEW_3D'
-	# bl_region_type = 'TOOLS'
-	# bl_category = 'Retopology'
 	bl_region_type = 'UI'
-	bl_category = 'Retopology'
-
-
-
+	bl_category = 'Sculpt'
 
 	def draw(self, context):
 		layout = self.layout
 		scn = context.scene
 
-		row = layout.row(align=True)
-		# row.alignment = 'EXPAND'
-		row.operator("setup.retopo", text="Set Up Retopo Mesh")
-		row = layout.row(align=True)
-		# row.alignment = 'EXPAND'
-		row.operator("shrink.update", text="Shrinkwrap Update")
-
+		############################################
 		row = layout.row(align=True)
 		row.alignment = 'EXPAND'
-		row.operator("freeze_verts.retopo", text="Freeze")
-		row.operator("thaw_freeze_verts.retopo", text="Thaw")
-		row.operator("show_freeze_verts.retopo", text="Show")
+		row.scale_y = 1.2
+		row.operator("shrink.update", text="Shrinkwrap Update",icon="MOD_SHRINKWRAP")
+
+		box = layout.box()
+
+		box.label(text="Option",icon="NONE")
+
+		row = box.row(align=True)
+		row.prop_search(scn,"sw_target", scn, "objects")
+		row.operator("icetool.set_target_active", text="",icon="IMPORT")
+
+		row = box.row(align=True)
+		row.scale_y = 1.5
+		row.scale_x = 1.5
+		row.alignment = 'EXPAND'
+		row.label(text="Freeze Vertex",icon="NONE")
+		row.operator("freeze_verts.retopo", text="",icon="ADD")
+		row.operator("thaw_freeze_verts.retopo", text="",icon="REMOVE")
+		row.separator()
+		row.operator("show_freeze_verts.retopo", text="",icon="HIDE_OFF")
+
+		layout.separator()
+
+		############################################
+		row = layout.row(align=True)
+		row.operator("setup.retopo", text="Set Up Retopo Mesh",icon="DOT")
+
+		layout.separator()
+
+
+		############################################
+		layout.label(text="Other",icon="NONE")
+
+		row = layout.row(align=True)
+		row.label(text="",icon="XRAY")
+		row.prop(bpy.context.space_data.shading,"show_xray")
+
+		layout.separator()
+
+		row = layout.row(align=True)
+		row.label(text="",icon="XRAY")
+		row.prop(context.object, "show_in_front", text="In Front")
+
+		row = layout.row(align=True)
+		row.label(text="",icon="SHADING_WIRE")
+		row.prop(context.object, "show_wire")
 
 		# if context.active_object is not None:
 		# 	row = layout.row(align=True)
@@ -374,6 +405,7 @@ FreezeVerts,
 ThawFrozenVerts,
 ShowFrozenVerts,
 RetopoSupport,
+set_target_active,
 }
 
 def register():
@@ -381,8 +413,20 @@ def register():
 	for cls in classes:
 		bpy.utils.register_class(cls)
 
-	bpy.types.Scene.sw_mesh= StringProperty()
-	bpy.types.Scene.sw_target= StringProperty()
+	# bpy.types.Scene.sw_mesh= StringProperty()
+
+	# bpy.types.Scene.sw_target= StringProperty()
+
+	bpy.types.Scene.sw_mesh =  PointerProperty(
+			name="Mesh",
+			type=bpy.types.Object
+			)
+
+	bpy.types.Scene.sw_target =  PointerProperty(
+			name="Target",
+			type=bpy.types.Object
+			)
+
 	bpy.types.Scene.sw_autoapply = BoolProperty(default=True)
 
 def unregister():
