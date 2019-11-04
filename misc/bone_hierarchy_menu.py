@@ -28,3 +28,11 @@ if not bpy.context.object == None:
                         bone_loop(bone,col,14)
           col.separator()
         col.separator()
+
+        
+
+def bone_loop(bone,col,range_c):
+	rows = col.row(align=True)
+	for i in range(range_c):
+		rows.separator()
+	rows.prop(bone ,"name",text="",icon="NONE")
